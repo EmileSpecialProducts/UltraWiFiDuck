@@ -8,14 +8,18 @@ function load_settings() {
   ws_send("settings", function(msg) {
     var lines = msg.split(/\n/);
 
-    var ssid = lines[0].split("=")[1];
-    var password = lines[1].split("=")[1];
+    var APssid = lines[0].split("=")[1];
+    var APpassword = lines[1].split("=")[1];
     var channel = lines[2].split("=")[1];
-    var autorun = lines[3].split("=")[1];
+    var ssid = lines[3].split("=")[1];
+    var password = lines[4].split("=")[1];
+    var autorun = lines[5].split("=")[1];
 
+    E("APssid").innerHTML = APssid;
+    E("APpassword").innerHTML = APpassword;
+    E("channel").innerHTML = channel;
     E("ssid").innerHTML = ssid;
     E("password").innerHTML = password;
-    E("channel").innerHTML = channel;
     E("autorun").innerHTML = autorun;
   });
 }
@@ -28,12 +32,12 @@ function ws_connected() {
 // ===== Startup ===== //
 window.addEventListener("load", function() {
 
-  E("edit_ssid").onclick = function() {
-    var newssid = prompt("SSID (1-32 chars)", E("ssid").innerHTML);
+  E("edit_APssid").onclick = function () {
+    var newAPssid = prompt("APSSID (1-32 chars)", E("APssid").innerHTML);
 
-    if (newssid) {
-      if (newssid.length >= 1 && newssid.length <= 32) {
-        ws_send("set ssid \"" + newssid + "\"", function(msg) {
+    if (newAPssid) {
+      if (newAPssid.length >= 1 && newAPssid.length <= 32) {
+        ws_send("set ssid \"" + newAPssid + "\"", function (msg) {
           load_settings();
         });
       } else {
@@ -42,12 +46,12 @@ window.addEventListener("load", function() {
     }
   };
 
-  E("edit_password").onclick = function() {
-    var newpassword = prompt("Password (8-64 chars)", E("password").innerHTML);
+  E("edit_APpassword").onclick = function () {
+    var newAPpassword = prompt("APPassword (8-64 chars)", E("APpassword").innerHTML);
 
-    if (newpassword) {
-      if (newpassword.length >= 8 && newpassword.length <= 64) {
-        ws_send("set password \"" + newpassword + "\"", function(msg) {
+    if (newAPpassword) {
+      if (newAPpassword.length >= 8 && newAPpassword.length <= 64) {
+        ws_send("set password \"" + newAPpassword + "\"", function (msg) {
           load_settings();
         });
       } else {
@@ -66,6 +70,34 @@ window.addEventListener("load", function() {
         });
       } else {
         alert("ERROR: Invalid channel number");
+      }
+    }
+  };
+
+  E("edit_ssid").onclick = function () {
+    var newssid = prompt("SSID (1-32 chars)", E("ssid").innerHTML);
+
+    if (newssid) {
+      if (newssid.length >= 1 && newssid.length <= 32) {
+        ws_send("set ssid \"" + newssid + "\"", function (msg) {
+          load_settings();
+        });
+      } else {
+        alert("ERROR: Invalid length");
+      }
+    }
+  };
+
+  E("edit_password").onclick = function () {
+    var newpassword = prompt("Password (8-64 chars)", E("password").innerHTML);
+
+    if (newpassword) {
+      if (newpassword.length >= 8 && newpassword.length <= 64) {
+        ws_send("set password \"" + newpassword + "\"", function (msg) {
+          load_settings();
+        });
+      } else {
+        alert("ERROR: Invalid length");
       }
     }
   };

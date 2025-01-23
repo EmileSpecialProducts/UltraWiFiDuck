@@ -33,6 +33,21 @@ const uint8_t settings_html[] = R"rawliteral(
 				<p>Restart the device to apply new settings.</p>
 				<table>
 				<tr>
+					<td>APSSID:</td>
+					<td id="APssid"></td>
+					<td><button class="primary" id="edit_APssid">edit</button></td>
+				</tr>
+				<tr>
+					<td>APPassword:</td>
+					<td id="APpassword"></td>
+					<td><button class="primary" id="edit_APpassword">edit</button></td>
+				</tr>
+				<tr>
+					<td>Channel:</td>
+					<td id="channel"></td>
+					<td><button class="primary" id="edit_channel">edit</button></td>
+				</tr>
+				<tr>
 					<td>SSID:</td>
 					<td id="ssid"></td>
 					<td><button class="primary" id="edit_ssid">edit</button></td>
@@ -41,11 +56,6 @@ const uint8_t settings_html[] = R"rawliteral(
 					<td>Password:</td>
 					<td id="password"></td>
 					<td><button class="primary" id="edit_password">edit</button></td>
-				</tr>
-				<tr>
-					<td>Channel:</td>
-					<td id="channel"></td>
-					<td><button class="primary" id="edit_channel">edit</button></td>
 				</tr>
 				<tr>
 					<td>Autorun Script:</td>
