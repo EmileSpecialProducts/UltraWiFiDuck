@@ -144,6 +144,16 @@ namespace cli {
         });
 
         /**
+         * \brief Create reboot command
+         *
+         * this will reboot the ESP device
+         */
+        cli.addCommand("reboot", [](cmd *c)
+                       {
+                print("Rebooting");
+                ESP.restart(); });
+
+        /**
          * \brief Create status command
          *
          * Prints status of i2c connection to atmega32u4:
