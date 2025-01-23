@@ -1,3 +1,4 @@
+const uint8_t settings_js[] = R"rawliteral(
 /*
    This software is licensed under the MIT License. See the license file for details.
    Source: https://github.com/spacehuhntech/WiFiDuck
@@ -85,3 +86,4 @@ window.addEventListener("load", function() {
 
   ws_init();
 }, false);
+)rawliteral";

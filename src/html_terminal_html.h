@@ -1,6 +1,7 @@
+const uint8_t terminal_html[] = R"rawliteral(
 <!--
-   This software is licensed under the MIT License. See the license file for details.
-   Source: https://github.com/spacehuhntech/WiFiDuck
+	This software is licensed under the MIT License. See the license file for details.
+	Source: https://github.com/spacehuhntech/WiFiDuck
 -->
 <!DOCTYPE html>
 <html>
@@ -10,12 +11,13 @@
         <meta name="theme-color" content="#36393E">
 
         <meta name="description" content="WiFi Duck">
-        <title>WiFi Duck | 404</title>
+        <title>WiFi Duck | Terminal</title>
 
         <link rel="stylesheet" type="text/css" href="style.css">
         <script src="script.js"></script>
+        <script src="terminal.js"></script>
     </head>
-    <body>
+  	<body>
         <nav>
             <ul class="menu">
                 <li><a href="index.html">WiFi Duck</a></li>
@@ -24,15 +26,19 @@
                 <li><a href="credits.html">About</a></li>
             </ul>
         </nav>
-        <div id="status"></div>
-        <main>
-            <section>
-
-				<h1>404</h1>
-				<p>
-				Page not found :(
-                </p>
-                <a class="primary" href="index.html">Back to Homepage</a>
+		<div id="status"></div>
+		<main>
+			<section>
+				<h2>Terminal</h2>
+				<div class="row">
+					<input type="text" class="smooth" id="input" value="help">
+					<button class="primary" id="send">send</button>
+					<button class="warn" id="clear">clear</button>
+					<button class="white" id="reconnect">reconnect</button>
+				</div>
+				<div class="row">
+					<div id="output" class="terminal"></div>
+				</div>
 			</section>
 		</main>
         <footer>
@@ -42,5 +48,6 @@
             Copyright (c) 2021 Spacehuhn Technologies<br>
             <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
         </footer>
-    </body>
+  	</body>
 </html>
+ )rawliteral";

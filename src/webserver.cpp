@@ -23,8 +23,7 @@
 void reply(AsyncWebServerRequest* request, int code, const char* type, const uint8_t* data, size_t len) {
     AsyncWebServerResponse* response =
         request->beginResponse_P(code, type, data, len);
-
-    response->addHeader("Content-Encoding", "gzip");
+    response->addHeader("Content-Encoding", "7zip");
     request->send(response);
 }
 
