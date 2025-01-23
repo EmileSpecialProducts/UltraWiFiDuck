@@ -30,7 +30,10 @@ server.on("/terminal.html", HTTP_GET, [](AsyncWebServerRequest* request) {\
 });\
 server.on("/terminal.js", HTTP_GET, [](AsyncWebServerRequest* request) {\
 	reply(request, 200, "application/javascript", terminal_js, sizeof(terminal_js)-1);\
-});
+});\
+server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)\
+		  { reply(request, 200, "image/x-icon", favicon_ico, sizeof(favicon_ico)); });\
+
 
 #include "html_credits_html.h"
 #include "html_error404_html.h"
@@ -42,3 +45,4 @@ server.on("/terminal.js", HTTP_GET, [](AsyncWebServerRequest* request) {\
 #include "html_style_css.h"
 #include "html_terminal_html.h"
 #include "html_terminal_js.h"
+#include "html_favicon_ico.h"
