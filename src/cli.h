@@ -35,4 +35,13 @@ namespace cli {
      * \param echo      Flag to enable echo of input
      */
     void parse(const char* input, PrintFunction printfunc, bool echo = true);
+    void fixPath(String &path);
+    String listDir(String dirName);
+    void streamOpen(String fileName);
+    void streamWrite(const char *buf, size_t len);
+    size_t streamRead(char *buf, size_t len);
+    size_t streamReadUntil(char *buf, char delimiter, size_t max_len);
+    void streamClose();
+    bool streaming();
+    size_t streamAvailable();
 }

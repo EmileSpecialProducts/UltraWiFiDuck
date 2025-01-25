@@ -134,9 +134,9 @@ function update_file_list() {
   });
 }
 
-// ! Format SPIFFS
+// ! Format LittleFS
 function format() {
-  if (confirm("Format SPIFFS? This will delete all scripts!")) {
+  if (confirm("Format LittleFS? This will delete all scripts!")) {
     ws_send("format", log_ws);
     alert("Formatting will take a minute.\nYou have to reconnect afterwards.");
   }

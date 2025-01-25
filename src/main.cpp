@@ -1,11 +1,12 @@
 #include <Arduino.h>
+#include <FS.h> // File
+#include <LittleFS.h>
 
 #include "config.h"
 #include "debug.h"
 #include "duckscript.h"
 #include "duckparser.h"
 #include "webserver.h"
-#include "spiffs.h"
 #include "settings.h"
 #include "cli.h"
 #include "USB.h"
@@ -13,7 +14,9 @@
 
 void setup() {
     debug_init();
-    spiffs::begin();
+
+    debug("Initializing LittleFS...");
+    LittleFS.begin(true);
     settings::begin();
     duckparser::beginKeyboard();
     USB.begin();

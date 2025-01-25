@@ -15,7 +15,6 @@
 #include "config.h"
 #include "debug.h"
 #include "cli.h"
-#include "spiffs.h"
 #include "settings.h"
 
 #include "webfiles.h"

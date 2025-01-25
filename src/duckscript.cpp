@@ -10,7 +10,8 @@
 #include "config.h"
 #include "debug.h"
 
-#include "spiffs.h"
+#include <FS.h> // File
+#include <LittleFS.h>
 
 namespace duckscript {
 
@@ -29,7 +30,7 @@ namespace duckscript {
 
         if (fileName.length() > 0) {
             debugf("Run file %s\n", fileName.c_str());
-            f       = spiffs::open(fileName);
+            f = LittleFS.open(fileName);
             running = true;
             nextLine();
         }

@@ -1,5 +1,6 @@
-#include <dummy.h>
 
+#include <FS.h> // File
+#include <LittleFS.h>
 /*!
    \file esp_duck/cli.cpp
    \brief Command line interface source
@@ -20,7 +21,7 @@
 // Import modules used for different commands
 #include "config.h"
 #include "debug.h"
-#include "spiffs.h"
+
 #include "duckscript.h"
 #include "settings.h"
 
@@ -186,25 +187,25 @@ namespace cli {
         cli.addSingleArgCmd("ls", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
+            String res = listDir(arg.getValue());
 
-            String res = spiffs::listDir(arg.getValue());
             print(res);
         });
 
         /**
          * \brief Create mem command
          *
-         * Prints memory usage of SPIFFS
+         * Prints memory usage of LittleFS
          */
         cli.addCommand("mem", [](cmd* c) {
             String s = "";
             s.reserve(64);
 
-            s += String(spiffs::size());
+            s += String(LittleFS.totalBytes());
             s += " byte\n";
-            s += String(spiffs::usedBytes());
+            s += String(LittleFS.usedBytes() );
             s += " byte used\n";
-            s += String(spiffs::freeBytes());
+            s += String(LittleFS.totalBytes() - LittleFS.usedBytes() );
             s += " byte free";
 
             print(s);
@@ -213,15 +214,17 @@ namespace cli {
         /**
          * \brief Create cat command
          *
-         * Prints out a file from the SPIFFS
+         * Prints out a file from the LittleFS
          *
          * \param * Path to file
          */
         cli.addSingleArgCmd("cat", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
+            String filename = arg.getValue();
+            fixPath(filename);
 
-            File f = spiffs::open(arg.getValue());
+            File f = LittleFS.open(filename);
 
             int buf_size { 256 };
             char buffer[buf_size];
@@ -244,7 +247,7 @@ namespace cli {
          *
          * Starts executing a ducky script
          *
-         * \param * Path to script in SPIFFS
+         * \param * Path to script in LittleFS
          */
         cli.addSingleArgCmd("run", [](cmd* c) {
             Command  cmd { c };
@@ -277,15 +280,18 @@ namespace cli {
         /**
          * \brief Create create command
          *
-         * Creates a file in the SPIFFS
+         * Creates a file in the LittleFS
          *
          * \param * Path with filename
          */
         cli.addSingleArgCmd("create", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
+            String filename = arg.getValue();
+            fixPath(filename);
 
-            spiffs::create(arg.getValue());
+            File f= LittleFS.open(filename, "w", true);
+            if (f) f.close();
 
             String response = "> created file \"" + arg.getValue() + "\"";
             print(response);
@@ -294,16 +300,16 @@ namespace cli {
         /**
          * \brief Create remove command
          *
-         * Removes file in SPIFFS
+         * Removes file in LittleFS
          *
          * \param * Path to file
          */
         cli.addSingleArgCmd("remove", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
-
-            spiffs::remove(arg.getValue());
-
+            String filename = arg.getValue();
+            fixPath(filename);
+            LittleFS.remove(filename);
             String response = "> removed file \"" + arg.getValue() + "\"";
             print(response);
         });
@@ -311,7 +317,7 @@ namespace cli {
         /**
          * \brief Create rename command
          *
-         * Renames a file in SPIFFS
+         * Renames a file in LittleFS
          *
          * \param fileA Old path with filename
          * \param fileB New path with filename
@@ -325,8 +331,9 @@ namespace cli {
 
                 String fileA { argA.getValue() };
                 String fileB { argB.getValue() };
-
-                spiffs::rename(fileA, fileB);
+                fixPath(fileA);
+                fixPath(fileB);
+                LittleFS.rename(fileA, fileB);
 
                 String response = "> renamed \"" + fileA + "\" to \"" + fileB + "\"";
                 print(response);
@@ -338,7 +345,7 @@ namespace cli {
         /**
          * \brief Create write command
          *
-         * Appends string to a file in SPIFFS
+         * Appends string to a file in LittleFS
          *
          * \param file    Path to file
          * \param content String to write
@@ -352,8 +359,18 @@ namespace cli {
 
                 String fileName { argFileName.getValue() };
                 String content { argContent.getValue() };
-
-                spiffs::write(fileName, (uint8_t*)content.c_str(), content.length());
+                fixPath(fileName);
+                File f = LittleFS.open(fileName, "w", true);
+                if (f)
+                {
+                    f.println(content);
+                    f.close();
+                    debugln("Wrote file");
+                }
+                else
+                {
+                    debugln("File error");
+                }
 
                 String response = "> wrote to file \"" + fileName + "\"";
                 print(response);
@@ -365,17 +382,17 @@ namespace cli {
         /**
          * \brief Create format command
          *
-         * Formats SPIFFS
+         * Formats LittleFS
          */
-        cli.addCommand("format", [](cmd* c) {
-            spiffs::format();
-            print("Formatted SPIFFS");
-        });
+        cli.addCommand("format", [](cmd *c)
+            {
+            LittleFS.format();
+            print("Formatted LittleFS"); });
 
         /**
          * \brief Create stream command
          *
-         * Opens stream to a file in SPIFFS.
+         * Opens stream to a file in LittleFS.
          * Whatever is parsed to the CLI is written into the strem.
          * Only close and read are commands will be executed.
          *
@@ -384,9 +401,9 @@ namespace cli {
         cli.addSingleArgCmd("stream", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
-
-            spiffs::streamOpen(arg.getValue());
-
+            String fileName { arg.getValue() };
+            fixPath(fileName);
+            streamOpen(fileName);
             String response = "> opened stream \"" + arg.getValue() + "\"";
             print(response);
         });
@@ -396,40 +413,43 @@ namespace cli {
          *
          * Closes file stream
          */
-        cli.addCommand("close", [](cmd* c) {
-            spiffs::streamClose();
-            print("> closed stream");
-        });
+        cli.addCommand("close", [](cmd *c)
+                       {
+            streamClose();
+            print("> closed stream"); });
 
         /**
          * \brief Create read command
          *
          * Reads from file stream (1024 characters)
          */
-        cli.addCommand("read", [](cmd* c) {
-            if (spiffs::streamAvailable()) {
+        cli.addCommand("read", [](cmd *c)
+                       {
+            if (streamAvailable()) {
                 size_t len = 1024;
 
                 char buffer[len];
 
-                size_t read = spiffs::streamRead(buffer, len);
+                size_t read = streamRead(buffer, len);
 
                 print(buffer);
             } else {
                 print("> END");
-            }
-        });
+            } });
     }
 
     void parse(const char* input, PrintFunction printfunc, bool echo) {
         cli::printfunc = printfunc;
 
-        if (spiffs::streaming() &&
+        if (streaming() &&
             (strcmp(input, "close\n") != 0) &&
-            (strcmp(input, "read\n") != 0)) {
-            spiffs::streamWrite(input, strlen(input));
+            (strcmp(input, "read\n") != 0))
+        {
+            streamWrite(input, strlen(input));
             print("> Written data to file");
-        } else {
+        }
+        else
+        {
             if (echo) {
                 String s = "# " + String(input);
                 print(s);
@@ -437,5 +457,131 @@ namespace cli {
 
             cli.parse(input);
         }
+    }
+    File streamFile;
+
+    void fixPath(String &path)
+    {
+        if (!path.startsWith("/"))
+        {
+            path = "/" + path;
+        }
+    }
+
+    String listDir(String dirName)
+    {
+
+        String res;
+
+        fixPath(dirName);
+
+        File root = LittleFS.open(dirName);
+
+        File file = root.openNextFile();
+
+        while (file)
+        {
+            res += file.name();
+            res += ' ';
+            res += file.size();
+            res += '\n';
+            file = root.openNextFile();
+        }
+        if (res.length() == 0)  res += "\n";
+        
+        return res;
+    }
+
+    void streamOpen(String fileName)
+    {
+        streamClose();
+        fixPath(fileName);
+        streamFile = LittleFS.open(fileName, "r+", true);
+        if (!streamFile)
+            debugln("ERROR: No stream file open");
+        else
+            debugln("File opened!");
+    }
+
+    void streamWrite(const char *buf, size_t len)
+    {
+        if (streamFile)
+            streamFile.write((uint8_t *)buf, len);
+        else
+            debugln("ERROR: No stream file open");
+    }
+
+    size_t streamRead(char *buf, size_t len)
+    {
+        if (streamFile)
+        {
+            size_t i;
+            debugln("streamRead  " + String(len));
+            for (i = 0; i < len; ++i)
+            {
+                if (!streamFile.available() || (i == len - 1))
+                {
+                    buf[i] = '\0';
+                    break;
+                }
+                else
+                {
+                    buf[i] = streamFile.read();
+                }
+            }
+            debugln("File buf " + String(buf));
+            return i;
+        }
+        else
+        {
+            debugln("ERROR: streamRead No stream file open");
+            return 0;
+        }
+    }
+
+    size_t streamReadUntil(char *buf, char delimiter, size_t max_len)
+    {
+        if (streamFile)
+        {
+            size_t i;
+            char c = 'x';
+
+            for (i = 0; i < max_len; ++i)
+            {
+                if ((c == delimiter) || !streamFile.available() || (i == max_len - 1))
+                {
+                    buf[i] = '\0';
+                    break;
+                }
+                else
+                {
+                    c = streamFile.read();
+                    buf[i] = c;
+                }
+            }
+            return i;
+        }
+        else
+        {
+            debugln("ERROR: No stream file open");
+            return 0;
+        }
+    }
+
+    void streamClose()
+    {
+        streamFile.close();
+    }
+
+    bool streaming()
+    {
+        return streamFile;
+    }
+
+    size_t streamAvailable()
+    {
+        if (!streamFile)
+            return 0;
+        return streamFile.available();
     }
 }
