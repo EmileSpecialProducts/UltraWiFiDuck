@@ -93,12 +93,11 @@ namespace webserver
         bool Conected = false;
         // Access Point
         WiFi.hostname(HOSTNAME);
-        debugf("WIfi  \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
-        if (strlen(settings::getSSID()) > 0 && strlen(settings::getPassword()) >= 8)
+        if (strlen(settings::getSSID()) > 0 && ( strlen(settings::getPassword()) >= 8 || strlen(settings::getPassword()) == 0))
         {
             debugf("Connecting to  \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
             WiFi.begin(settings::getSSID(), settings::getPassword());
-            for (uint8_t i = 0; i < 10 && !Conected; i++)
+            for (uint8_t i = 0; i < 20 && !Conected; i++)
             { // wait 10 seconds
                 if (WiFi.status() != WL_CONNECTED)
                     delay(500);

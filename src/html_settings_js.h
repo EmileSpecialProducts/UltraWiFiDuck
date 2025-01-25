@@ -6,8 +6,8 @@ const uint8_t settings_js[] = R"rawliteral(
 // ===== WebSocket Actions ===== //
 function load_settings() {
   ws_send("settings", function(msg) {
-    var lines = msg.split(/\n/);
-
+    var lines = msg.split(/\n/); 
+    
     var APssid = lines[0].split("=")[1];
     var APpassword = lines[1].split("=")[1];
     var channel = lines[2].split("=")[1];
@@ -37,7 +37,7 @@ window.addEventListener("load", function() {
 
     if (newAPssid) {
       if (newAPssid.length >= 1 && newAPssid.length <= 32) {
-        ws_send("set ssid \"" + newAPssid + "\"", function (msg) {
+        ws_send("set APssid \"" + newAPssid + "\"", function (msg) {
           load_settings();
         });
       } else {
@@ -50,13 +50,18 @@ window.addEventListener("load", function() {
     var newAPpassword = prompt("APPassword (8-64 chars)", E("APpassword").innerHTML);
 
     if (newAPpassword) {
-      if (newAPpassword.length >= 8 && newAPpassword.length <= 64) {
-        ws_send("set password \"" + newAPpassword + "\"", function (msg) {
+      if (newAPpassword.length >= 8 && newAPpassword.length <= 64)  {
+        ws_send("set APpassword \"" + newAPpassword + "\"", function (msg) {
           load_settings();
         });
       } else {
         alert("ERROR: Invalid length");
       }
+    } else
+    {
+       ws_send("set APpassword \"\"", function (msg) {
+          load_settings();
+          });
     }
   };
 
@@ -75,16 +80,21 @@ window.addEventListener("load", function() {
   };
 
   E("edit_ssid").onclick = function () {
-    var newssid = prompt("SSID (1-32 chars)", E("ssid").innerHTML);
+    var newssid = prompt("SSID (0-32 chars)", E("ssid").innerHTML);
 
     if (newssid) {
-      if (newssid.length >= 1 && newssid.length <= 32) {
+      if (newssid.length >= 0 && newssid.length <= 32) {
         ws_send("set ssid \"" + newssid + "\"", function (msg) {
           load_settings();
         });
       } else {
         alert("ERROR: Invalid length");
       }
+    } else
+    {
+       ws_send("set ssid \"\"", function (msg) {
+          load_settings();
+          });
     }
   };
 
@@ -92,13 +102,18 @@ window.addEventListener("load", function() {
     var newpassword = prompt("Password (8-64 chars)", E("password").innerHTML);
 
     if (newpassword) {
-      if (newpassword.length >= 8 && newpassword.length <= 64) {
+      if (newpassword.length >= 8 && newpassword.length <= 64)  {
         ws_send("set password \"" + newpassword + "\"", function (msg) {
           load_settings();
         });
       } else {
         alert("ERROR: Invalid length");
       }
+    } else
+    {
+       ws_send("set password \"\"", function (msg) {
+          load_settings();
+          });
     }
   };
 

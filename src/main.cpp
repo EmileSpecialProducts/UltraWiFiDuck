@@ -13,14 +13,13 @@
 
 void setup() {
     debug_init();
+    spiffs::begin();
+    settings::begin();
     duckparser::beginKeyboard();
     USB.begin();
     delay(200);
-    spiffs::begin();
-    settings::begin();
     cli::begin();
     webserver::begin();
-
     duckscript::run(settings::getAutorun());
 }
 

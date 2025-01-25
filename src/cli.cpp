@@ -10,7 +10,7 @@
 #include "cli.h"
 
 // SimpleCLI library
-#include <SimpleCLI.h>
+#include <SimpleCLI.h> // https://github.com/SpacehuhnTech/SimpleCLI
 
 // // Get RAM (heap) usage
 // extern "C" {
@@ -18,10 +18,11 @@
 // }
 
 // Import modules used for different commands
+#include "config.h"
+#include "debug.h"
 #include "spiffs.h"
 #include "duckscript.h"
 #include "settings.h"
-#include "config.h"
 
 namespace cli {
     // ===== PRIVATE ===== //
@@ -122,9 +123,9 @@ namespace cli {
 
                 String name { argName.getValue() };
                 String value { argValue.getValue() };
-
+                debug( "> set \"" + name + "\" to \"" + value + "\"");
                 settings::set(name.c_str(), value.c_str());
-
+                settings::save();
                 String response = "> set \"" + name + "\" to \"" + value + "\"";
 
                 print(response);
@@ -140,6 +141,7 @@ namespace cli {
          */
         cli.addCommand("reset", [](cmd* c) {
             settings::reset();
+            settings::save();
             print(settings::toString());
         });
 

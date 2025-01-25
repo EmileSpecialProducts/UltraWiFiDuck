@@ -3,22 +3,17 @@
    Source: https://github.com/spacehuhntech/WiFiDuck
  */
 
+#include "config.h"
 #include "settings.h"
-
 #include "spiffs.h"
 #include "debug.h"
-#include "config.h"
-#include "eeprom0.h"
-
-#define SETTINGS_ADDRES 1
-#define SETTINGS_MAGIC_NUM 1234567891
 
 namespace settings
 {
     // ===== PRIVATE ===== //
     typedef struct settings_t
     {
-        uint32_t magic_num;
+
         char APssid[33];
         char APpassword[65];
         char APchannel[5];
@@ -32,35 +27,39 @@ namespace settings
     // ===== PUBLIC ====== //
     void begin()
     {
-        eeprom::begin();
+        debugln("Initializing Settings....");
         load();
     }
 
     void load()
     {
-        eeprom::getObject(SETTINGS_ADDRES, data);
-        if (data.magic_num != SETTINGS_MAGIC_NUM)
-            reset();
-
-        if (data.APssid[32] != 0)
-            setAPSSID(WIFI_APSSID);
-        if (data.APpassword[64] != 0)
-            setAPPassword(WIFI_APPASSWORD);
-        if (data.ssid[32] != 0)
-            setSSID(WIFI_SSID);
-        if (data.password[64] != 0)
-            setPassword(WIFI_PASSWORD);
-        if (data.APchannel[4] != 0)
-            setAPChannel(WIFI_CHANNEL);
-        if (data.autorun[64] != 0)
-            setAutorun("");
+        String line;
+        debugln("Load");
+        reset();
+        File f = LittleFS.open(SETTINGSFILENAME,"r");
+        if (f)
+        {
+            debugln("Load OPen File found");    
+            while (f.available())
+            {
+                line = f.readStringUntil('\n');
+                debugln("readString:" + line);
+                debugln(line.substring(0, line.indexOf("=")));
+                debugln(line.substring(line.indexOf("=")+1, line.length()));
+                set(line.substring(0, line.indexOf("=")).c_str(), line.substring(line.indexOf("=") + 1, line.length()).c_str());
+            }
+            debugln(toString());
+        }
+        else
+        {
+            debugln("Load File Not found");
+            save();
+        }
     }
 
     void reset()
     {
         debugln("Resetting Settings");
-        data.magic_num = SETTINGS_MAGIC_NUM;
-
         setAPSSID(WIFI_APSSID);
         setAPPassword(WIFI_APPASSWORD);
         setAPChannel(WIFI_CHANNEL);
@@ -71,42 +70,44 @@ namespace settings
     void save()
     {
         debugln("Saving Settings");
-        eeprom::saveObject(SETTINGS_ADDRES, data);
+        File f = LittleFS.open(SETTINGSFILENAME,"w",true);
+        String s = toString();
+        debug("Save Settings" + s);
+        f.print(s);
+        f.close();
     }
 
     String toString()
     {
-        String s;
-        s += "APssid=";
-        s += getAPSSID();
-        s += "\n";
-        s += "APpassword=";
-        s += getAPPassword();
-        s += "\n";
-        s += "channel=";
-        s += getAPChannel();
-        s += "\n";
-        s += "ssid=";
-        s += getSSID();
-        s += "\n";
-        s += "password=";
-        s += getPassword();
-        s += "\n";
-        s += "autorun=";
-        s += getAutorun();
-        s += "\n";
-
+        String s ;
+        s = "APssid="
+        + String(getAPSSID())
+        +"\n" + "APpassword="
+        + String(getAPPassword())
+        + "\n"+ "channel="
+        + String(getAPChannel())
+        + "\n"
+        + "ssid="
+        + String(getSSID())
+        + "\n"
+        + "password="
+        + String(getPassword())
+        + "\n"
+        + "autorun="
+        + String(getAutorun())
+        + "\n";
+        debug(s);
         return s;
     }
 
     const char *getSSID()
     {
-        return data.ssid;
+            return data.ssid;
     }
 
     const char *getPassword()
     {
-        return data.password;
+            return data.password;
     }
 
     const char *getAPSSID()
@@ -138,6 +139,7 @@ namespace settings
 
     void set(const char *name, const char *value)
     {
+        debugln("Settings::set \"" + String(name) + "\" \"" + String(value) + "\"");
         if (strcmp(name, "APssid") == 0)
         {
             setAPSSID(value);
@@ -168,38 +170,34 @@ namespace settings
     {
         if (ssid)
         {
-            memset(data.ssid, 0, 33);
-            strncpy(data.ssid, ssid, 32);
-            save();
+            memset(data.ssid, 0, sizeof(data.ssid));
+            strncpy(data.ssid, ssid, sizeof(data.ssid) - 1);
         }
     }
 
     void setPassword(const char *password)
     {
-        if (password && (strlen(password) >= 8))
-        {
-            memset(data.password, 0, 65);
-            strncpy(data.password, password, 64);
-            save();
+        if (password && ((strlen(password) >= 8)||(strlen(password) == 0)))
+        { 
+            memset(data.password, 0, sizeof(data.password));
+            strncpy(data.password, password, sizeof(data.password) - 1);
         }
     }
     void setAPSSID(const char *ssid)
     {
         if (ssid)
         {
-            memset(data.APssid, 0, 33);
-            strncpy(data.APssid, ssid, 32);
-            save();
+            memset(data.APssid, 0, sizeof(data.APssid));
+            strncpy(data.APssid, ssid, sizeof(data.APssid) - 1);
         }
     }
 
     void setAPPassword(const char *password)
     {
-        if (password && (strlen(password) >= 8))
+        if (password && ((strlen(password) >= 8)||(strlen(password) == 0)))
         {
-            memset(data.APpassword, 0, 65);
-            strncpy(data.APpassword, password, 64);
-            save();
+            memset(data.APpassword, 0, sizeof(data.APpassword));
+            strncpy(data.APpassword, password, sizeof(data.APpassword) - 1);
         }
     }
 
@@ -209,7 +207,6 @@ namespace settings
         {
             memset(data.APchannel, 0, 5);
             strncpy(data.APchannel, channel, 4);
-            save();
         }
     }
 
@@ -217,9 +214,8 @@ namespace settings
     {
         if (autorun)
         {
-            memset(data.autorun, 0, 65);
-            strncpy(data.autorun, autorun, 64);
-            save();
+            memset(data.autorun, 0, sizeof(data.autorun));
+            strncpy(data.autorun, autorun, sizeof(data.autorun) - 1);
         }
     }
 }
