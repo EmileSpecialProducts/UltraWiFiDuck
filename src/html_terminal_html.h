@@ -42,9 +42,15 @@ const uint8_t terminal_html[] = R"rawliteral(
 			</section>
 		</main>
         <footer>
-            <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
-            <br><br>
+            This Fork 
+            <a href="https://github.com/EmileSpecialProducts/SuperWiFiDuck" target="_blank">Source</a>
+            you can find.
+            <br>
             <span id="version"></span><br>
+            <br>
+            This is the original 
+            <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
+            <br>
             Copyright (c) 2021 Spacehuhn Technologies<br>
             <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
         </footer>
