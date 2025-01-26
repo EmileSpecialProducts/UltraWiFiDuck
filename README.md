@@ -35,7 +35,7 @@ Video Demo:
     - [Examples](#examples)
   - [CLI Commands](#cli-commands)
     - [General](#general)
-    - [SPIFFS File Management](#spiffs-file-management)
+    - [LittleFS File Management](#LittleFS-file-management)
   - [How to Debug](#how-to-debug)
   - [Development](#development)
     - [Edit Web Files](#edit-web-files)
@@ -202,12 +202,12 @@ The command line interface or CLI is accessible using a serial connection to the
 | run <...> | Starts executing a Ducky script | `run example.txt` |
 | stop <...> | Stops executing a Ducky script | `stop example.txt` |
 
-### SPIFFS File Management
+### LittleFS File Management
 
 | Command | Description | Example |
 | ------- | ----------- | ------- |
-| mem | Returns available, used and free memory of SPIFFS in bytes | `mem` |
-| format | Formats SPIFFS | `format` |
+| mem | Returns available, used and free memory of LittleFS in bytes | `mem` |
+| format | Formats LittleFS | `format` |
 | ls <...> | Returns list of files | `ls /` |
 | create <...> | Creates file | `create example.duck` |
 | remove <...> | Deletes file | `remove example.duck` |
