@@ -14,7 +14,9 @@ It also can be connected to you Wifi network or generate its own access point.
 
 To install the software you will not need to build but can install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html  
 
-You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2.6Mb** for scripts    
+You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2.6Mb** for scripts, 
+
+But will recomend a ESP32-S3 that has a USB and COM port for software installation and RGB led.    
 
 You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI.
 
