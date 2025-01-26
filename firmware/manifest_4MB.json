@@ -1,0 +1,26 @@
+{
+  "name": "SuperWiFiDuck_4MB",
+  "version": "2025.01.23",
+  "home_assistant_domain": "SuperWiFiDuck",
+  "funding_url": "https://github.com/EmileSpecialProducts/SuperWiFiDuck/",
+  "builds": [      
+    {
+      "chipFamily": "ESP32-S2",
+      "parts": [
+        { "path": "./esp32s2_4MB_qio/bootloader.bin", "offset": 4096 },
+        { "path": "./esp32s2_4MB_qio/partitions.bin", "offset": 32768 },
+        { "path": "./esp32s2_4MB_qio/boot_app0.bin", "offset": 57344 },
+        { "path": "./esp32s2_4MB_qio/firmware.bin", "offset": 65536 }
+      ]
+    },
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "./esp32s3_4MB_qio/bootloader.bin", "offset": 0 },
+        { "path": "./esp32s3_4MB_qio/partitions.bin", "offset": 32768 },
+        { "path": "./esp32s3_4MB_qio/boot_app0.bin", "offset": 57344 },
+        { "path": "./esp32s3_4MB_qio/firmware.bin", "offset": 65536 }
+      ]
+    }
+  ]
+}

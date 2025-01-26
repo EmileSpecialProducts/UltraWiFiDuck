@@ -73,21 +73,25 @@ const uint8_t settings_html[] = R"rawliteral(
 			</section>
 			<section>
 				<h1>Update</h1>
-
 				<p>
-					Go to <a href="https://github.com/spacehuhntech/WiFiDuck/releases" target="_blank">wifiduck.com/releases</a>
-					to check for updates.<br>Select a .bin file and press upload to update the device.<br>
+				Go to <a href="https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html">SuperWifiduck</a>
+				to upload the Softwate.
 				</p>
-
-				<form method='POST' action='/update' enctype='multipart/form-data'>
-				<input type='file' name='update'>
-				<input type='submit' class="warn" value='Upload'>
-				</form>
+				<p>
+					This fork was based on the <a href="https://wifiduck.com">wifiduck.com</a>
+					The upload is changed to have more script space<br>
+				</p>
 			</section>
 			<footer>
-				<a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
-				<br><br>
+				This Fork 
+				<a href="https://github.com/EmileSpecialProducts/SuperWiFiDuck" target="_blank">Source</a>
+				you can find.
+				<br>
 				<span id="version"></span><br>
+				<br>
+				This is the original 
+				<a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
+				<br>
 				Copyright (c) 2021 Spacehuhn Technologies<br>
 				<a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
 			</footer>

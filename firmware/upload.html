@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <title>ESP Web tool</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10.1.0/dist/web/install-button.js?module"></script>
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+            }
+            td,
+            th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+        </style>
+</head>
+<body>
+    <div>
+        <h2>This will program the SuperWiFiDucksoftware to the ESP S2/S3 device
+        The folowing devices are supported.
+        </h2>
+        <table>
+            <tr>
+                <th>Device</th>
+                <th>Supported</th>
+            </tr>
+            <tr>
+                <td>ESP32-S2</td>
+                <td>Yes#</td>
+            </tr>
+            <tr>
+                <td>ESP32-S3</td>
+                <td>Yes</td>
+            </tr>
+        </table>
+       
+    </div>
+    <dif>
+    <esp-web-install-button manifest="./manifest_4MB.json">    
+        <button slot="activate">Install on 4MB Device </button>
+    </esp-web-install-button>
+    </dif>
+    <dif>
+        <esp-web-install-button manifest="./manifest_8MB.json">
+            <button slot="activate">Install on 8MB Device </button>
+        </esp-web-install-button>
+    </dif>
+    <dif>
+        <esp-web-install-button manifest="./manifest_16MB.json">
+            <button slot="activate">Install on 16MB Device </button>
+        </esp-web-install-button>
+    </dif>
+    <br>
+    <br>
+    <div>
+        You can find the Github at <a href="https://github.com/EmileSpecialProducts/SuperWiFiDuck">this</a> location
+    </div>
+    <div>
+        You can find the the 3d Duck box <a href="https://www.tinkercad.com">this</a> location
+    </div>
+    <div>
+        You can find the ESPWebTool information at <a href="https://esphome.github.io/esp-web-tools/">this</a> location or the <a href="https://github.com/esphome/esp-web-tools/">GitHub</a>
+    </div>
+    <div>
+        The ESPWebTool is based on the <a href="https://github.com/espressif/esptool-js">esptool-js</a>
+    </div>
+    <div>
+        You can find a Serial monitor at <a href="https://www.serialterminal.com/">this</a> location
+    </div>
+    <div>
+        Or this Serial monitor at <a href="https://tyeth.github.io/read-partitions-esptool-js/">this</a> location
+    </div>
+</body>
+</html>

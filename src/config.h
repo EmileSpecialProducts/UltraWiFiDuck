@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define VERSION "1.2.0"
+#define VERSION "2.0.0"
 
 /*! ===== DEBUG Settings ===== */
 //#define ENABLE_DEBUG
@@ -20,15 +20,15 @@
 #define BUFFER_SIZE 256
 #define PACKET_SIZE 32
 
-#define MSG_CONNECTED "LED 0 0 25\n"
-#define MSG_STARTED "LED 0 25 0\n"
-
 /*! ===== WiFi Settings ===== */
 #define WIFI_APSSID "wifiduck"
 #define WIFI_APPASSWORD "wifiduck"
 #define WIFI_CHANNEL "1"
 #define WIFI_SSID ""
 #define WIFI_PASSWORD ""
+#define RGBLEDPIN ""
 
 #define HOSTNAME "wifiduck"
 #define URL "wifi.duck"
+
+#define NEOPIXEL_NUM 144  // So that you can connect a 1 meter led strip 

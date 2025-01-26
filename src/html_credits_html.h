@@ -68,7 +68,6 @@ const uint8_t credits_html[] = R"rawliteral(
         Other software used for this project:<br>
         - <a href="https://www.arduino.cc" target="_blank">Arduino</a><br>
         - <a href="https://github.com/adafruit/Adafruit_NeoPixel" target="_blank">Neopixel Library</a><br>
-        - <a href="https://github.com/adafruit/Adafruit_DotStar" target="_blank">Dotstar Library</a><br>
         - <a href="https://github.com/spacehuhn/hardware/tree/master/wifiduck" target="_blank">AVR, ESP8266 & SAMD Arduino Core</a><br>
         - <a href="https://github.com/me-no-dev/ESPAsyncTCP" target="_blank">ESPAsyncTCP</a><br>
         - <a href="https://github.com/me-no-dev/ESPAsyncWebServer" target="_blank">ESPAsyncWebServer</a><br>
@@ -79,6 +78,7 @@ const uint8_t credits_html[] = R"rawliteral(
       <h1>Thanks</h1>
       <p>
         Thanks to everyone that helped making this project reality, especially:<br>
+        - <a href="https://github.com/EmileSpecialProducts" target="_blank">EmileSpecialProducts</a>improving the Web Software Instalation<br>
         - <a href="https://deantonious.es" target="_blank">deantonious</a> for helping to design and improve the user experience<br>
         - <a href="youtube.com/seytonic" target="_blank">Seytonic</a> for educating people about the topic<br>
         - <a href="https://dstike.com/" target="_blank">Travis Lin</a> for creating, selling and financially supporting us with custom made hardware<br>
@@ -86,13 +86,19 @@ const uint8_t credits_html[] = R"rawliteral(
       </p>
     </section>
   </main>
-  <footer>
-    <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
-    <br><br>
-    <span id="version"></span><br>
-    Copyright (c) 2021 Spacehuhn Technologies<br>
-    <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
-  </footer>
+    <footer>
+				This Fork 
+				<a href="https://github.com/EmileSpecialProducts/SuperWiFiDuck" target="_blank">Source</a>
+				you can find.
+				<br>
+				<span id="version"></span><br>
+				<br>
+				This is the original 
+				<a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
+				<br>
+				Copyright (c) 2021 Spacehuhn Technologies<br>
+				<a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
+			</footer>
 </body>
 
 </html>

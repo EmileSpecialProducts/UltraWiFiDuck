@@ -302,12 +302,18 @@ const uint8_t index_html[] = R"rawliteral(
             </section>
         </main>
         <footer>
-            <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
-            <br><br>
-            <span id="version"></span><br>
-            Copyright (c) 2021 Spacehuhn Technologies<br>
-            <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
-        </footer>
+				This Fork 
+				<a href="https://github.com/EmileSpecialProducts/SuperWiFiDuck" target="_blank">Source</a>
+				you can find.
+				<br>
+				<span id="version"></span><br>
+				<br>
+				This is the original 
+				<a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
+				<br>
+				Copyright (c) 2021 Spacehuhn Technologies<br>
+				<a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
+		</footer>
     </body>
 </html>
 )rawliteral";
