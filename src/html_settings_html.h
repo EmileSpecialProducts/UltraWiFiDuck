@@ -32,40 +32,40 @@ const uint8_t settings_html[] = R"rawliteral(
 				<h1>Settings</h1>
 				<p>Reboot the device to apply new settings.</p>
 				<table>
-				<tr>
+				<tr id="edit_APssid">
 					<td>APSSID:</td>
 					<td id="APssid"></td>
-					<td><button class="primary" id="edit_APssid">edit</button></td>
+					<td><button class="primary" >edit</button></td>
 				</tr>
-				<tr>
+				<tr id="edit_APpassword">
 					<td>APPassword:</td>
 					<td id="APpassword"></td>
-					<td><button class="primary" id="edit_APpassword">edit</button></td>
+					<td><button class="primary" >edit</button></td>
 				</tr>
-				<tr>
+				<tr id="edit_channel">
 					<td>Channel:</td>
 					<td id="channel"></td>
-					<td><button class="primary" id="edit_channel">edit</button></td>
+					<td><button class="primary" >edit</button></td>
 				</tr>
-				<tr>
+				<tr id="edit_ssid">
 					<td>SSID:</td>
 					<td id="ssid"></td>
-					<td><button class="primary" id="edit_ssid">edit</button></td>
+					<td><button class="primary" >edit</button></td>
 				</tr>
-				<tr>
+				<tr id="edit_password">
 					<td>Password:</td>
 					<td id="password"></td>
-					<td><button class="primary" id="edit_password">edit</button></td>
+					<td><button class="primary" >edit</button></td>
 				</tr>
-				<tr>
+				<tr id="disable_autorun">
 					<td>Autorun Script:</td>
 					<td id="autorun"></td>
-					<td><button class="warn" id="disable_autorun">disable</button></td>
+					<td><button class="warn" >disable</button></td>
 				</tr>
-					<tr>
+				<tr id="edit_RGBLedPin">
 					<td>RGBLedPin:</td>
 					<td id="RGBLedPin"></td>
-					<td><button class="primary" id="edit_RGBLedPin">edit</button></td>
+					<td><button class="primary" >edit</button></td>
 				</tr>
 				</table>
 				<button class="danger" id="reset">Reset settings</button>
@@ -97,4 +97,5 @@ const uint8_t settings_html[] = R"rawliteral(
 			</footer>
 	</body>
 </html>
+
 )rawliteral";
