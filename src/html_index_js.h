@@ -91,7 +91,7 @@ function update_file_list() {
     var percent = Math.floor(byte / 100);
     var freepercent = Math.floor(free / percent);
 
-    E("freeMemory").innerHTML = used + " byte used (" + freepercent + "% free)";
+    E("freeMemory").innerHTML = Math.floor(used/1024) + " Kbytes used, "+ Math.floor(free/1024) +" Kbytes free,  (" + freepercent + "% free)";
 
     file_list = "";
 
@@ -119,8 +119,8 @@ function update_file_list() {
             read(fileName);
           }
           tableHTML += "<tr>\n";
-          tableHTML += "<td>" + fileName + "</td>\n";
-          tableHTML += "<td>" + fileSize + "</td>\n";
+          tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileName + "</td>\n";
+          tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileSize + "</td>\n";
           tableHTML += "<td>\n";
           tableHTML += "<button class=\"primary\" onclick=\"read('" + fileName + "')\">edit</button>\n";
           tableHTML += "<button class=\"warn\" onclick=\"run('" + fileName + "')\">run</button>\n";
