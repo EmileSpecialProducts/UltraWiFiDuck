@@ -14,6 +14,7 @@ function load_settings() {
     var ssid = lines[3].split("=")[1];
     var password = lines[4].split("=")[1];
     var autorun = lines[5].split("=")[1];
+    var RGBLedPin = lines[6].split("=")[1];
 
     E("APssid").innerHTML = APssid;
     E("APpassword").innerHTML = APpassword;
@@ -21,6 +22,7 @@ function load_settings() {
     E("ssid").innerHTML = ssid;
     E("password").innerHTML = password;
     E("autorun").innerHTML = autorun;
+    E("RGBLedPin").innerHTML = RGBLedPin;
   });
 }
 
@@ -67,7 +69,6 @@ window.addEventListener("load", function() {
 
   E("edit_channel").onclick = function() {
     var newchannel = prompt("Channel (1-14)", E("channel").innerHTML);
-
     if (newchannel) {
       if (parseInt(newchannel) >= 1 && parseInt(newchannel) <= 13) {
         ws_send("set channel " + newchannel, function(msg) {
@@ -79,6 +80,24 @@ window.addEventListener("load", function() {
     }
   };
 
+  E("edit_RGBLedPin").onclick = function() {
+    var pin = prompt("RGBLedPin (0-48)", E("RGBLedPin").innerHTML);
+    if (pin) {
+      if (parseInt(pin) >= 0 && parseInt(pin) <= 48) {
+        ws_send("set RGBLedPin " + pin, function(msg) {
+          load_settings();
+        });
+      } else {
+        ws_send("set RGBLedPin \"\"", function(msg) {
+          load_settings();
+        });  
+      }
+    } else {
+        ws_send("set RGBLedPin \"\"", function(msg) {
+          load_settings();
+        });  
+      }
+  };
   E("edit_ssid").onclick = function () {
     var newssid = prompt("SSID (0-32 chars)", E("ssid").innerHTML);
 
@@ -131,6 +150,17 @@ window.addEventListener("load", function() {
     }
   };
 
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+ E("reboot").onclick = function() {
+    if (confirm("Reboot ?")) {
+      ws_send("reboot", function(msg) {
+      delay(10000).then(() => {console.log('ran after 10 seconds passed');location.reload();});
+      });
+    }
+  };
   ws_init();
 }, false);
 )rawliteral";

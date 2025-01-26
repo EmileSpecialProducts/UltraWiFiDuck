@@ -29,8 +29,8 @@ const uint8_t settings_html[] = R"rawliteral(
 		<div id="status"></div>
 		<main>
 			<section>
-				<h1>WiFi</h1>
-				<p>Restart the device to apply new settings.</p>
+				<h1>Settings</h1>
+				<p>Reboot the device to apply new settings.</p>
 				<table>
 				<tr>
 					<td>APSSID:</td>
@@ -62,8 +62,14 @@ const uint8_t settings_html[] = R"rawliteral(
 					<td id="autorun"></td>
 					<td><button class="warn" id="disable_autorun">disable</button></td>
 				</tr>
+					<tr>
+					<td>RGBLedPin:</td>
+					<td id="RGBLedPin"></td>
+					<td><button class="primary" id="edit_RGBLedPin">edit</button></td>
+				</tr>
 				</table>
 				<button class="danger" id="reset">Reset settings</button>
+				<button class="danger" id="reboot">Reboot</button>
 			</section>
 			<section>
 				<h1>Update</h1>

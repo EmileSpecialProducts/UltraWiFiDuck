@@ -20,6 +20,8 @@ namespace settings
         char ssid[33];
         char password[65];
         char autorun[65];
+        char RGBLedPin[5];
+
     } settings_t;
 
     settings_t data;
@@ -65,6 +67,7 @@ namespace settings
         setAPChannel(WIFI_CHANNEL);
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
+        setRGBLedPin(RGBLEDPIN);
     }
 
     void save()
@@ -95,6 +98,9 @@ namespace settings
         + "\n"
         + "autorun="
         + String(getAutorun())
+        + "\n"
+        + "RGBLedPin="
+        + String(getRGBLedPin())
         + "\n";
         debug(s);
         return s;
@@ -125,6 +131,11 @@ namespace settings
         return data.APchannel;
     }
 
+    const char *getRGBLedPin()
+    {
+        return data.RGBLedPin;
+    }
+
     int getAPChannelNum()
     {
         if (strcmp(data.APchannel, "auto") != 0)
@@ -132,6 +143,12 @@ namespace settings
         return 1;
     }
 
+    int getRGBLedPinNum()
+    {
+        if (atoi(data.RGBLedPin) >= 0 && atoi(data.RGBLedPin) <=48 )
+            return atoi(data.RGBLedPin);
+        return -1;
+    }
     const char *getAutorun()
     {
         return data.autorun;
@@ -159,6 +176,10 @@ namespace settings
         else if (strcmp(name, "channel") == 0)
         {
             setAPChannel(value);
+        }
+        else if (strcmp(name, "RGBLedPin") == 0)
+        {
+            setRGBLedPin(value);
         }
         else if (strcmp(name, "autorun") == 0)
         {
@@ -207,6 +228,14 @@ namespace settings
         {
             memset(data.APchannel, 0, 5);
             strncpy(data.APchannel, channel, 4);
+        }
+    }
+    void setRGBLedPin(const char *pin)
+    {
+        if (pin && ((strcmp(pin, "") == 0) || ((atoi(pin) >= 0) && (atoi(pin) <= 48))))
+        {
+            memset(data.RGBLedPin, 0, 5);
+            strncpy(data.RGBLedPin, pin, 4);
         }
     }
 

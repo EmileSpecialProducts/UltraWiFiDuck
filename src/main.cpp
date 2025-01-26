@@ -10,7 +10,7 @@
 #include "settings.h"
 #include "cli.h"
 #include "USB.h"
-
+#include "led.h"
 
 void setup() {
     debug_init();
@@ -18,6 +18,7 @@ void setup() {
     debug("Initializing LittleFS...");
     LittleFS.begin(true);
     settings::begin();
+    led::begin();
     duckparser::beginKeyboard();
     USB.begin();
     delay(200);

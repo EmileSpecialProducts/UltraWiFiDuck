@@ -23,12 +23,15 @@ namespace settings
   const char *getAPSSID();
   const char *getAPPassword();
   const char *getAPChannel();
+  const char *getRGBLedPin();
   const char *getSSID();
   const char *getPassword();
   const char *getAutorun();
+  
 
   int getAPChannelNum();
-
+  int getRGBLedPinNum();
+  
   void set(const char *name, const char *value);
 
   void setAPSSID(const char *ssid);
@@ -37,4 +40,5 @@ namespace settings
   void setPassword(const char *password);
   void setAPChannel(const char *channel);
   void setAutorun(const char *autorun);
+  void setRGBLedPin(const char *pin);
 }

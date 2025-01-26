@@ -150,8 +150,10 @@ const uint8_t index_html[] = R"rawliteral(
                         </tr>
                         <tr>
                             <td><code>LED</code></td>
-                            <td><code>LED 40 20 10</code></td>
-                            <td>Changes the color of the LED in decimal RGB values (0-255)</td>
+                            <td><code>LED 255 128 64</code></td>
+                            <td>Changes the color of the LEDs in decimal RGB values (0-255)<br>
+                            You can connect a led strip up to 144 RGB leds
+                            </td>
                         </tr>
                     </tbody>
                 </table>
