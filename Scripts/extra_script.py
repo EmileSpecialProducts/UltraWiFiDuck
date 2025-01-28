@@ -55,11 +55,12 @@ def PostBuild(source, target, env):
     print("BOARD_BOOT_MODE " + board_boot_mode)
     print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
     print("BOARD = " + board + " board_mcu = " + board_mcu + " board_boot_mode = " + board_boot_mode)
+    # This will get the flash-size from the Upload , Will not work for OTA configuration.
     upload = env.subst("$UPLOADERFLAGS").split()
     nextMB=False
     flashsize="0MB"
     for x in upload:
-        # print("Upload :"+x)
+        print("Upload :"+x)
         if nextMB:  
             flashsize = x
             nextMB = False
@@ -89,12 +90,12 @@ def PostBuild(source, target, env):
     flash = env.subst("$FLASH_EXTRA_IMAGES")
     # print(flash)
     parts = flash.split()
-    print("---------------------------------------------------------")
+    print("------------------------------------------------------------------------------------------------------------------")
     print(parts[0] + " " + str(int(parts[0], 16)) + " " + parts[1])
     print(parts[2] + " " + str(int(parts[2], 16)) + " " + parts[3])
     print(parts[4] + " " + str(int(parts[4], 16)) + " " + parts[5])
     print(env.get("ESP32_APP_OFFSET") + " " + str(int(env.get("ESP32_APP_OFFSET"), 16)) + " " +source + "\\firmware.bin")
-    print("---------------------------------------------------------")
+    print("------------------------------------------------------------------------------------------------------------------")
 
 # env.AddPostAction("buildprog", PostBuild)
 

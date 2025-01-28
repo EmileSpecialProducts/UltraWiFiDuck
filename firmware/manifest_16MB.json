@@ -1,6 +1,6 @@
 {
   "name": "SuperWiFiDuck_16MB",
-  "version": "2025.01.23",
+  "version": "2025.01.26",
   "home_assistant_domain": "SuperWiFiDuck",
   "funding_url": "https://github.com/EmileSpecialProducts/SuperWiFiDuck/",
   "builds": [      

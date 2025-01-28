@@ -31,4 +31,9 @@
 #define HOSTNAME "wifiduck"
 #define URL "wifi.duck"
 
-#define NEOPIXEL_NUM 144  // So that you can connect a 1 meter led strip 
+#define NEOPIXEL_NUM 144  // So that you can connect a 1 meter led strip
+
+#define CUSTOM_USB_PRODUCT "SuperWifiDuck"
+#define CUSTOM_USB_PID 0x0002
+#define CUSTOM_USB_VID 0x303a
+#define CUSTOM_USB_MANUFACTURER "Espressif Systems"
