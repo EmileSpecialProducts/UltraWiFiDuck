@@ -8,7 +8,9 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <DNSServer.h>
+#ifdef OTA_UPDATE
 #include <ArduinoOTA.h>
+#endif
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
@@ -40,7 +42,6 @@ namespace webserver
 
     DNSServer dnsServer;
 
-    bool reboot = false;
     IPAddress apIP(192, 168, 4, 1);
 
     void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
@@ -140,7 +141,7 @@ namespace webserver
             }, false); });
 
         WEBSERVER_CALLBACK;
-
+#ifdef OTA_UPDATE
         // Arduino OTA Update
         ArduinoOTA.onStart([]()
                            { events.send("Update Start", "ota"); });
@@ -160,43 +161,10 @@ namespace webserver
             else if (error == OTA_END_ERROR) events.send("End Failed", "ota"); });
         ArduinoOTA.setHostname(HOSTNAME);
         ArduinoOTA.begin();
-
+#endif
         events.onConnect([](AsyncEventSourceClient *client)
                          { client->send("hello!", NULL, esp_timer_get_time(), 1000); });
         server.addHandler(&events);
-
-        // Web OTA
-        server.on("/update", HTTP_POST, [](AsyncWebServerRequest *request)
-                  {
-            reboot = !Update.hasError();
-
-            AsyncWebServerResponse* response;
-            response = request->beginResponse(200, "text/plain", reboot ? "OK" : "FAIL");
-            response->addHeader("Connection", "close");
-
-            request->send(response); }, [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
-                  {
-            if (!index) {
-                debugf("Update Start: %s\n", filename.c_str());
-                //Update.runAsync(true);
-                if (!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000)) {
-                    Update.printError(Serial);
-                }
-            }
-            if (!Update.hasError()) {
-                if (Update.write(data, len) != len) {
-                    Update.printError(Serial);
-                }
-            }
-            if (final) {
-                if (Update.end(true)) {
-                    debugf("Update Success: %uB\n", index+len);
-                } else {
-                    Update.printError(Serial);
-                }
-            } });
-
-
 
         MDNS.addService("http", "tcp", 80);
 
@@ -211,9 +179,9 @@ namespace webserver
 
     void update()
     {
+#ifdef OTA_UPDATE
         ArduinoOTA.handle();
-        if (reboot)
-            ESP.restart();
+#endif        
         dnsServer.processNextRequest();
     }
 
