@@ -10,16 +10,17 @@ ESP32 S2/3 can emulate multiple USB devices at the same time. So I want to add U
 It also can be connected to you Wifi network or generate its own access point.
 
 
-## Install
+## Install / Flash the ESP32-S2/S3
 
-To install the software you will not need to build but can install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html  
+To install the software you will not need to build but can install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html 
+
+No software development IDE needed
 
 You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2.6Mb** for scripts, 
 
-But will recomend a ESP32-S3 that has a USB and COM port for software installation and RGB led.    
+But will recomend a ESP32-S3 that has a USB and COM port for software installation and RGB led and i will add the [Bluetooth connection](https://github.com/EmileSpecialProducts/SuperWiFiDuck/issues/13) in time.    
 
-You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI.
-
+You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI Settings Page.
  
 ---
 
