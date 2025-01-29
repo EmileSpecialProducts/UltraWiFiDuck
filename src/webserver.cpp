@@ -181,8 +181,11 @@ namespace webserver
     {
 #ifdef OTA_UPDATE
         ArduinoOTA.handle();
-#endif        
-        dnsServer.processNextRequest();
+#endif
+        if(WiFi.getMode() & WIFI_MODE_AP)
+        {
+            dnsServer.processNextRequest();
+        }
     }
 
     void send(const char *str)
