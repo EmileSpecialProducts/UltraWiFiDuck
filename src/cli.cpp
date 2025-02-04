@@ -271,7 +271,6 @@ namespace cli {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
 
-            duckscript::stop(arg.getValue());
 
             String response = "> stopped " + arg.getValue();
             print(response);
