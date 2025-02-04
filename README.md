@@ -1,7 +1,7 @@
 # Ultra WiFi Duck
 
 <p align="center">
-<img alt="WiFi Duck Logo" src="img/Under-Construction.png" width="640">
+<img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="640">
 </p>
 
 <p align="center">
