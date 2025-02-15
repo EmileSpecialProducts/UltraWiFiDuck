@@ -1,27 +1,32 @@
-# Super WiFi Duck
+# Ultra WiFi Duck
+
+<p align="center">
+<img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="640">
+</p>
 
 <p align="center">
 <img alt="WiFi Duck Logo" src="img/thumbnail.jpg" width="640">
 </p>
 
-This project upgrades from WiFi Duck and utilizes the native USB function of ESP32 S2/3 chip. As a result, you can run WiFi Duck with a default module below 3$, and no special hardware work is required.
-
-ESP32 S2/3 can emulate multiple USB devices at the same time. So I want to add USB mouse future. But it depends on how much time I have.
-It also can be connected to you Wifi network or generate its own access point.
+This project Ultra WiFi Duck and utilizes the native USB/Bluetooth function of ESP32, ESP S2/S3/C3 chip. 
+ESP32 S2/S3 can emulate USB devices the ESP32, S3/C3 support Bluetooth . 
+It also supports mouse emulation.
+It also can be connected to you Wifi network or generate its own access point or connect to you Wifi.
 
 
 ## Install / Flash the ESP32-S2/S3
 
-To install the software you will not need to build but can install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html 
+You can install the software from your browser you will not need knowledge of the ESP programming environment No software development IDE needed 
+The install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html 
 
-No software development IDE needed
 
 You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2.6Mb** for scripts, 
 
-But will recomend a ESP32-S3 that has a USB and COM port for software installation and RGB led and i will add the [Bluetooth connection](https://github.com/EmileSpecialProducts/SuperWiFiDuck/issues/13) in time.    
+But will recommend a ESP32-S3 that has a USB/Bluetooth and COM port for software installation and RGB led.    
 
 You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI Settings Page.
- 
+  
+
 ---
 
 - [Super WiFi Duck](#super-wifi-duck)
@@ -53,7 +58,7 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
 ## About
 
 
-WiFi Duck: This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and 'BadUSBs'.  
+Ultra WiFi Duck: This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and 'BadUSBs'.  
 
 By emulating a USB keyboard, tools like this can gain full access to any computer with a USB port in a matter of seconds!  
 This is made possible by the fact that keyboards are trusted by computers. You can have full control over a computer with just a keyboard.  
@@ -88,26 +93,20 @@ If you have further questions, check out the [issue section](https://github.com/
 
 ## Flash ESP32 S2/S3
 
-1. Install PlatformIO
-2. modify platformio.ini if needed
-3. `pio run -e esp32-s3-devkitc-1 -t upload` for esp32s3 ; 
-   `pio run -e esp32-s2-kaluga-1 -t upload` for esp32s2
-
-4. see Usage part   
+The install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html 
 
 ## Scripting
 
 ### Basics
 
-Keys are separated by a single space.  
-Everything written in a single line gets pressed and released at the same time.  
-To write text, use the STRING function.  
-It's compatible to Ducky Script, which was developed by the wonderful people at [Hak5](https://www.hak5.org/).  
+Key on one line are pressed and released one by one and an <Enter> at the end of the line
+Commands are at the begin of a line and are in CAPITOL
+To write text, that does not need a enter use the STRING function.
+
 
 | Example | Explanation |
 | ------- | ----------- |
-| WINDOWS <br> r | Type the Windows key and then the r key |
-| WINDOWS r | Press the Windows key and the r key simultaneously |
+| WINDOWS r | Press the Windows key and then press the r key and release it |
 | STRING WINDOWS r | Write WINDOWS r |
 
 ### Functions
@@ -186,6 +185,16 @@ GUI r
 STRING notepad
 ENTER
 STRING Hello World!
+```
+
+```
+REM This will lock a PC and display a full screen lock screen 
+GUI r
+DELAY 1000
+STRING https://emilespecialproducts.github.io/UltraWifiDuck/web/lock.htm
+ENTER
+DELAY 1000
+F11
 ```
 
 ## CLI Commands
