@@ -1,0 +1,12 @@
+DELAY 1000
+GUI x
+DELAY 500
+STRING A
+DELAY 2000
+REM as the next line start with a Startof line Command so no Enter is Added but added by the \ENTER command 
+\SHIFT\t\SHIFT\ENTER
+DELAY 1000
+STRING Write-Host This can be a PowerShell script\ENTER
+DELAY 4000
+REM this will close the PowerShell Window
+\ALT\F4

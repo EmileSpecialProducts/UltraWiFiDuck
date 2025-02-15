@@ -10,6 +10,9 @@ server.on("/error404.html", HTTP_GET, [](AsyncWebServerRequest* request) {\
 server.on("/index.html", HTTP_GET, [](AsyncWebServerRequest* request) {\
 	reply(request, 200, "text/html", index_html, sizeof(index_html)-1);\
 });\
+server.on("/help.html", HTTP_GET, [](AsyncWebServerRequest* request) {\
+	reply(request, 200, "text/html", help_html, sizeof(help_html)-1);\
+});\
 server.on("/index.js", HTTP_GET, [](AsyncWebServerRequest* request) {\
 	reply(request, 200, "application/javascript", index_js, sizeof(index_js)-1);\
 });\
@@ -38,6 +41,7 @@ server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)\
 #include "html_credits_html.h"
 #include "html_error404_html.h"
 #include "html_index_html.h"
+#include "html_help_html.h"
 #include "html_index_js.h"
 #include "html_script_js.h"
 #include "html_settings_html.h"

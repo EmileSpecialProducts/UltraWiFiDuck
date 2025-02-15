@@ -1,0 +1,22 @@
+REM Hello World Example Script
+DEFAULTDELAY 500
+DELAY 2000
+GUI r
+STRING notepad
+\ENTER
+DELAY 1000
+STRING Hello World!
+STRING \ENTER
+STRING Hello
+STRING \SPACEWorld 2
+REM a line that has no Start of line command will give a <Enter> at the end of a line
+
+\SHIFT 
+hello world 1
+REM this \SHIFT will toggel the SHIFT Key state
+\SHIFT 
+hello world !
+DELAY 2000
+REM Now exit Notepad and do not save the text
+\ALT\F4
+\t\ENTER

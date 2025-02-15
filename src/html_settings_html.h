@@ -23,6 +23,7 @@ const uint8_t settings_html[] = R"rawliteral(
                 <li><a href="index.html">WiFi Duck</a></li>
                 <li><a href="settings.html">Settings</a></li>
                 <li><a href="terminal.html">Terminal</a></li>
+				<li><a href="help.html">Help</a></li>
                 <li><a href="credits.html">About</a></li>
             </ul>
         </nav>
@@ -74,7 +75,7 @@ const uint8_t settings_html[] = R"rawliteral(
 			<section>
 				<h1>Update</h1>
 				<p>
-				Go to <a href="https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html">SuperWifiduck</a>
+				Go to <a href="https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html">UltraWifiDuck</a>
 				to upload the Softwate.
 				</p>
 				<p>
@@ -84,7 +85,7 @@ const uint8_t settings_html[] = R"rawliteral(
 			</section>
 			<footer>
 				This Fork 
-				<a href="https://github.com/EmileSpecialProducts/SuperWiFiDuck" target="_blank">Source</a>
+				<a href="https://github.com/EmileSpecialProducts/UltraWiFiDuck" target="_blank">Source</a>
 				you can find.
 				<br>
 				<span id="version"></span><br>

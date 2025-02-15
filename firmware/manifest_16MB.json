@@ -1,9 +1,18 @@
 {
-  "name": "SuperWiFiDuck_16MB",
-  "version": "2025.01.23",
-  "home_assistant_domain": "SuperWiFiDuck",
-  "funding_url": "https://github.com/EmileSpecialProducts/SuperWiFiDuck/",
-  "builds": [      
+  "name": "UltraWifiDuck_16MB",
+  "version": "2025.02.15",
+  "home_assistant_domain": "UltraWifiDuck",
+  "funding_url": "https://github.com/EmileSpecialProducts/UltraWifiDuck/",
+  "builds": [   
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        { "path": "./esp32c3_16MB_qio/bootloader.bin", "offset": 0 },
+        { "path": "./esp32c3_16MB_qio/partitions.bin", "offset": 32768 },
+        { "path": "./esp32c3_16MB_qio/boot_app0.bin", "offset": 57344 },
+        { "path": "./esp32c3_16MB_qio/firmware.bin", "offset": 65536 }
+      ]
+    },   
     {
       "chipFamily": "ESP32-S2",
       "parts": [

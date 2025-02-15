@@ -92,10 +92,10 @@ namespace cli {
          *
          * Prints the current version number
          */
-        cli.addCommand("version", [](cmd* c) {
-            String res = "Version " + String(VERSION);
-            print(res);
-        });
+        cli.addCommand("version", [](cmd *c)
+                       {
+            String res = "Version " + String(VERSION) +" "+  String(__DATE__ " " __TIME__ ) ;
+            print(res); });
 
         /**
          * \brief Create settings command
@@ -168,9 +168,10 @@ namespace cli {
             if (true) {
                 if (duckscript::isRunning()) {
                     String s = "running " + duckscript::currentScript();
+                    
                     print(s);
                 } else {
-                    print("Super WiFiDuck -- Ready");
+                    print("Ultra WifiDuck -- Ready");
                 }
             } else {
                 print("Internal connection problem");
@@ -271,6 +272,7 @@ namespace cli {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
 
+            duckscript::stop();
 
             String response = "> stopped " + arg.getValue();
             print(response);
@@ -475,7 +477,6 @@ namespace cli {
         fixPath(dirName);
 
         File root = LittleFS.open(dirName);
-
         File file = root.openNextFile();
 
         while (file)

@@ -17,7 +17,7 @@
 #define SERIAL_PORT Serial
 #define SERIAL_BAUD 115200
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 #define PACKET_SIZE 32
 
 /*! ===== WiFi Settings ===== */
@@ -31,7 +31,7 @@
 #define HOSTNAME "wifiduck"
 #define URL "wifi.duck"
 
-#define CUSTOM_USB_PRODUCT "SuperWifiDuck"
+#define CUSTOM_USB_PRODUCT "UltraWiFiDuck"
 #define CUSTOM_USB_PID 0x0002
 #define CUSTOM_USB_VID 0x303a
 #define CUSTOM_USB_MANUFACTURER "Espressif Systems"

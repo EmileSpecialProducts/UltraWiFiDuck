@@ -1,7 +1,0 @@
-REM Hello World Example Script
-DEFAULTDELAY 200
-DELAY 2000
-GUI R
-STRING notepad
-ENTER
-STRING Hello World!

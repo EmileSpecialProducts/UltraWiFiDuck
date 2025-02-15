@@ -149,8 +149,8 @@ function run(fileName) {
 }
 
 // ! Stop running specific script
-function stop(fileName) {
-  ws_send("stop \"" + fixFileName(fileName) + "\"", log_ws, true);
+function stop() {
+  ws_send("stop", log_ws, true);
 }
 
 // ! Stop running all scripts
@@ -174,7 +174,7 @@ function read_stream() {
 
 // ! Open stream to a file
 function read(fileName) {
-  stop(fileName);
+  stop();
 
   fileName = fixFileName(fileName);
 
@@ -190,7 +190,7 @@ function read(fileName) {
 
 // ! Create a new file
 function create(fileName) {
-  stop(fileName);
+  stop();
 
   fileName = fixFileName(fileName);
 
@@ -207,7 +207,7 @@ function create(fileName) {
 
 // ! Delete a file
 function remove(fileName) {
-  stop(fileName);
+  stop();
   ws_send("remove \"" + fixFileName(fileName) + "\"", log_ws);
   update_file_list();
   unsaved_changed = true;
@@ -219,7 +219,7 @@ function autorun(fileName) {
 
 // ! Write content to file
 function write(fileName, content) {
-  stop(fileName);
+  stop();
 
   fileName = fixFileName(fileName);
 
@@ -288,7 +288,8 @@ window.addEventListener("load", function() {
   };
 
   E("editorStop").onclick = function() {
-    stop(get_editor_filename());
+    //stop(get_editor_filename());
+    stop();
   }
 
   E("editorRun").onclick = function() {

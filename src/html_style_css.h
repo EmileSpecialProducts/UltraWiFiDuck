@@ -98,7 +98,7 @@ nav a {
 	display: inline-block;
 }
 
-.menu li:last-child {
+.menu li:nth-last-child(-n+2) {
 	float: right;
 }
 

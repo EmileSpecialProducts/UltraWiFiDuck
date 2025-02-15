@@ -75,7 +75,7 @@ namespace webserver
                 char *msg = (char *)data;
                 msg[len] = 0;
 
-                debugf("Message from %u [%llu byte]=%s", client->id(), info->len, msg);
+                //debugf("Message from %u [%llu byte]=%s\n", client->id(), info->len, msg);
 
                 currentClient = client;
                 cli::parse(msg, [](const char *str)
@@ -165,8 +165,12 @@ namespace webserver
         events.onConnect([](AsyncEventSourceClient *client)
                          { client->send("hello!", NULL, esp_timer_get_time(), 1000); });
         server.addHandler(&events);
-
-        MDNS.addService("http", "tcp", 80);
+        char host[] = "UltraWifiDuck";
+        
+        if (MDNS.begin(host))
+        {
+            MDNS.addService("http", "tcp", 80);
+        }
 
         // Websocket
         ws.onEvent(wsEvent);
@@ -174,8 +178,11 @@ namespace webserver
 
         // Start Server
         server.begin();
-        debugln("Started Webserver");
-    }
+        debug("You can now connect to http://");
+        debug(host);
+        debug(".local or http://");
+        debugln(WiFi.localIP());
+        }
 
     void update()
     {

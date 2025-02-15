@@ -1,0 +1,17 @@
+DELAY 1000
+GUI r
+DELAY 500
+REM The next line will start PowerShell as Administrator
+PowerShell\SHIFT\CONTROL\ENTER
+DELAY 2000
+REM as the next line start with a Command no Enter is Added but added 
+\SHIFT\t\SHIFT\ENTER
+DELAY 500
+Get-ExecutionPolicy -List
+DELAY 500
+Set-ExecutionPolicy Bypass
+DELAY 500
+Get-ExecutionPolicy -List
+DELAY 4000
+REM this will close the PowerShell Window
+exit
