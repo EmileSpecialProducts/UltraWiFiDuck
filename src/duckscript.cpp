@@ -21,8 +21,6 @@ USBHID hid;
 #endif
 
 #if defined(CONFIG_BT_BLE_ENABLED)
-#include "BleComboKeyboard.h"
-#include "BleComboMouse.h"
 BleComboKeyboard BleKeyboard;
 BleComboMouse BleMouse(&BleKeyboard);
 #endif

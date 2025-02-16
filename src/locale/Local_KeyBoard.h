@@ -1,9 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include "USBHID.h"
-
-#include <class/hid/hid.h>
-#include <class/hid/hid_device.h>
+#include "duckscript.h"
 
 typedef struct UnicodeToKeyCode_t
 {

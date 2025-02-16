@@ -31,19 +31,27 @@
         <table>
             <tr>
                 <th>Device</th>
-                <th>Supported</th>
+                <th>USB Keyboard/mouse</th>
+                <th>Bluetooth Keyboard/mouse</th>
             </tr>
             <tr>
                 <td>ESP32-S2</td>
-                <td>Yes#</td>
+                <td>Yes</td>
+                <td>No</td>
             </tr>
             <tr>
                 <td>ESP32-S3</td>
                 <td>Yes</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>ESP32-C3</td>
+                <td>No</td>
+                <td>Yes</td>
             </tr>
         </table>
-       
     </div>
+    <br>
     <dif>
     <esp-web-install-button manifest="./manifest_4MB.json">    
         <button slot="activate">Install on 4MB Device </button>

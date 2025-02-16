@@ -1,6 +1,6 @@
 {
   "name": "UltraWifiDuck_16MB",
-  "version": "2025.02.15",
+  "version": "2025.02.16",
   "home_assistant_domain": "UltraWifiDuck",
   "funding_url": "https://github.com/EmileSpecialProducts/UltraWifiDuck/",
   "builds": [   
