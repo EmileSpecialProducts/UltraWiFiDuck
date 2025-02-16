@@ -17,10 +17,10 @@ It also can be connected to you Wifi network or generate its own access point or
 ## Install / Flash the ESP32-S2/S3
 
 You can install the software from your browser you will not need knowledge of the ESP programming environment No software development IDE needed 
-The install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html 
+The install from the [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html 
 
 
-You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2.6Mb** for scripts, 
+You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2Mb** for scripts, 
 
 But will recommend a ESP32-S3 that has a USB/Bluetooth and COM port for software installation and RGB led.    
 
@@ -29,7 +29,7 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
 
 ---
 
-- [Super WiFi Duck](#super-wifi-duck)
+- [Ultra WiFi Duck](#Ultra-wifi-duck)
   - [About](#about)
   - [Install](#Install)
   - [Usage](#usage)
@@ -60,13 +60,13 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
 
 Ultra WiFi Duck: This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and 'BadUSBs'.  
 
-By emulating a USB keyboard, tools like this can gain full access to any computer with a USB port in a matter of seconds!  
+By emulating a USB/Bluetooth keyboard and mouse, tools like this can gain full access to any computer with a USB/Bluetooth port in a matter of seconds!  
 This is made possible by the fact that keyboards are trusted by computers. You can have full control over a computer with just a keyboard.  
 A BadUSB pretends to be a keyboard to the computer to send keystrokes. 
 But unlike a human, it can type hundreds of characters per second. 
 By using a simple scripting language, it's easy to make BadUSBs type whatever you want. 
 
-With the WiFi Duck, you can simply connect via WiFi to manage all scripts
+With the Ultra WiFi Duck, you can simply connect via WiFi to manage all scripts, or connect to your WiFi network
 from within a web interface. This means that, unlike other BadUSBs, you don't need to install an app, log in, compile or copy scripts to an SD card.  
 
 ## Usage
@@ -86,14 +86,14 @@ from within a web interface. This means that, unlike other BadUSBs, you don't ne
 5. [Recommended] Open `Settings` (top right corner) and update SSID and password
 
 **Help I forgot the password:**
-[Flash the ESP32](#flash-esp32), but make sure that you select `Erase Flash: Sketch + WiFi Settings`
-under Tools in the Arduino IDE.  
 
-If you have further questions, check out the [issue section](https://github.com/spacehuhn/WiFiDuck/issues).  
+Just flach the ESP from th  [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html).  
 
-## Flash ESP32 S2/S3
+If you have further questions, check out the [issue section](https://github.com/EmileSpecialProducts/UltraWiFiDuck/issues).   
 
-The install from the [Web Page](https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html) https://emilespecialproducts.github.io/SuperWiFiDuck/upload.html 
+## Flash ESP32 S2/S3/C3
+
+The install from the [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html 
 
 ## Scripting
 
@@ -117,11 +117,11 @@ To write text, that does not need a enter use the STRING function.
 | `DEFAULTDELAY` or `DEFAULT_DELAY` | `DEFAULTDELAY 200` | Time in ms between every command |
 | `DELAY` | `DELAY 1000` | Delay in ms |
 | `STRING` | `STRING Hello World!` | Types the following string |
-| `REPEAT` or `REPLAY` | `REPEAT 3` | Repeats the last command n times |
 | `LOCALE` | `LOCALE DE` | Sets the keyboard layout. [List](#translate-keyboard-layout) |
 | `KEYCODE` | `KEYCODE 0x02 0x04` | Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal |
-| `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) |
-
+| `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) up to 144 Leds |
+| `MOUSE CLICK`| This is give a mouse click|
+| `MOUSE 10 10 `| This is move the mouse x y weel pan |
 ### Standard Keys
 
 | Key |
@@ -129,32 +129,32 @@ To write text, that does not need a enter use the STRING function.
 | `a` - `z` |
 | `A` - `Z` |
 | `0` - `9` |
-| `F1` - `F12` |
+| `\F1` - `\F12` |
 
 ### Modifier Keys
 
 | Key |
 | --- |
-| `CTRL` or `CONTROL` |
-| `SHIFT` |
-| `ALT` |
-| `WINDOWS` or `GUI` |
+| `\CTRL` or `\CONTROL` |
+| `\SHIFT` |
+| `\ALT` |
+| `\WINDOWS` or `\GUI` |
 
 ### Other Keys
 
 | Key |
 | --- |
-| `ENTER` |
-| `MENU` or `APP`|
-| `DELETE` |
-| `HOME` |
-| `INSERT` |
-| `PAGEUP` |
-| `PAGEDOWN` |
-| `UP` or `UPARROW` |
-| `DOWN` or `DOWNARROW` |
-| `LEFT` or `LEFTARROW` |
-| `RIGHT` or `RIGHTARROW` |
+| `\ENTER` |
+| `\MENU` or `\APP`|
+| `\DELETE` |
+| `\HOME` |
+| `\INSERT` |
+| `\PAGEUP` |
+| `\PAGEDOWN` |
+| `ARROWUP` |
+| `ARROWDOWN` |
+| `ARROWLEFT` |
+| `ARROWRIGHT` |
 | `TAB` |
 | `END` |
 | `ESC` or `ESCAPE` |
@@ -183,7 +183,7 @@ REM Hello World for Windows PCs
 DEFAULTDELAY 200
 GUI r
 STRING notepad
-ENTER
+\ENTER
 STRING Hello World!
 ```
 
@@ -192,14 +192,14 @@ REM This will lock a PC and display a full screen lock screen
 GUI r
 DELAY 1000
 STRING https://emilespecialproducts.github.io/UltraWifiDuck/web/lock.htm
-ENTER
+\ENTER
 DELAY 1000
-F11
+\F11
 ```
 
 ## CLI Commands
 
-The command line interface or CLI is accessible using a serial connection to the ESP8266 (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
+The command line interface or CLI is accessible using a serial connection to the ESP (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
 
 ### General
 
@@ -234,6 +234,7 @@ The command line interface or CLI is accessible using a serial connection to the
 If a stream is open, everything you type (except messages containing exactly `close` or `read`) will be written to the file until you type `close`!  
 
 ## How to Debug
+
 The original debug module doesn't work right now.
 To debug, please use `ESP_LOGE` to display information via the COM port
 
@@ -246,123 +247,13 @@ The `web/` folder contains all `.html`, `.css`, `.js` files.
 You can edit and test them locally as long as you're connected to the WiFi Duck
 network thanks to the websocket connection handled by JavaScript in the background.  
 
-To get the new files onto the ESP8266, run `python3 webconverter.py` in the
-repository folder.  
-It gzips all files inside `web/`, converts them into a hex array
-and saves it in `esp_duck/webfiles.h`.  
-Now you just need to [flash](#flash-software) the ESP8266 again.  
-
-
-### Change Keyboard Identifier
-
-The default VendorID/ProductID is Expressif Systems. 
-To emulate a different brand of keyboard, modify the build parameters in `platform.ini`
-
-For example:  
-
-To emulate an Apple Keyboard
-
-```bash
-    -D USB_VID=0x05ac
-    -D USB_PID=0x0267
-    -D USB_MANUFACTURER='"Apple Inc."'
-    -D USB_PRODUCT='"Apple Magic Keyboard"'
-```
-To emulate an IBM Keyboard
-```bash
-    -D USB_VID=0x04b3
-    -D USB_PID=0x4604
-    -D USB_MANUFACTURER='"IBM Corp."'
-    -D USB_PRODUCT='"IBM Keyboard"'
-```
-
-Additional VendorID/ProductIDs available on [devicehunt.com](https://devicehunt.com/view/type/usb/vendor/046D)
-
 ### Translate Keyboard Layout
 
-Currently supported keyboard layouts:  
-- [:de: DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h)
-- [:gb: GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
-- [:us: US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
-- [:es: ES](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_es.h)
-- [:denmark: DK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_dk.h)
-- [:ru: RU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_ru.h)
-- [:fr: FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
-- [:belgium: BE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_be.h)
-- [:portugal: PT](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_pt.h)
-- [:it: IT](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_it.h)
-- [:slovakia: SK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_sk.h)
-- [:czech_republic: CZ](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_cz.h)
-- [:slovenia: SI](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_si.h)
-- [:bulgaria: BG](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_bg.h)
-- [:canada: CA-FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_cafr.h)
-- [:switzerland: CH-DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_chde.h)
-- [:switzerland: CH-FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_chfr.h)
-- [:hungary: HU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_hu.h)
+Currently supported keyboard layouts:
+NONE, US , US-INT, BG  
 
-All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
-To translate a keyboard layout, you have to match each character on
-your keyboard to the one(s) of a US keyboard.  
-This stuff is hard to explain in writing and requires a lot of manual work and testing.  
+But you can enter the UFT8 characters and they will be typed using the <Alt> and Unicode on the numberpad
 
-1. Copy one of the existing layouts files, like [locale_us.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h).  
-Preferably one that is close to your keyboard layout, it will save you time!  
-2. Add `#include "locale_xx.h"` to the end of the locales.h file.
-3. Rename the file and its variables to your language code.
-For example:  
-`locale_xx.h` -> `locale_de.h`,  
-`ascii_xx` -> `ascii_de`,  
-`locale_xx` -> `locale_de`,  
-`utf8_xx` -> `utf8_de`.  
-`combinations_xx` -> `combinations_de`,  
-4. Modify the ASCII array.  
-The ASCII array has a fixed size. Each row describes a key.
-First a modifier key like `KEY_MOD_LSHIFT`, then a character key.
-Some ASCII characters can't be typed or don't require a modifier,
-that's where you must place `KEY_NONE`.
-Check [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h) for the available keys.  
-If multiple modifiers are required, you must use a bitwise OR to connect them: `KEY_MOD_RALT | KEY_MOD_LSHIFT`.  
-For example, in [locale_de.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h#L136) `Z` is saved as `KEY_MOD_LSHIFT, KEY_Y`.  
-This is because German keyboards use QWERTZ instead of the QWERTY layout
-and since the letter is uppercase, shift must be pressed as well.   
-Thankfully you don't have to trial and error everything, the Hak5 Community
-translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example, `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.  
-5. [deprecated] ~~Modify or create the extended ASCII array.  
-The extended ASCII array doesn't have a fixed size and is only as long as you make it.
-First the character code. For example, [ä](https://theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html) has the index 132, or 84 in hex.
-It doesn't use a modifier and sits where the apostrophe key is on a US keyboard:
-`0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.~~  
-6. Modify or create the UTF-8 array.  
-The UTF-8 array is variable in length, too.  
-The first 4 bytes are the character code.  
-For example, [Ä](https://www.fileformat.info/info/unicode/char/00c4/index.htm) has the hex code c384 or 0xc3 0x84. The other 2 bytes are not used so we set them to 0.
-Because the letter is uppercase, we need to press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.  
-7. Edit the hid_locale_t structure.  
-If you renamed all variables accordingly, there's nothing left to do.  
-8. Go to [duckparser.cpp](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/duckparser.cpp#L163) at `// LOCALE (-> change keyboard layout)` you can see a bunch of else if statements.
-You need to copy one for your layout.  
-
-Before adding GB layout:  
-```c
-if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
-    keyboard::setLocale(&locale_us);
-} else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
-    keyboard::setLocale(&locale_de);
-}
-```
-
-After adding GB layout:
-```c
-if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
-    keyboard::setLocale(&locale_us);
-} else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
-    keyboard::setLocale(&locale_de);
-} else if (compare(w->str, w->len, "GB", CASE_SENSETIVE)) {
-   keyboard::setLocale(&locale_gb);
-}
-```
-9. Test your layout with a Ducky Script that contains all characters of your keyboard. For example:  
-```
 LOCALE DE
 STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
 ENTER
