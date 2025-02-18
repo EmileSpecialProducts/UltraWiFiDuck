@@ -25,7 +25,15 @@ You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But y
 But will recommend a ESP32-S3 that has a USB/Bluetooth and COM port for software installation and RGB led.    
 
 You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI Settings Page.
-  
+## Supported devices 
+| Device | USB| Bluetooth | Description |
+| ------- | -------| ------- | ----------- |
+| `ESP32-S3` | `Yes`| `Yes` | Best device for the job |
+| `ESP32-S2` | `Yes`| `No` |  |
+| `ESP32-C3` | `No` | `Yes`| Not yet fully supported still some bugs |
+| `ESP32` | `No` | `Yes`| Not working yet but compiles  |
+| `ESP32-C6` | `No` | `Yes`| Not yet supported as platformIO does not support the device |
+
 
 ---
 
@@ -33,7 +41,6 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
   - [About](#about)
   - [Install](#Install)
   - [Usage](#usage)
-  - [Flash ESP32 S2/S3](#flash-esp32-s2s3)
   - [Scripting](#scripting)
     - [Basics](#basics)
     - [Functions](#functions)
@@ -91,9 +98,6 @@ Just flach the ESP from th  [Web Page](https://emilespecialproducts.github.io/Ul
 
 If you have further questions, check out the [issue section](https://github.com/EmileSpecialProducts/UltraWiFiDuck/issues).   
 
-## Flash ESP32 S2/S3/C3
-
-The install from the [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html 
 
 ## Scripting
 
