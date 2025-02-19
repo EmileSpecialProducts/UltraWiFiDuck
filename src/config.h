@@ -21,15 +21,15 @@
 #define PACKET_SIZE 32
 
 /*! ===== WiFi Settings ===== */
-#define WIFI_APSSID "wifiduck"
-#define WIFI_APPASSWORD "wifiduck"
+#define WIFI_APSSID "UltraWiFiDuck"
+#define WIFI_APPASSWORD ""
 #define WIFI_CHANNEL "1"
 #define WIFI_SSID ""
 #define WIFI_PASSWORD ""
 #define RGBLEDPIN ""
 
-#define HOSTNAME "wifiduck"
-#define URL "wifi.duck"
+#define HOSTNAME "UltraWiFiDuck"
+#define URL "UltraWiFiDuck.duck"
 
 #define CUSTOM_USB_PRODUCT "UltraWiFiDuck"
 #define CUSTOM_USB_PID 0x0002

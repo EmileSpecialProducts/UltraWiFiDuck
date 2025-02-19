@@ -27,7 +27,7 @@ void reply(AsyncWebServerRequest *request, int code, const char *type, const uin
         request->beginResponse(code, type, data, len);
 
     // response->addHeader("Content-Encoding", "gzip");
-    response->addHeader("Content-Encoding", "7zip");
+    // response->addHeader("Content-Encoding", "7zip");
     request->send(response);
 }
 
@@ -116,16 +116,37 @@ namespace webserver
 
             dnsServer.setTTL(300);
             dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
-            dnsServer.start(53, URL, apIP);
+            // dnsServer.start(53, URL, apIP);
 
+            /* Setup the DNS server redirecting all the domains to the apIP */
+            //dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+            //dnsServer->start(DNS_PORT, F("*"), WiFi.softAPIP());
+
+            // This will connect to the UltraWiFiDuck 
+            dnsServer.start(53, F("*"), apIP);
+            server.onNotFound([](AsyncWebServerRequest *request)
+                              { 
+                                debugln("url NotFound "+request->url());
+                                if (strlen(settings::getAPPassword())>0 )
+                                    request->redirect("/index.html");
+                                else
+                                    request->redirect("/settings.html");
+                                     
+                                });
+        }
+        else
+        {
+
+            server.onNotFound([](AsyncWebServerRequest *request)
+                              { debugln("url NotFound "+request->url());
+                            request->redirect("/error404.html"); });
+            
         }
         // Webserver
         server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
                   { request->redirect("/index.html"); });
 
-        server.onNotFound([](AsyncWebServerRequest *request)
-                          { request->redirect("/error404.html"); });
-
+        
         server.on("/run", [](AsyncWebServerRequest *request)
                   {
             String message;
