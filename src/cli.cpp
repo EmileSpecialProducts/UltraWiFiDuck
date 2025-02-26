@@ -203,11 +203,15 @@ namespace cli {
             s.reserve(64);
 
             s += String(LittleFS.totalBytes());
-            s += " byte\n";
+            s += " byte LittleFS\n";
             s += String(LittleFS.usedBytes() );
-            s += " byte used\n";
+            s += " byte used LittleFS\n";
             s += String(LittleFS.totalBytes() - LittleFS.usedBytes() );
-            s += " byte free";
+            s += " byte free LittleFS\n";
+            s += String(esp_get_free_heap_size());
+            s += " byte free heap_size\n";
+            s += String(esp_get_free_internal_heap_size());
+            s += " byte free internal_heap_size";
 
             print(s);
         });
