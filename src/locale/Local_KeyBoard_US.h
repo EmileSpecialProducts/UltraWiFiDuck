@@ -1,5 +1,5 @@
 #pragma once
-#include "locale\Local_KeyBoard.h"
+#include "Local_KeyBoard.h"
 // https://learn.microsoft.com/en-us/globalization/windows-keyboard-layouts
 // https://kbdlayout.info/
 UnicodeToKeyCode_t Keyboard_US[] =

@@ -3,8 +3,7 @@
 // https://kbdlayout.info/
 // https://learn.microsoft.com/en-us/globalization/keyboards/kbdbgph1
 // Bulgarian (Phonetic Traditional) Keyboard 
-#include "USBHID.h"
-#include "locale\Local_KeyBoard.h"
+#include "Local_KeyBoard.h"
 
 UnicodeToKeyCode_t Keyboard_BG[] =
     {

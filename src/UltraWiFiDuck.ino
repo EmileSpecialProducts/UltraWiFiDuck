@@ -12,9 +12,11 @@
 #include "led.h"
 
 void setup() {
-    debug_init();
-
-    debug("Initializing LittleFS...");
+    debug_init();                                         
+    debugln( " esp_idf_version: " + String(ESP_IDF_VERSION_MAJOR) + "." + String(ESP_IDF_VERSION_MINOR) + "." + String(ESP_IDF_VERSION_PATCH));
+    debugln( " arduino_version: " + String(ESP_ARDUINO_VERSION_MAJOR) + "." + String(ESP_ARDUINO_VERSION_MINOR) + "." + String(ESP_ARDUINO_VERSION_PATCH));
+    debugln( " Build Date: " + String(__DATE__ " " __TIME__));
+    debugln("Initializing LittleFS...");
     LittleFS.begin(true);
     settings::begin();
     led::begin();
@@ -24,6 +26,7 @@ void setup() {
     cli::begin();
     webserver::begin();
     duckscript::run(settings::getAutorun());
+    debugln("End of Setup");
 }
 
 void loop() {

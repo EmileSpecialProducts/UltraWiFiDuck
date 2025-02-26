@@ -1,7 +1,7 @@
 #pragma once
 // https://learn.microsoft.com/en-us/globalization/windows-keyboard-layouts
 // https://kbdlayout.info/
-#include "locale\Local_KeyBoard.h"
+#include "Local_KeyBoard.h"
 
 UnicodeToKeyCode_t Keyboard_US_INT[] =
     {
