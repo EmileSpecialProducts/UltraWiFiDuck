@@ -26,12 +26,12 @@ BleComboMouse BleMouse(&BleKeyboard);
 #endif
 
 #include "led.h"
-#include "locale\Local_KeyBoard.h"
+#include "Local_KeyBoard.h"
     namespace duckscript {
 
     File file;
-    bool running { false };
-    u32_t running_line = 0;             // This will indicat the current line number of the running script
+    bool running = false ;
+    uint32_t running_line = 0; // This will indicat the current line number of the running script
     char Line_Buffer[BUFFER_SIZE + 1];
     char *Line_BufferPtr; // This is the pointer to the current location in the Line_Buffer
     unsigned int defaultDelay=0;
