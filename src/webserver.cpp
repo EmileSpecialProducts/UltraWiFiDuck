@@ -6,6 +6,7 @@
 #include "webserver.h"
 
 #include <WiFi.h>
+#include <esp_wifi.h>
 #include <ESPmDNS.h>
 #include <DNSServer.h>
 #ifdef OTA_UPDATE
@@ -23,14 +24,17 @@
 
 void reply(AsyncWebServerRequest *request, int code, const char *type, const uint8_t *data, size_t len)
 {
-    AsyncWebServerResponse *response =
-        request->beginResponse(code, type, data, len);
+    debugf("reply Len = %d code = %d Type= %s\n ", len, code, type);
+        request->send(code, type, data, len);
+        /*
+        AsyncWebServerResponse *response =
+            request->beginResponse(code, type, data, len);
 
-    // response->addHeader("Content-Encoding", "gzip");
-    // response->addHeader("Content-Encoding", "7zip");
-    request->send(response);
+        // response->addHeader("Content-Encoding", "gzip");
+        // response->addHeader("Content-Encoding", "7zip");
+        request->send(response);
+        */
 }
-
 namespace webserver
 {
     // ===== PRIVATE ===== //
@@ -39,10 +43,8 @@ namespace webserver
     AsyncEventSource events("/events");
 
     AsyncWebSocketClient *currentClient{nullptr};
-
     DNSServer dnsServer;
-
-    IPAddress apIP(192, 168, 4, 1);
+    uint32_t WaitTime=0;
 
     void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
     {
@@ -81,7 +83,7 @@ namespace webserver
                 cli::parse(msg, [](const char *str)
                            {
                     webserver::send(str);
-                    debugf("%s\n", str); }, false);
+                    debugf("send(%s)\n", str); }, false);
                 currentClient = nullptr;
             }
         }
@@ -106,10 +108,12 @@ namespace webserver
             }
             if (!Conected)
                 debugf("Connecting to  \"%s\":\"%s\" Failed\n", settings::getSSID(), settings::getPassword());
+
         }
         if (!Conected)
         {
             // WiFi.mode(WIFI_AP_STA);
+            IPAddress apIP(192, 168, 4, 1);
             WiFi.softAP(settings::getAPSSID(), settings::getAPPassword(), settings::getAPChannelNum());
             WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
             debugf("Started Access Point \"%s\":\"%s\"\n", settings::getAPSSID(), settings::getAPPassword());
@@ -158,7 +162,7 @@ namespace webserver
             request->send(200, "text/plain", "Run: " + message);
 
             cli::parse(message.c_str(), [](const char* str) {
-                debugf("%s\n", str);
+                debugf("RUN:%s\n", str);
             }, false); });
 
         WEBSERVER_CALLBACK;
@@ -186,9 +190,8 @@ namespace webserver
         events.onConnect([](AsyncEventSourceClient *client)
                          { client->send("hello!", NULL, esp_timer_get_time(), 1000); });
         server.addHandler(&events);
-        char host[] = "UltraWifiDuck";
-        
-        if (MDNS.begin(host))
+
+        if (MDNS.begin(HOSTNAME))
         {
             MDNS.addService("http", "tcp", 80);
         }
@@ -200,13 +203,19 @@ namespace webserver
         // Start Server
         server.begin();
         debug("You can now connect to http://");
-        debug(host);
+        debug(HOSTNAME);
         debug(".local or http://");
         debugln(WiFi.localIP());
+        WaitTime = millis();
         }
 
     void update()
     {
+        if (millis() > (WaitTime + (10 * 1000)) )
+        {
+            WaitTime = millis();
+            debugf("esp_get_free_heap_size = %d , esp_get_free_internal_heap_size = %d \n", esp_get_free_heap_size(), esp_get_free_internal_heap_size());
+        }
 #ifdef OTA_UPDATE
         ArduinoOTA.handle();
 #endif
@@ -214,6 +223,7 @@ namespace webserver
         {
             dnsServer.processNextRequest();
         }
+        ws.cleanupClients();
     }
 
     void send(const char *str)
@@ -221,4 +231,5 @@ namespace webserver
         if (currentClient)
             currentClient->text(str);
     }
+
 }
