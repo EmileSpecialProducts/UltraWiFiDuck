@@ -14,6 +14,8 @@
 #endif
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <FS.h> // File
+#include <LittleFS.h>
 
 #include "config.h"
 #include "debug.h"
@@ -21,6 +23,7 @@
 #include "settings.h"
 
 #include "webfiles.h"
+bool WiFiConected = false;
 
 void reply(AsyncWebServerRequest *request, int code, const char *type, const uint8_t *data, size_t len)
 {
@@ -92,25 +95,24 @@ namespace webserver
     // ===== PUBLIC ===== //
     void begin()
     {
-        bool Conected = false;
         // Access Point
         WiFi.hostname(HOSTNAME);
         if (strlen(settings::getSSID()) > 0 && ( strlen(settings::getPassword()) >= 8 || strlen(settings::getPassword()) == 0))
         {
             debugf("Connecting to  \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
             WiFi.begin(settings::getSSID(), settings::getPassword());
-            for (uint8_t i = 0; i < 20 && !Conected; i++)
+            for (uint8_t i = 0; i < 20 && !WiFiConected; i++)
             { // wait 10 seconds
                 if (WiFi.status() != WL_CONNECTED)
                     delay(500);
                 else
-                    Conected = true;
+                    WiFiConected = true;
             }
-            if (!Conected)
+            if (!WiFiConected)
                 debugf("Connecting to  \"%s\":\"%s\" Failed\n", settings::getSSID(), settings::getPassword());
 
         }
-        if (!Conected)
+        if (!WiFiConected)
         {
             // WiFi.mode(WIFI_AP_STA);
             IPAddress apIP(192, 168, 4, 1);
@@ -125,47 +127,72 @@ namespace webserver
             /* Setup the DNS server redirecting all the domains to the apIP */
             //dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
             //dnsServer->start(DNS_PORT, F("*"), WiFi.softAPIP());
-
             // This will connect to the UltraWiFiDuck 
             dnsServer.start(53, F("*"), apIP);
-            server.onNotFound([](AsyncWebServerRequest *request)
-                              { 
-                                debugln("url NotFound "+request->url());
-                                if (strlen(settings::getAPPassword())>0 )
-                                    request->redirect("/index.html");
-                                else
-                                    request->redirect("/settings.html");
-                                     
-                                });
         }
-        else
-        {
 
-            server.onNotFound([](AsyncWebServerRequest *request)
-                              { debugln("url NotFound "+request->url());
-                            request->redirect("/error404.html"); });
-            
-        }
+        server.onNotFound([](AsyncWebServerRequest *request)
+                { 
+                    debugf("url NotFound %s , Method =%s\n", request->url().c_str(), request->methodToString());
+                    if (LittleFS.exists( request->url()) )
+                    {
+                        request->send(LittleFS, request->url(), String(), false);
+                    }
+                    else
+                    {
+                        if(request->url() == "/favicon.ico" )
+                                reply(request, 200, "image/x-icon", favicon_ico, sizeof(favicon_ico));
+                        else if (request->url() == "/credits.html")
+                                reply(request, 200, "text/html", credits_html, sizeof(credits_html) - 1);
+                        else if (request->url() == "/error404.html")
+                                reply(request, 404, "text/html", error404_html, sizeof(error404_html) - 1);
+                        else if (request->url() == "/index.html")
+                                reply(request, 200, "text/html", index_html, sizeof(index_html) - 1);
+                        else if (request->url() == "/help.html")
+                                reply(request, 200, "text/html", help_html, sizeof(help_html)-1);
+                        else if (request->url() == "/index.js")
+                                reply(request, 200, "application/javascript", index_js, sizeof(index_js)-1);
+                        else if (request->url() == "/script.js")
+                                reply(request, 200, "application/javascript", script_js, sizeof(script_js) - 1);
+                        else if (request->url() == "/settings.html")
+                                reply(request, 200, "text/html", settings_html, sizeof(settings_html)-1);
+                        else if (request->url() == "/settings.js")
+                                reply(request, 200, "application/javascript", settings_js, sizeof(settings_js)-1);
+                        else if (request->url() == "/style.css")
+                                reply(request, 200, "text/css", style_css, sizeof(style_css)-1);
+                        else if (request->url() == "/terminal.html")
+                                reply(request, 200, "text/html", terminal_html, sizeof(terminal_html)-1);
+                        else if (request->url() == "/terminal.js")
+                                reply(request, 200, "application/javascript", terminal_js, sizeof(terminal_js) - 1);
+                        else 
+                        {
+                            if (WiFiConected)
+                            {
+                                request->redirect("/error404.html");
+                            } else
+                            {
+                                request->redirect("/index.html");
+                            }                            
+                        }
+                    } 
+                });   
         // Webserver
         server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
                   { request->redirect("/index.html"); });
 
-        
         server.on("/run", [](AsyncWebServerRequest *request)
-                  {
-            String message;
+                    {
+                        String message="";
+                        if (request->hasParam("cmd")) {
+                            message = request->getParam("cmd")->value();
+                        }
+                        request->send(200, "text/plain", "Run: " + message);
+                        cli::parse(message.c_str(), [](const char* str) {
+                            debugf("RUN:%s\n", str);
+                        }, false); 
+                    }
+                  );
 
-            if (request->hasParam("cmd")) {
-                message = request->getParam("cmd")->value();
-            }
-
-            request->send(200, "text/plain", "Run: " + message);
-
-            cli::parse(message.c_str(), [](const char* str) {
-                debugf("RUN:%s\n", str);
-            }, false); });
-
-        WEBSERVER_CALLBACK;
 #ifdef OTA_UPDATE
         // Arduino OTA Update
         ArduinoOTA.onStart([]()
@@ -178,12 +205,14 @@ namespace webserver
             sprintf(p, "Progress: %u%%\n", (progress/(total/100)));
             events.send(p, "ota"); });
         ArduinoOTA.onError([](ota_error_t error)
-                           {
-            if (error == OTA_AUTH_ERROR) events.send("Auth Failed", "ota");
-            else if (error == OTA_BEGIN_ERROR) events.send("Begin Failed", "ota");
-            else if (error == OTA_CONNECT_ERROR) events.send("Connect Failed", "ota");
-            else if (error == OTA_RECEIVE_ERROR) events.send("Recieve Failed", "ota");
-            else if (error == OTA_END_ERROR) events.send("End Failed", "ota"); });
+                {
+                if (error == OTA_AUTH_ERROR) events.send("Auth Failed", "ota");
+                else if (error == OTA_BEGIN_ERROR) events.send("Begin Failed", "ota");
+                else if (error == OTA_CONNECT_ERROR) events.send("Connect Failed", "ota");
+                else if (error == OTA_RECEIVE_ERROR) events.send("Recieve Failed", "ota");
+                else if (error == OTA_END_ERROR) events.send("End Failed", "ota"); 
+                }
+        );
         ArduinoOTA.setHostname(HOSTNAME);
         ArduinoOTA.begin();
 #endif
@@ -214,7 +243,7 @@ namespace webserver
         if (millis() > (WaitTime + (10 * 1000)) )
         {
             WaitTime = millis();
-            debugf("esp_get_free_heap_size = %d , esp_get_free_internal_heap_size = %d \n", esp_get_free_heap_size(), esp_get_free_internal_heap_size());
+            // debugf("esp_get_free_heap_size = %d , esp_get_free_internal_heap_size = %d \n", esp_get_free_heap_size(), esp_get_free_internal_heap_size());
         }
 #ifdef OTA_UPDATE
         ArduinoOTA.handle();
