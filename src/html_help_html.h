@@ -86,17 +86,18 @@ const uint8_t help_html[] = R"rawliteral(
                         <tr>
                             <td><code>STRING</code></td>
                             <td><code>STRING Hello World!</code></td>
-                            <td>Types the following string</td>
+                            <td>Types the following string but no Enter</td>
                         </tr>
                         <tr>
-                            <td><code>REPEAT</code> or <code>REPLAY</code></td>
-                            <td><code>REPEAT 3</code></td>
-                            <td>Repeats the last command n times</td>
+                            <td><code></code></td>
+                            <td><code>Hello World!</code></td>
+                            <td>Types the following string and will add an Enter</td>
                         </tr>
                         <tr>
                             <td><code>LOCALE</code></td>
-                            <td><code>LOCALE DE</code></td>
-                            <td>Sets the keyboard layout. Available: <code>DE</code>, <code>GB</code>, <code>US</code>, <code>ES</code>, <code>FR</code>, <code>DK</code>, <code>RU</code>, <code>BE</code>, <code>PT</code>, <code>IT</code>, <code>SK</code>, <code>CZ</code>, <code>SI</code>, <code>BG</code>, <code>CA-FR</code>, <code>CH-DE</code>, <code>CH-FR</code>, <code>HU</code>
+                            <td><code>LOCALE US-INT</code></td>
+                            <td>Sets the keyboard layout. Available: 
+                            <code>US</code>,<code>US-INT</code>, <code>BG</code>,<code>NONE</code>, 
                             </td>
                         </tr>
                         <tr>
@@ -111,6 +112,12 @@ const uint8_t help_html[] = R"rawliteral(
                             You can connect a led strip up to 144 RGB leds
                             </td>
                         </tr>
+                       <tr>
+                            <td><code>RESTART</code></td>
+                            <td><code>DELAY 10000<br>MOUSE 10 0 <br>RESTART</code></td>
+                            <td>This will restart the script and loop this script
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <h3>Standard Keys</h3>
@@ -122,16 +129,19 @@ const uint8_t help_html[] = R"rawliteral(
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>a</code> - <code>z</code></td>
+                            <td><code>a</code> - <code>z</code> <code>A</code> - <code>Z</code> </td>
                         </tr>
                         <tr>
-                            <td><code>A</code> - <code>Z</code></td>
+                            <td><code>0</code> - <code>9</code> <code>\NUM_0</code> - <code>\NUM_9</code> <code>\NUM_ASTERIX</code> <code>\NUM_ENTER</code> <code>\NUM_MINUS</code> <code>\NUM_DOT</code> <code>\NUM_PLUS</code></td>
                         </tr>
                         <tr>
-                            <td><code>0</code> - <code>9</code></td>
+                            <td><code>\MENU</code> <code>\APP</code> <code>\DELETE</code> <code>\HOME</code> <code>\ENTER</code> <code>\n</code> <code>\INSERT</code> <code>\PAGEUP</code> <code>\PAGEDOWN</code> <code>\ARROWUP</code> <code>\ARROWDOWN</code> <code>\ARROWLEFT</code> <code>\ARROWRIGHT</code></td>
                         </tr>
                         <tr>
-                            <td><code>F1</code> - <code>F12</code></td>
+                            <td><code>\ARROW_U</code> <code>\ARROW_D</code> <code>\ARROW_L</code> <code>\ARROW_R</code> <code>\TAB</code> <code>\t</code> <code>\END</code> <code>\ESC</code> <code>\ESCAPE</code> <code>\SPACE</code> <code>\PAUSE</code> <code>\BREAK</code> <code>\CAPSLOCK</code> <code>\NUMLOCK</code> <code>\PRINTSCREEN</code> <code>\SCROLLLOCK</code> <code>\\</code> </td>
+                        </tr>
+                        <tr>
+                            <td><code>F1</code> - <code>F24</code></td>
                         </tr>
                     </tbody>
                 </table>
@@ -144,117 +154,19 @@ const uint8_t help_html[] = R"rawliteral(
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>CTRL</code> or <code>CONTROL</code></td>
+                            <td><code>CTRL</code> <code>CONTROL</code> <code>\CONTROLLEFT</code> <code>\CONTROLRICHT</code></td>
                         </tr>
                         <tr>
-                            <td><code>SHIFT</code></td>
+                            <td><code>SHIFT</code> <code>\SHIFTLEFT</code> <code>\SHIFTRICHT</code></td>
                         </tr>
                         <tr>
-                            <td><code>ALT</code></td>
+                            <td><code>ALT</code> <code>ALTLEFT</code> <code>ALTRICHT</code></td>
                         </tr>
                         <tr>
-                            <td><code>WINDOWS</code> or <code>GUI</code></td>
+                            <td><code>WINDOWS</code> <code>GUI</code> <code>\GUILEFT</code> <code>\GUIRICHT</code> <code>\WINDOWSLEFT</code> <code>\WINDOWSRICHT</code> </td>
                         </tr>
                     </tbody>
-                </table>
-                <h3>Other Keys</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>ENTER</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>MENU</code> or <code>APP</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>DELETE</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>HOME</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>INSERT</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>PAGEUP</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>PAGEDOWN</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>UP</code> or <code>UPARROW</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>DOWN</code> or <code>DOWNARROW</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>LEFT</code> or <code>LEFTARROW</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>RIGHT</code> or <code>RIGHTARROW</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>TAB</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>END</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>ESC</code> or <code>ESCAPE</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>SPACE</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>PAUSE or BREAK</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>CAPSLOCK</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>NUMLOCK</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>PRINTSCREEN</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>SCROLLLOCK</code></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h3>Numpad Keys</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>NUM_0</code> - <code>NUM_9</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>NUM_ASTERIX</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>NUM_ENTER</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>NUM_MINUS</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>NUM_DOT</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>NUM_PLUS</code></td>
-                        </tr>
-                    </tbody>
-                </table>
+                </table>             
             </section>
         </main>
         <footer>
