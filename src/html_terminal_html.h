@@ -32,7 +32,30 @@ const uint8_t terminal_html[] = R"rawliteral(
 			<section>
 				<h2>Terminal</h2>
 				<div class="row">
-					<input type="text" class="smooth" id="input" value="help">
+					<input list="commands" type="text" class="smooth" id="input">
+                      <datalist id="commands">
+                        <option value="help">
+                        <option value="ram">
+                        <option value="version">
+                        <option value="settings">
+                        <option value="set">
+                        <option value="reset">
+                        <option value="reboot">
+                        <option value="status">
+                        <option value="ls">
+                        <option value="mem">
+                        <option value="cat">
+                        <option value="run">
+                        <option value="stop">
+                        <option value="create">
+                        <option value="remove">
+                        <option value="rename">
+                        <option value="write">
+                        <option value="format">
+                        <option value="stream">
+                        <option value="close">
+                        <option value="read">
+                    </datalist>
 					<button class="primary" id="send">send</button>
 					<button class="warn" id="clear">clear</button>
 					<button class="white" id="reconnect">reconnect</button>
