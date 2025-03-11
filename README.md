@@ -4,36 +4,26 @@
 <img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="640">
 </p>
 
-<p align="center">
-<img alt="WiFi Duck Logo" src="img/thumbnail.jpg" width="640">
-</p>
-
 This project Ultra WiFi Duck and utilizes the native USB/Bluetooth function of ESP32, ESP S2/S3/C3 chip. 
 ESP32 S2/S3 can emulate USB devices the ESP32, S3/C3 support Bluetooth . 
 It also supports mouse emulation.
 It also can be connected to you Wifi network or generate its own access point or connect to you Wifi.
 
-
-## Install / Flash the ESP32-S2/S3
-
+## Install / Flash the ESP32-S2/S3/C3
 You can install the software from your browser you will not need knowledge of the ESP programming environment No software development IDE needed 
 The install from the [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html 
 
-
 You will need to select the Flash size 4/8/16Mb. The ESP32-S2-mini has 4Mb But you will have **2Mb** for scripts, 
-
 But will recommend a ESP32-S3 that has a USB/Bluetooth and COM port for software installation and RGB led.    
-
 You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI Settings Page.
 ## Supported devices 
 | Device | USB| Bluetooth | Description |
 | ------- | -------| ------- | ----------- |
 | `ESP32-S3` | `Yes`| `Yes` | Best device for the job |
 | `ESP32-S2` | `Yes`| `No` |  |
-| `ESP32-C3` | `No` | `Yes`| Not yet fully supported still some bugs |
+| `ESP32-C3` | `No` | `Yes`|  |
 | `ESP32` | `No` | `Yes`| Not working yet but compiles  |
 | `ESP32-C6` | `No` | `Yes`| Not yet supported as platformIO does not support the device |
-
 
 ---
 
@@ -64,17 +54,16 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
 
 ## About
 
-
-Ultra WiFi Duck: This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and 'BadUSBs'.  
+Ultra WiFi Duck: This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and Mouse emulation.  
 
 By emulating a USB/Bluetooth keyboard and mouse, tools like this can gain full access to any computer with a USB/Bluetooth port in a matter of seconds!  
 This is made possible by the fact that keyboards are trusted by computers. You can have full control over a computer with just a keyboard.  
-A BadUSB pretends to be a keyboard to the computer to send keystrokes. 
+A UltraWiFiDuck pretends to be a keyboard to the computer to send keystrokes. 
 But unlike a human, it can type hundreds of characters per second. 
-By using a simple scripting language, it's easy to make BadUSBs type whatever you want. 
+By using a simple scripting language, it's easy to make UltraWiFiDuck type whatever you want. 
 
 With the Ultra WiFi Duck, you can simply connect via WiFi to manage all scripts, or connect to your WiFi network
-from within a web interface. This means that, unlike other BadUSBs, you don't need to install an app, log in, compile or copy scripts to an SD card.  
+from within a web interface. This means that, unlike other tools, you don't need to install an app, log in, compile or copy scripts to an SD card.  
 
 ## Usage
 
@@ -85,19 +74,16 @@ from within a web interface. This means that, unlike other BadUSBs, you don't ne
     <b>Watch the full video</b>
   </a>
 </p>
-
-1. Plug in your WiFi Duck
-2. Connect to the WiFi network `wifiduck` with the password `wifiduck`
+1. Install the software on this [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) 
+2. Connect to the open WiFi network `wifiduck` 
 3. Open a browser and visit `192.168.4.1`
-4. Write, save and run your first Ducky Script
-5. [Recommended] Open `Settings` (top right corner) and update SSID and password
+4. You can add it to your network by the setting page
+5. Write, save and run your first Ducky Script
 
 **Help I forgot the password:**
 
 Just flach the ESP from th  [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html).  
-
 If you have further questions, check out the [issue section](https://github.com/EmileSpecialProducts/UltraWiFiDuck/issues).   
-
 
 ## Scripting
 
@@ -133,55 +119,24 @@ To write text, that does not need a enter use the STRING function.
 | `a` - `z` |
 | `A` - `Z` |
 | `0` - `9` |
-| `\F1` - `\F12` |
+| `\F1` - `\F24` |
+| `\NUM_0` - `\NUM_9` `\NUM_ASTERIX` `\NUM_ENTER` `\NUM_MINUS` `\NUM_DOT` `\NUM_PLUS`  |
+| `\MENU` `\APP` `\DELETE` `\HOME` `\ENTER` `\n` `\INSERT` `\PAGEUP` `\PAGEDOWN` `\ARROWUP` `\ARROWDOWN` `\ARROWLEFT` `\ARROWRIGHT`| 
+| `\ARROW_U` `\ARROW_D` `\ARROW_L` `\ARROW_R` `\TAB` `\t` `\END` `\ESC` `\ESCAPE` `\SPACE` `\PAUSE` `\BREAK` `\CAPSLOCK` `\NUMLOCK` `\PRINTSCREEN` |
+| `\SCROLLLOCK`  `\\` |
 
 ### Modifier Keys
 
 | Key |
 | --- |
-| `\CTRL` or `\CONTROL` |
-| `\SHIFT` |
-| `\ALT` |
-| `\WINDOWS` or `\GUI` |
-
-### Other Keys
-
-| Key |
-| --- |
-| `\ENTER` |
-| `\MENU` or `\APP`|
-| `\DELETE` |
-| `\HOME` |
-| `\INSERT` |
-| `\PAGEUP` |
-| `\PAGEDOWN` |
-| `ARROWUP` |
-| `ARROWDOWN` |
-| `ARROWLEFT` |
-| `ARROWRIGHT` |
-| `TAB` |
-| `END` |
-| `ESC` or `ESCAPE` |
-| `SPACE` |
-| `PAUSE or BREAK` |
-| `CAPSLOCK` |
-| `NUMLOCK` |
-| `PRINTSCREEN` |
-| `SCROLLLOCK` |
-
-### Numpad Keys
-
-| Key |
-| --- |
-| `NUM_0` - `NUM_9` |
-| `NUM_ASTERIX` |
-| `NUM_ENTER` |
-| `NUM_MINUS` |
-| `NUM_DOT` |
-| `NUM_PLUS` |
+| `\CTRL` `\CONTROL` `\CONTROLLEFT` `\CONTROLRICHT` |
+| `\SHIFT` `\SHIFTLEFT` `\SHIFTRICHT` |
+| `\ALT` `\ALTLEFT` `\ALTRICHT`|
+| `\WINDOWS` `\GUI` `\GUILEFT` `\GUIRICHT` `\WINDOWSLEFT` `\WINDOWSRICHT`|
 
 ### Examples
 
+You can find example script in the `payloads` folder 
 ```
 REM Hello World for Windows PCs
 DEFAULTDELAY 200
@@ -203,7 +158,7 @@ DELAY 1000
 
 ## CLI Commands
 
-The command line interface or CLI is accessible using a serial connection to the ESP (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
+The command line interface or CLI is accessible using a [serial](https://webserial.io/) connection to the ESP (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
 
 ### General
 
@@ -239,17 +194,14 @@ If a stream is open, everything you type (except messages containing exactly `cl
 
 ## How to Debug
 
-The original debug module doesn't work right now.
-To debug, please use `ESP_LOGE` to display information via the COM port
+You can debug the software when using the OTA version as this will also print all the debug information to the serial port
 
 ## Development
-
+To develop you can best use the "esp32-s3-devkitc-8MB-OTA" as this will support USB and Bluetooth 
 ### Edit Web Files
 
-If you would like to modify the web interface, you can!  
-The `web/` folder contains all `.html`, `.css`, `.js` files.  
-You can edit and test them locally as long as you're connected to the WiFi Duck
-network thanks to the websocket connection handled by JavaScript in the background.  
+The file html_xxxxx.h are the webpages that you can edit.
+aScript in the background.  
 
 ### Translate Keyboard Layout
 
@@ -261,9 +213,6 @@ But you can enter the UFT8 characters and they will be typed using the <Alt> and
 LOCALE DE
 STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
 ENTER
-```
-10. Add a link to your layout to [README](README.md), to [web/index.html](web/index.html) and please feel free to improve this tutorial to help future translators!
-11. [Create a Pull Request](https://help.github.com/en/articles/creating-a-pull-request)
 
 ## Disclaimer
 
@@ -288,14 +237,6 @@ Software libraries used in this project:
   - [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
   - [SimpleCLI](https://github.com/spacehuhn/SimpleCLI)
 
-## Support original wifiduck
+## Original wifiduck
+As this is a Fork from [spacehuhn.com](https://spacehuhn.com) [github](https://github.com/spacehuhntech/WiFiDuck)
 
-Hey, do you like this kind of project?  
-It took a huge amount of effort to create!  
-
-To make sure we can keep working on free and open-source projects like this,  
-**please consider becoming a [:heart: Sponsor](https://github.com/sponsors/spacehuhntech) or support us via [:coffee: Ko-fi](https://ko-fi.com/spacehuhn).**  
-
-Visit [spacehuhn.com](https://spacehuhn.com) to learn more about us. :chicken:
-
-<a href='https://ko-fi.com/G2G75FA4V' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
