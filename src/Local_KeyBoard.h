@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LOCAL_KEYBOARD_H__
+#define __LOCAL_KEYBOARD_H__
+
 #include <Arduino.h>
 #include "duckscript.h"
 
@@ -28,3 +31,4 @@ Keyboards_t Local_Keyboards[] =
     {"BG", Keyboard_BG},
     {"NONE", Keyboard_NONE}
 };
+#endif //__LOCAL_KEYBOARD_H__
