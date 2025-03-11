@@ -32,10 +32,10 @@ namespace duckscript
   String FixPath(String Path);
   String currentScript();
   void Runfile(String fileName);
-  uint32_t getUniCode(char *buffer, uint8_t *utf_code_len = 0);
+  uint32_t getUniCode(char *buffer, uint8_t *utf_code_len);
   void LineCommand();
   void PointToNextParammeter();
-  void WriteLine(bool ControlCommands = true);
+  void WriteLine();
   void LineDelay();
   int toInt(const char *str, size_t len);
   void press(int Unicode);
@@ -46,9 +46,9 @@ namespace duckscript
   void toggelmodifiers(uint8_t Key);
   void ReleaseKeyboardMouse();
   uint8_t mouse_GetButtons(char *strButtons);
-  void mouse_move(int8_t x, int8_t y, int8_t wheel = 0, int8_t pan = 0);
-  void mouse_absmove(int8_t x, int8_t y, int8_t wheel = 0, int8_t pan = 0);
-  void mouse_click(uint8_t b = MOUSE_LEFT);
-  void mouse_release(uint8_t b = MOUSE_LEFT);
-  void mouse_press(uint8_t b = MOUSE_LEFT);
+  void mouse_move(int8_t x, int8_t y, int8_t wheel , int8_t pan );
+  void mouse_absmove(int8_t x, int8_t y, int8_t wheel , int8_t pan );
+  void mouse_click(uint8_t b );
+  void mouse_release(uint8_t b );
+  void mouse_press(uint8_t b );
 };

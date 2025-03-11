@@ -147,7 +147,15 @@ BleComboMouse BleMouse(&BleKeyboard);
                 debugf("%02x ", Line_Buffer[f]);
             debug("]...\n");
 #endif
-            LineCommand();
+            if (strncmp(Line_BufferPtr,"RESTART",7)==0)
+            {   // Restart the script
+                file.seek(0);
+                running_line = 0;
+            }
+            else
+            {
+                LineCommand();
+            }
         }
         if (file)
             file.close();
@@ -304,7 +312,7 @@ BleComboMouse BleMouse(&BleKeyboard);
          {"WINDOWSRICHT", HID_KEY_GUI_RIGHT},
          {"WINDOWS", HID_KEY_GUI_LEFT}};
 
-     void  WriteLine(bool ControlCommands)
+     void  WriteLine()
      {
          uint32_t utf_code = 0;
          uint8_t utf_code_len = 0;
