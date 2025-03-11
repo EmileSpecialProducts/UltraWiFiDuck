@@ -200,7 +200,7 @@ namespace cli {
          */
         cli.addCommand("mem", [](cmd* c) {
             String s = "";
-            s.reserve(64);
+            s.reserve(150);
 
             s += String(LittleFS.totalBytes());
             s += " byte LittleFS\n";
