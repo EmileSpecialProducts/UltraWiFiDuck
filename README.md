@@ -1,13 +1,14 @@
 # Ultra WiFi Duck
 
 <p align="center">
-<img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="640">
+<img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="320">
 </p>
 
 This project Ultra WiFi Duck and utilizes the native USB/Bluetooth function of ESP32, ESP S2/S3/C3 chip. 
 ESP32 S2/S3 can emulate USB devices the ESP32, S3/C3 support Bluetooth . 
 It also supports mouse emulation.
 It also can be connected to you Wifi network or generate its own access point or connect to you Wifi.
+It is still under construction but form 2025-03-11 it is in a more stable state, but is Old ESP32 is not yet supported. 
 
 ## Install / Flash the ESP32-S2/S3/C3
 You can install the software from your browser you will not need knowledge of the ESP programming environment No software development IDE needed 
@@ -42,6 +43,7 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
   - [CLI Commands](#cli-commands)
     - [General](#general)
     - [LittleFS File Management](#LittleFS-file-management)
+  - [Powershell](#Powershell) 
   - [How to Debug](#how-to-debug)
   - [Development](#development)
     - [Edit Web Files](#edit-web-files)
@@ -74,15 +76,20 @@ from within a web interface. This means that, unlike other tools, you don't need
     <b>Watch the full video</b>
   </a>
 </p>
+
 1. Install the software on this [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) 
+
 2. Connect to the open WiFi network `wifiduck` 
-3. Open a browser and visit `192.168.4.1`
-4. You can add it to your network by the setting page
-5. Write, save and run your first Ducky Script
+
+3. Open a browser and visit [192.168.4.1](http://192.168.4.1) or [http://UltraWiFiDuck.local](http://UltraWiFiDuck.local)
+
+4. You can add your network setting in the setting page
+
+5. Write, save and run your first Ducky Script 
 
 **Help I forgot the password:**
 
-Just flach the ESP from th  [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html).  
+Just flach the ESP from the  [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html).  
 If you have further questions, check out the [issue section](https://github.com/EmileSpecialProducts/UltraWiFiDuck/issues).   
 
 ## Scripting
@@ -156,10 +163,25 @@ DELAY 1000
 \F11
 ```
 
-## CLI Commands
+### CLI Commands
 
-The command line interface or CLI is accessible using a [serial](https://webserial.io/) connection to the ESP (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
+The command line interface or CLI is accessible using a [serial](https://webserial.io/) connection to the ESP (115200 baud, Newline ending) or via the web interface at [192.168.4.1/terminal.html](http://192.168.4.1/terminal.html).  
 
+### Powershell 
+You can run a CLI command remote from a powershell script 
+This will run the /mouse script 
+```
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=run mouse"
+```
+
+```
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=stop mouse"
+```
+
+This will create a file led.txt using powershell
+```
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=write led.txt `"LED 10 10 10`nDELAY 1000`nLED 0 0 0`nDELAY 1000`nRESTART`""
+```
 ### General
 
 | Command | Description | Example |
