@@ -1,0 +1,9 @@
+REM mouse jiggler to prevent a computer to go too sleep :-)
+REM https://github.com/EmileSpecialProducts/Turtle-ESP-mouse-jiggler
+LED 10 10 10 
+DELAY 10000
+MOUSE 10 0
+LED 0 0 0 
+DELAY 10000
+MOUSE -10 0 
+RESTART
