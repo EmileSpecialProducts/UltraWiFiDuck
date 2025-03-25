@@ -7,5 +7,5 @@
 
 namespace led {
     void begin();
-    void setColor(int r, int g, int b);
+    void setColor(int r, int g, int b,int start=0,int end=0);
 }

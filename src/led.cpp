@@ -18,9 +18,14 @@ namespace led
         setColor(0, 0, 0);
     }
 
-    void setColor(int r, int g, int b)
+    void setColor(int r, int g, int b, int start , int end )
     {
-        for (size_t i = 0; i < strip.numPixels(); i++)
+        if (start == 0 && end ==0 )
+        {
+            end = strip.numPixels();
+        }
+        if (end > strip.numPixels()) end = strip.numPixels();
+        for (size_t i = start; i < end; i++)
         {
             strip.setPixelColor(i, r, g, b);
         }
