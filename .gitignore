@@ -40,10 +40,10 @@ save-commands.json
 .DS_Store
 
 *.hex
-
 *.uf2
 
 .pio
 .idea
 .vscode
 private
+Thumbs.db
