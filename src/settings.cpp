@@ -51,6 +51,7 @@ namespace settings
                 set(line.substring(0, line.indexOf("=")).c_str(), line.substring(line.indexOf("=") + 1, line.length()).c_str());
             }
             debugln(toString());
+            f.close();
         }
         else
         {
@@ -68,6 +69,7 @@ namespace settings
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
         setRGBLedPin(RGBLEDPIN);
+        setAutorun("");
     }
 
     void save()
@@ -106,32 +108,32 @@ namespace settings
         return s;
     }
 
-    const char *getSSID()
+    char *getSSID()
     {
             return data.ssid;
     }
 
-    const char *getPassword()
+    char *getPassword()
     {
             return data.password;
     }
 
-    const char *getAPSSID()
+    char *getAPSSID()
     {
         return data.APssid;
     }
 
-    const char *getAPPassword()
+    char *getAPPassword()
     {
         return data.APpassword;
     }
 
-    const char *getAPChannel()
+    char *getAPChannel()
     {
         return data.APchannel;
     }
 
-    const char *getRGBLedPin()
+    char *getRGBLedPin()
     {
         return data.RGBLedPin;
     }
@@ -149,7 +151,7 @@ namespace settings
             return atoi(data.RGBLedPin);
         return -1;
     }
-    const char *getAutorun()
+    char *getAutorun()
     {
         return data.autorun;
     }

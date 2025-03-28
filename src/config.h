@@ -5,8 +5,8 @@
 
 #pragma once
 
-#define VERSION "2.0.1"
-
+#define VERSION "2.1.0"
+#define PRODUCTNAME "UltraWiFiDuck"
 /*! ===== DEBUG Settings ===== */
 //#define ENABLE_DEBUG
 #define DEBUG_PORT Serial
@@ -14,8 +14,8 @@
 
 /*! ===== Communication Settings ===== */
 // #define ENABLE_SERIAL
-#define SERIAL_PORT Serial
-#define SERIAL_BAUD 115200
+#define SERIAL_PORT DEBUG_PORT
+#define SERIAL_BAUD DEBUG_BAUD
 
 #define BUFFER_SIZE 1024
 #define PACKET_SIZE 32

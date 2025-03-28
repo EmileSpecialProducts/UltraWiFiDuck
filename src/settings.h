@@ -20,13 +20,13 @@ namespace settings
 
   String toString();
 
-  const char *getAPSSID();
-  const char *getAPPassword();
-  const char *getAPChannel();
-  const char *getRGBLedPin();
-  const char *getSSID();
-  const char *getPassword();
-  const char *getAutorun();
+  char *getAPSSID();
+  char *getAPPassword();
+  char *getAPChannel();
+  char *getRGBLedPin();
+  char *getSSID();
+  char *getPassword();
+  char *getAutorun();
   
 
   int getAPChannelNum();

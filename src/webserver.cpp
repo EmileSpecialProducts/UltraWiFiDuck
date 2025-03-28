@@ -19,10 +19,11 @@
 
 #include "config.h"
 #include "debug.h"
-#include "cli.h"
+#include "commandline.h"
 #include "settings.h"
 
 #include "webfiles.h"
+
 bool WiFiConected = false;
 
 void reply(AsyncWebServerRequest *request, int code, const char *type, const uint8_t *data, size_t len)
@@ -38,60 +39,13 @@ void reply(AsyncWebServerRequest *request, int code, const char *type, const uin
         request->send(response);
         */
 }
+
 namespace webserver
 {
     // ===== PRIVATE ===== //
     AsyncWebServer server(80);
-    AsyncWebSocket ws("/ws");
-    AsyncEventSource events("/events");
-
-    AsyncWebSocketClient *currentClient{nullptr};
     DNSServer dnsServer;
     uint32_t WaitTime=0;
-
-    void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
-    {
-        if (type == WS_EVT_CONNECT)
-        {
-            debugf("WS Client connected %u\n", client->id());
-        }
-
-        else if (type == WS_EVT_DISCONNECT)
-        {
-            debugf("WS Client disconnected %u\n", client->id());
-        }
-
-        else if (type == WS_EVT_ERROR)
-        {
-            debugf("WS Client %u error(%u): %s\n", client->id(), *((uint16_t *)arg), (char *)data);
-        }
-
-        else if (type == WS_EVT_PONG)
-        {
-            debugf("PONG %u\n", client->id());
-        }
-
-        else if (type == WS_EVT_DATA)
-        {
-            AwsFrameInfo *info = (AwsFrameInfo *)arg;
-
-            if (info->opcode == WS_TEXT)
-            {
-                char *msg = (char *)data;
-                msg[len] = 0;
-
-                //debugf("Message from %u [%llu byte]=%s\n", client->id(), info->len, msg);
-
-                currentClient = client;
-                cli::parse(msg, [](const char *str)
-                           {
-                    webserver::send(str);
-                    debugf("send(%s)\n", str); }, false);
-                currentClient = nullptr;
-            }
-        }
-    }
-
     // ===== PUBLIC ===== //
     void begin()
     {
@@ -110,7 +64,11 @@ namespace webserver
             }
             if (!WiFiConected)
                 debugf("Connecting to  \"%s\":\"%s\" Failed\n", settings::getSSID(), settings::getPassword());
-
+#if not defined(CONFIG_BT_BLE_ENABLED)
+#if not defined(ESP8266)
+            esp_wifi_set_ps(WIFI_PS_NONE); // Esp32 enters the power saving mode by default,
+#endif
+#endif
         }
         if (!WiFiConected)
         {
@@ -134,15 +92,18 @@ namespace webserver
         server.onNotFound([](AsyncWebServerRequest *request)
                 { 
                     debugf("url NotFound %s , Method =%s\n", request->url().c_str(), request->methodToString());
-                    if (LittleFS.exists( request->url()) )
+                    if (request->method() == HTTP_GET)
                     {
-                        request->send(LittleFS, request->url(), String(), false);
-                    }
-                    else
-                    {
-                        if(request->url() == "/favicon.ico" )
+                        if (LittleFS.exists(request->url())) // exists will give a error in the error log see: https://github.com/espressif/arduino-esp32/issues/7615
+                        {
+                            request->send(LittleFS, request->url(), String(), false);
+                        }
+                        else
+                        {
+                        if (request->url() == "/favicon.ico")
                                 reply(request, 200, "image/x-icon", favicon_ico, sizeof(favicon_ico));
-                        else if (request->url() == "/credits.html")
+                        else
+                        if (request->url() == "/credits.html")
                                 reply(request, 200, "text/html", credits_html, sizeof(credits_html) - 1);
                         else if (request->url() == "/error404.html")
                                 reply(request, 404, "text/html", error404_html, sizeof(error404_html) - 1);
@@ -150,8 +111,10 @@ namespace webserver
                                 reply(request, 200, "text/html", index_html, sizeof(index_html) - 1);
                         else if (request->url() == "/help.html")
                                 reply(request, 200, "text/html", help_html, sizeof(help_html)-1);
+                        else if (request->url() == "/help.js")
+                                reply(request, 200, "application/javascript", help_js, sizeof(help_js) - 1);
                         else if (request->url() == "/index.js")
-                                reply(request, 200, "application/javascript", index_js, sizeof(index_js)-1);
+                                reply(request, 200, "application/javascript", index_js, sizeof(index_js) - 1);
                         else if (request->url() == "/script.js")
                                 reply(request, 200, "application/javascript", script_js, sizeof(script_js) - 1);
                         else if (request->url() == "/settings.html")
@@ -160,75 +123,88 @@ namespace webserver
                                 reply(request, 200, "application/javascript", settings_js, sizeof(settings_js)-1);
                         else if (request->url() == "/style.css")
                                 reply(request, 200, "text/css", style_css, sizeof(style_css)-1);
-                        else if (request->url() == "/terminal.html")
-                                reply(request, 200, "text/html", terminal_html, sizeof(terminal_html)-1);
-                        else if (request->url() == "/terminal.js")
-                                reply(request, 200, "application/javascript", terminal_js, sizeof(terminal_js) - 1);
                         else 
-                        {
-                            if (WiFiConected)
                             {
-                                request->redirect("/error404.html");
-                            } else
-                            {
-                                request->redirect("/index.html");
-                            }                            
+                                if (WiFiConected)
+                                {
+                                    request->redirect("/error404.html");
+                                } else
+                                {   // if AP connected
+                                    request->redirect("/index.html");
+                                }                            
+                            }
                         }
-                    } 
-                });   
+                    }
+                    else if (request->method() == HTTP_POST)
+                    {
+                        reply(request, 404, "text/html", error404_html, sizeof(error404_html) - 1);
+                    }
+                });
         // Webserver
         server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
                   { request->redirect("/index.html"); });
 
-        server.on("/run", [](AsyncWebServerRequest *request)
-                    {
-                        String message="";
-                        if (request->hasParam("cmd")) {
-                            message = request->getParam("cmd")->value();
-                        }
-                        request->send(200, "text/plain", "Run: " + message);
-                        cli::parse(message.c_str(), [](const char* str) {
-                            debugf("RUN:%s\n", str);
-                        }, false); 
+        server.on("/upload", HTTP_POST, 
+                [](AsyncWebServerRequest *request)
+                  {
+                    debugln("File upload completed");
+                    request->send(200, "text/plain; chartset=\"UTF-8\"", "File upload completed"); 
+                  }, 
+                [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
+                  {
+                    debugf("Upload[%s]: start=%u, len=%u, final=%d\n", filename.c_str(), index, len, final);
+                    if (!index) {
+                    request->_tempFile = LittleFS.open("/"+ filename, "w+");
                     }
-                  );
+                    if (len) request->_tempFile.write(data, len);
+                    if (final) {
+                    request->_tempFile.close();
+                    } 
+                  }
+            );
+        server.on("/run", [](AsyncWebServerRequest *request)
+                  {
+                      String buffer;
+                      buffer.reserve(1024);
+                      String message = "";
+                      if (request->hasParam("cmd"))
+                      {
+                          message = request->getParam("cmd")->value();
+                          Commandline((char *)message.c_str(), &buffer);
+                          request->send(200, "text/plain", buffer);
+                      }
+                      else
+                      {
+                          request->send(200, "text/plain", "No cmd");
+                      }
+                  });
 
 #ifdef OTA_UPDATE
         // Arduino OTA Update
         ArduinoOTA.onStart([]()
-                           { events.send("Update Start", "ota"); });
+                           { debugln("OTA Update Start"); });
         ArduinoOTA.onEnd([]()
-                         { events.send("Update End", "ota"); });
+                         { debugln("OTA Update End"); });
         ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
                               {
-            char p[32];
-            sprintf(p, "Progress: %u%%\n", (progress/(total/100)));
-            events.send(p, "ota"); });
+            debugf("OTA Progress: %u%%\n", (progress/(total/100)));
+            });
         ArduinoOTA.onError([](ota_error_t error)
                 {
-                if (error == OTA_AUTH_ERROR) events.send("Auth Failed", "ota");
-                else if (error == OTA_BEGIN_ERROR) events.send("Begin Failed", "ota");
-                else if (error == OTA_CONNECT_ERROR) events.send("Connect Failed", "ota");
-                else if (error == OTA_RECEIVE_ERROR) events.send("Recieve Failed", "ota");
-                else if (error == OTA_END_ERROR) events.send("End Failed", "ota"); 
+                if (error == OTA_AUTH_ERROR) debugln("OTA Auth Failed");
+                else if (error == OTA_BEGIN_ERROR) debugln("OTA Begin Failed");
+                else if (error == OTA_CONNECT_ERROR) debugln("OTAConnect Failed");
+                else if (error == OTA_RECEIVE_ERROR) debugln("OTARecieve Failed");
+                else if (error == OTA_END_ERROR) debugln("OTA End Failed"); 
                 }
         );
         ArduinoOTA.setHostname(HOSTNAME);
         ArduinoOTA.begin();
 #endif
-        events.onConnect([](AsyncEventSourceClient *client)
-                         { client->send("hello!", NULL, esp_timer_get_time(), 1000); });
-        server.addHandler(&events);
-
         if (MDNS.begin(HOSTNAME))
         {
             MDNS.addService("http", "tcp", 80);
         }
-
-        // Websocket
-        ws.onEvent(wsEvent);
-        server.addHandler(&ws);
-
         // Start Server
         server.begin();
         debug("You can now connect to http://");
@@ -236,7 +212,7 @@ namespace webserver
         debug(".local or http://");
         debugln(WiFi.localIP());
         WaitTime = millis();
-        }
+    }
 
     void update()
     {
@@ -252,13 +228,5 @@ namespace webserver
         {
             dnsServer.processNextRequest();
         }
-        ws.cleanupClients();
     }
-
-    void send(const char *str)
-    {
-        if (currentClient)
-            currentClient->text(str);
-    }
-
-}
+ }

@@ -21,7 +21,6 @@ const uint8_t error404_html[] = R"rawliteral(
             <ul class="menu">
                 <li><a href="index.html">WiFi Duck</a></li>
                 <li><a href="settings.html">Settings</a></li>
-                <li><a href="terminal.html">Terminal</a></li>
                 <li><a href="credits.html">About</a></li>
             </ul>
         </nav>
@@ -36,13 +35,19 @@ const uint8_t error404_html[] = R"rawliteral(
                 <a class="primary" href="index.html">Back to Homepage</a>
 			</section>
 		</main>
-        <footer>
-            <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
-            <br><br>
-            <span id="version"></span><br>
-            Copyright (c) 2021 Spacehuhn Technologies<br>
-            <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
-        </footer>
+    <footer>
+        You can find the source of of this software at this github 
+        <a href="https://github.com/EmileSpecialProducts/UltraWiFiDuck" target="_blank">archive</a>
+        .
+        <br>
+        <span id="version"></span><br>
+        <br>
+        This is the original
+        <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
+        <br>
+        Copyright (c) 2021 Spacehuhn Technologies<br>
+        <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
+    </footer>
     </body>
 </html>
 )rawliteral";

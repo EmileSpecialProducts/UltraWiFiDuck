@@ -120,15 +120,6 @@ code {
 	line-height: 24px;
 }
 
-.terminal {
-	max-height: 100vh;
-	background:#2f3136;
-	height: 400px;
-	border-radius: 4px;
-	overflow-y: scroll;
-	padding: 15px;
-}
-
 .white {
   color: #bfbfbf;
 }

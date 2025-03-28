@@ -11,8 +11,8 @@ const uint8_t credits_html[] = R"rawliteral(
   <meta name="viewport" content="width=device-width, initial-scale=0.8, minimal-ui">
   <meta name="theme-color" content="#36393E">
 
-  <meta name="description" content="WiFi Duck">
-  <title>WiFi Duck | About</title>
+  <meta name="description" content="Ultra WiFi Duck">
+  <title>Ultra WiFi Duck | About</title>
 
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -22,7 +22,6 @@ const uint8_t credits_html[] = R"rawliteral(
     <ul class="menu">
       <li><a href="index.html">WiFi Duck</a></li>
       <li><a href="settings.html">Settings</a></li>
-      <li><a href="terminal.html">Terminal</a></li>
       <li><a href="help.html">Help</a></li>
       <li><a href="credits.html">About</a></li>
     </ul>
@@ -87,19 +86,19 @@ const uint8_t credits_html[] = R"rawliteral(
       </p>
     </section>
   </main>
-    <footer>
-				This Fork 
-				<a href="https://github.com/EmileSpecialProducts/UltraWiFiDuck" target="_blank">Source</a>
-				you can find.
-				<br>
-				<span id="version"></span><br>
-				<br>
-				This is the original 
-				<a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
-				<br>
-				Copyright (c) 2021 Spacehuhn Technologies<br>
-				<a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
-			</footer>
+        <footer>
+            You can find the source of of this software at this github
+            <a href="https://github.com/EmileSpecialProducts/UltraWiFiDuck" target="_blank">archive</a>
+            .
+            <br>
+            <span id="version"></span><br>
+            <br>
+            This is the original
+            <a href="https://github.com/spacehuhntech/WiFiDuck" target="_blank">Source</a>
+            <br>
+            Copyright (c) 2021 Spacehuhn Technologies<br>
+            <a href="https://spacehuhn.com" target="_blank">spacehuhn.com</a>
+        </footer>
 </body>
 
 </html>
