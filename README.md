@@ -89,7 +89,7 @@ As the UltraWiFiDuck is also a web server you can put custom web pages/script on
 
 1. Install the software on this [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) 
 
-2. Connect to the open WiFi network `UltaWiFiduck` 
+2. Connect to the open WiFi network `UltaWiFiduck` no password <img alt="Ultra WiFi Duck" src="img/UltraWiFiDuck_WiFi.png" width="160">
 
 3. Open a browser and visit [192.168.4.1](http://192.168.4.1) or [http://UltraWiFiDuck.local](http://UltraWiFiDuck.local)
 
