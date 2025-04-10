@@ -104,7 +104,21 @@ void Commandline(char * Command, String *buffer)
     }
     else if (strncmp(commandbuffer, "version", 7) == 0) // * Prints the current version number
     {
-        *buffer = "Version " + String(VERSION) + " " + String(__DATE__ " " __TIME__);
+        *buffer = "Version " + String(VERSION) + " " + String(__DATE__ " " __TIME__ " ");
+        #if defined (CONFIG_IDF_TARGET_ESP32S3)
+        *buffer+="ESP-S3";
+        #elif defined (CONFIG_IDF_TARGET_ESP32C3)
+        *buffer+="ESP-C3";
+        #elif defined (CONFIG_IDF_TARGET_ESP32C6)
+        *buffer+="ESP-C6";
+        #elif defined (CONFIG_IDF_TARGET_ESP32)
+        *buffer+="ESP-CLASIC";
+        #endif
+        *buffer+="\nesp_idf_version: " +String(ESP_IDF_VERSION_MAJOR) +"."+String(ESP_IDF_VERSION_MINOR)+"."+(ESP_IDF_VERSION_PATCH);
+        *buffer+="\narduino_version: " +String(ESP_ARDUINO_VERSION_MAJOR)+"."+String(ESP_ARDUINO_VERSION_MINOR)+"."+String(ESP_ARDUINO_VERSION_PATCH);
+#ifdef ENABLE_DEBUG
+        *buffer+="\nDebug Enabled";
+#endif
     }
     else if (strncmp(commandbuffer, "set", 3) == 0)
     {
