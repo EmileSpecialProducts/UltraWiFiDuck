@@ -22,7 +22,7 @@ var file_opened = false;
 
 // ===== Value Getters ===== //
 function get_new_filename() {
-    return E("newFile").value;
+    return fixFileName(E("newFile").value);
 }
 
 function get_editor_filename() {
@@ -42,8 +42,13 @@ function get_editor_content() {
     return content;
 }
 
-
+var StatusUpdateRunning = false;
 function updatestatus()
+{
+    if (!StatusUpdateRunning)
+        Teststatus();
+}
+function Teststatus()
 {
     var isrunning = false;
     fetch("/run?cmd=status")
@@ -72,7 +77,12 @@ function updatestatus()
             }
             if (isrunning)
             {
-                setTimeout(updatestatus, 500);
+                StatusUpdateRunning = true;
+                setTimeout(Teststatus, 500);
+            }
+            else
+            {
+                StatusUpdateRunning = false;
             }
         })
         .catch(error => {

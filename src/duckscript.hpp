@@ -5,12 +5,17 @@
 
 #pragma once
 #include <Arduino.h> // String
+#include "config.h"
+#include "debug.h"
 
 #if defined(CONFIG_TINYUSB_ENABLED)
 #include "USBHID.h"
 #include "USB.h"
 #include "USBHIDMouse.h"
 #include "USBHIDKeyboard.h"
+#include "USBHIDGamepad.h"
+#include "USBHIDConsumerControl.h"
+
 #endif
 
 #if defined(CONFIG_BT_BLE_ENABLED)
@@ -72,6 +77,7 @@ public:
   void toggelmodifiers(uint8_t Key);
   void releaseAll();
   void sendReport(KeyReport *k);
+  void pressMedia(uint16_t Media);
   void mouse_move(int8_t x, int8_t y, int8_t wheel, int8_t pan);
   void mouse_absmove(int8_t x, int8_t y, int8_t wheel, int8_t pan);
   uint8_t mouse_GetButtons(char *strButtons);

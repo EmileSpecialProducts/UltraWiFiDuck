@@ -2,17 +2,15 @@
    This software is licensed under the MIT License. See the license file for details.
    Source: https://github.com/spacehuhntech/WiFiDuck
  */
-#include <Arduino.h>
-#include "config.h"
-#include "debug.h"
-
 
 #include "duckscript.hpp"
 
-
 #if defined(CONFIG_TINYUSB_ENABLED)
+
 USBHIDMouse UsbMouse;
 USBHIDKeyboard UsbKeyboard;
+USBHIDGamepad UsbGamepad;
+USBHIDConsumerControl UsbConsumerControl; 
 USBHID hid;
 #endif
 
@@ -22,8 +20,8 @@ BleComboMouse BleMouse(&BleKeyboard);
 #endif
 
 #include "led.h"
-
 #include "Local_KeyBoard.h"
+
 struct KeyCommand
 {
     char StrCommand[15];
@@ -31,94 +29,135 @@ struct KeyCommand
 };
 
 const KeyCommand KeyCommands[] =
-    {
-        {"n", HID_KEY_ENTER},
-        {"e", HID_KEY_ESCAPE},
-        {"r", HID_KEY_RETURN},
-        {"t", HID_KEY_TAB},
-        {"b", HID_KEY_BACKSPACE},
-        {"F10", HID_KEY_F10},
-        {"F11", HID_KEY_F11},
-        {"F12", HID_KEY_F12},
-        {"F13", HID_KEY_F13},
-        {"F14", HID_KEY_F14},
-        {"F15", HID_KEY_F15},
-        {"F16", HID_KEY_F16},
-        {"F17", HID_KEY_F17},
-        {"F18", HID_KEY_F18},
-        {"F19", HID_KEY_F19},
-        {"F20", HID_KEY_F20},
-        {"F21", HID_KEY_F21},
-        {"F22", HID_KEY_F22},
-        {"F23", HID_KEY_F23},
-        {"F24", HID_KEY_F24},
-        {"F1", HID_KEY_F1}, // first the longer Commands strings
-        {"F2", HID_KEY_F2},
-        {"F3", HID_KEY_F3},
-        {"F4", HID_KEY_F4},
-        {"F5", HID_KEY_F5},
-        {"F6", HID_KEY_F6},
-        {"F7", HID_KEY_F7},
-        {"F8", HID_KEY_F8},
-        {"F9", HID_KEY_F9},
-        {"NUM_0", HID_KEY_KEYPAD_0},
-        {"NUM_1", HID_KEY_KEYPAD_1},
-        {"NUM_2", HID_KEY_KEYPAD_2},
-        {"NUM_3", HID_KEY_KEYPAD_3},
-        {"NUM_4", HID_KEY_KEYPAD_4},
-        {"NUM_5", HID_KEY_KEYPAD_5},
-        {"NUM_6", HID_KEY_KEYPAD_6},
-        {"NUM_7", HID_KEY_KEYPAD_7},
-        {"NUM_8", HID_KEY_KEYPAD_8},
-        {"NUM_9", HID_KEY_KEYPAD_9},
-        {"NUM_ASTERIX", HID_KEY_KEYPAD_MULTIPLY},
-        {"NUM_ENTER", HID_KEY_KEYPAD_ENTER},
-        {"NUM_MINUS", HID_KEY_KEYPAD_SUBTRACT},
-        {"NUM_DOT", HID_KEY_KEYPAD_DECIMAL},
-        {"NUM_PLUS", HID_KEY_KEYPAD_ADD},
-        {"MENU", HID_KEY_MENU},
-        {"APP", HID_KEY_MENU},
-        {"DELETE", HID_KEY_DELETE},
-        {"HOME", HID_KEY_HOME},
-        {"ENTER", HID_KEY_ENTER},
-        {"INSERT", HID_KEY_INSERT},
-        {"PAGEUP", HID_KEY_PAGE_UP},
-        {"PAGEDOWN", HID_KEY_PAGE_DOWN},
-        {"ARROWUP", HID_KEY_ARROW_UP},
-        {"ARROWDOWN", HID_KEY_ARROW_DOWN},
-        {"ARROWLEFT", HID_KEY_ARROW_LEFT},
-        {"ARROWRIGHT", HID_KEY_ARROW_RIGHT},
-        {"ARROW_U", HID_KEY_ARROW_UP},
-        {"ARROW_D", HID_KEY_ARROW_DOWN},
-        {"ARROW_L", HID_KEY_ARROW_LEFT},
-        {"ARROW_R", HID_KEY_ARROW_RIGHT},
-        {"TAB", HID_KEY_TAB},
-        {"END", HID_KEY_END},
-        {"ESC", HID_KEY_ESCAPE},
-        {"ESCAPE", HID_KEY_ESCAPE},
-        {"SPACE", HID_KEY_SPACE},
-        {"PAUSE", HID_KEY_PAUSE},
-        {"BREAK", HID_KEY_PAUSE},
-        {"CAPSLOCK", HID_KEY_CAPS_LOCK},
-        {"NUMLOCK", HID_KEY_NUM_LOCK},
-        {"PRINTSCREEN", HID_KEY_PRINT_SCREEN},
-        {"SCROLLLOCK", HID_KEY_SCROLL_LOCK},
-        {"CONTROLLEFT", HID_KEY_CONTROL_LEFT},
-        {"CONTROLRICHT", HID_KEY_CONTROL_RIGHT},
-        {"CONTROL", HID_KEY_CONTROL_LEFT},
-        {"CTRL", HID_KEY_CONTROL_LEFT},
-        {"SHIFTLEFT", HID_KEY_SHIFT_LEFT},
-        {"SHIFTRICHT", HID_KEY_SHIFT_RIGHT},
-        {"SHIFT", HID_KEY_SHIFT_LEFT},
-        {"ALTLEFT", HID_KEY_ALT_LEFT},
-        {"ALTRICHT", HID_KEY_ALT_RIGHT},
-        {"ALT", HID_KEY_ALT_LEFT},
-        {"GUILEFT", HID_KEY_GUI_LEFT},
-        {"GUIRICHT", HID_KEY_GUI_RIGHT},
-        {"GUI", HID_KEY_GUI_LEFT},
-        {"WINDOWSLEFT", HID_KEY_GUI_LEFT},
-        {"WINDOWSRICHT", HID_KEY_GUI_RIGHT},
-        {"WINDOWS", HID_KEY_GUI_LEFT}};
+{
+    {"n", HID_KEY_ENTER},
+    {"e", HID_KEY_ESCAPE},
+    {"r", HID_KEY_RETURN},
+    {"t", HID_KEY_TAB},
+    {"b", HID_KEY_BACKSPACE},
+    {"F10", HID_KEY_F10},
+    {"F11", HID_KEY_F11},
+    {"F12", HID_KEY_F12},
+    {"F13", HID_KEY_F13},
+    {"F14", HID_KEY_F14},
+    {"F15", HID_KEY_F15},
+    {"F16", HID_KEY_F16},
+    {"F17", HID_KEY_F17},
+    {"F18", HID_KEY_F18},
+    {"F19", HID_KEY_F19},
+    {"F20", HID_KEY_F20},
+    {"F21", HID_KEY_F21},
+    {"F22", HID_KEY_F22},
+    {"F23", HID_KEY_F23},
+    {"F24", HID_KEY_F24},
+    {"F1", HID_KEY_F1}, // first the longer Commands strings
+    {"F2", HID_KEY_F2},
+    {"F3", HID_KEY_F3},
+    {"F4", HID_KEY_F4},
+    {"F5", HID_KEY_F5},
+    {"F6", HID_KEY_F6},
+    {"F7", HID_KEY_F7},
+    {"F8", HID_KEY_F8},
+    {"F9", HID_KEY_F9},
+    {"NUM_0", HID_KEY_KEYPAD_0},
+    {"NUM_1", HID_KEY_KEYPAD_1},
+    {"NUM_2", HID_KEY_KEYPAD_2},
+    {"NUM_3", HID_KEY_KEYPAD_3},
+    {"NUM_4", HID_KEY_KEYPAD_4},
+    {"NUM_5", HID_KEY_KEYPAD_5},
+    {"NUM_6", HID_KEY_KEYPAD_6},
+    {"NUM_7", HID_KEY_KEYPAD_7},
+    {"NUM_8", HID_KEY_KEYPAD_8},
+    {"NUM_9", HID_KEY_KEYPAD_9},
+    {"NUM_ASTERIX", HID_KEY_KEYPAD_MULTIPLY},
+    {"NUM_ENTER", HID_KEY_KEYPAD_ENTER},
+    {"NUM_MINUS", HID_KEY_KEYPAD_SUBTRACT},
+    {"NUM_DOT", HID_KEY_KEYPAD_DECIMAL},
+    {"NUM_PLUS", HID_KEY_KEYPAD_ADD},
+    {"MENU", HID_KEY_MENU},
+    {"APP", HID_KEY_MENU},
+    {"DELETE", HID_KEY_DELETE},
+    {"HOME", HID_KEY_HOME},
+    {"ENTER", HID_KEY_ENTER},
+    {"INSERT", HID_KEY_INSERT},
+    {"PAGEUP", HID_KEY_PAGE_UP},
+    {"PAGEDOWN", HID_KEY_PAGE_DOWN},
+    {"ARROWUP", HID_KEY_ARROW_UP},
+    {"ARROWDOWN", HID_KEY_ARROW_DOWN},
+    {"ARROWLEFT", HID_KEY_ARROW_LEFT},
+    {"ARROWRIGHT", HID_KEY_ARROW_RIGHT},
+    {"ARROW_U", HID_KEY_ARROW_UP},
+    {"ARROW_D", HID_KEY_ARROW_DOWN},
+    {"ARROW_L", HID_KEY_ARROW_LEFT},
+    {"ARROW_R", HID_KEY_ARROW_RIGHT},
+    {"TAB", HID_KEY_TAB},
+    {"END", HID_KEY_END},
+    {"ESC", HID_KEY_ESCAPE},
+    {"ESCAPE", HID_KEY_ESCAPE},
+    {"SPACE", HID_KEY_SPACE},
+    {"PAUSE", HID_KEY_PAUSE},
+    {"BREAK", HID_KEY_PAUSE},
+    {"CAPSLOCK", HID_KEY_CAPS_LOCK},
+    {"NUMLOCK", HID_KEY_NUM_LOCK},
+    {"PRINTSCREEN", HID_KEY_PRINT_SCREEN},
+    {"SCROLLLOCK", HID_KEY_SCROLL_LOCK},
+    {"CONTROLLEFT", HID_KEY_CONTROL_LEFT},
+    {"CONTROLRICHT", HID_KEY_CONTROL_RIGHT},
+    {"CONTROL", HID_KEY_CONTROL_LEFT},
+    {"CTRL", HID_KEY_CONTROL_LEFT},
+    {"SHIFTLEFT", HID_KEY_SHIFT_LEFT},
+    {"SHIFTRICHT", HID_KEY_SHIFT_RIGHT},
+    {"SHIFT", HID_KEY_SHIFT_LEFT},
+    {"ALTLEFT", HID_KEY_ALT_LEFT},
+    {"ALTRICHT", HID_KEY_ALT_RIGHT},
+    {"ALT", HID_KEY_ALT_LEFT},
+    {"GUILEFT", HID_KEY_GUI_LEFT},
+    {"GUIRICHT", HID_KEY_GUI_RIGHT},
+    {"GUI", HID_KEY_GUI_LEFT},
+    {"WINDOWSLEFT", HID_KEY_GUI_LEFT},
+    {"WINDOWSRICHT", HID_KEY_GUI_RIGHT},
+    {"WINDOWS", HID_KEY_GUI_LEFT}
+};
+
+struct Control_Command
+{
+    char StrCommand[15];
+    uint16_t RawKeycode;
+};
+
+const Control_Command Control_Commands[] =
+{
+    {"POWER",CONSUMER_CONTROL_POWER},// Not working
+    {"SLEEP",CONSUMER_CONTROL_SLEEP},// Not working
+    {"MUTE",CONSUMER_CONTROL_MUTE},
+    {"VOLUMEUP",CONSUMER_CONTROL_VOLUME_INCREMENT},
+    {"VOLUMEDOWN",CONSUMER_CONTROL_VOLUME_DECREMENT},
+    {"VOLUME+",CONSUMER_CONTROL_VOLUME_INCREMENT},
+    {"VOLUME-",CONSUMER_CONTROL_VOLUME_DECREMENT},
+    {"CALC",CONSUMER_CONTROL_CALCULATOR},
+    {"BRIGHT+",CONSUMER_CONTROL_BRIGHTNESS_INCREMENT},
+    {"BRIGHT-",CONSUMER_CONTROL_BRIGHTNESS_DECREMENT},
+    {"WWW",CONSUMER_CONTROL_HOME}        
+};
+const uint16_t bltControl_Commands[] =
+{ // the Control Commands keys are defined in the BleComboKeyboard.cpp file.
+    0xB5,          //   USAGE (Scan Next Track)     ; bit 0: 1
+    0xB6,          //   USAGE (Scan Previous Track) ; bit 1: 2
+    0xB7,          //   USAGE (Stop)                ; bit 2: 4
+    0xCD,          //   USAGE (Play/Pause)          ; bit 3: 8
+    0xE2,          //   USAGE (Mute)                ; bit 4: 16
+    0xE9,          //   USAGE (Volume Increment)    ; bit 5: 32
+    0xEA,          //   USAGE (Volume Decrement)    ; bit 6: 64
+    0x0223,        //   Usage (WWW Home)            ; bit 7: 128
+    0x0194,        //   Usage (My Computer) ; bit 0: 1
+    0x0192,        //   Usage (Calculator)  ; bit 1: 2
+    0x022A,        //   Usage (WWW fav)     ; bit 2: 4
+    0x0221,        //   Usage (WWW search)  ; bit 3: 8
+    0x0226,        //   Usage (WWW stop)    ; bit 4: 16
+    0x0224,        //   Usage (WWW back)    ; bit 5: 32
+    0x0183,        //   Usage (Media sel)   ; bit 6: 64
+    0x018A         //   Usage (Mail)        ; bit 7: 128
+};
 
 const struct KeyCommand StartOfLineKeys[] = {
     {"CONTROL_LEFT", HID_KEY_CONTROL_LEFT},
@@ -153,8 +192,9 @@ Keyboards_t Local_Keyboards[] =
         {"US-INT", Keyboard_US_INT},
         {"US", Keyboard_US},
         {"BG", Keyboard_BG},
-        {"NONE", Keyboard_NONE}
-    };
+        {"DE", Keyboard_DE},
+        {"FR", Keyboard_French},
+        {"NONE", Keyboard_NONE}};
 
 DuckScript DuckScripts[DUCKSCRIPTLEN];
 
@@ -164,7 +204,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         debugf("DuckScript Constructor\n");
     } //  constructor to initilize
 
-     void DuckScript::Runfile(String fileName)
+    void DuckScript::Runfile(String fileName)
     {
         unsigned int Line_Buffer_i = 0;
         bool eol = false; // End of line
@@ -315,9 +355,22 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                             break;
                         }
                     }
+                    
                     if (commands == sizeof(KeyCommands) / sizeof(KeyCommands[0]))
                     { // no Command found
-                        press('\\');
+                        for (commands = 0; commands < sizeof(Control_Commands) / sizeof(Control_Commands[0]); commands++)
+                        {
+                            if (strncmp(Line_BufferPtr, Control_Commands[commands].StrCommand, strlen(Control_Commands[commands].StrCommand)) == 0)
+                            {
+                                debugf("Found Control_Command : %s\n", Control_Commands[commands].StrCommand);
+                                Line_BufferPtr += strlen(Control_Commands[commands].StrCommand);
+                                pressMedia(Control_Commands[commands].RawKeycode);
+                                break;
+                            }
+                        }
+                        if (commands == sizeof(Control_Commands) / sizeof(Control_Commands[0])){
+                                press('\\');
+                        }
                     }
                 }
             }
@@ -725,6 +778,46 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         }
     }
 
+    void DuckScript::pressMedia(uint16_t Media)
+    {
+        if (running)
+        {
+            uint32_t WaitTime = millis() + defaultKeyDelay;
+            debugf("sendMediaReport: %04x\n",Media);
+#if defined(CONFIG_TINYUSB_ENABLED)
+            if (hid.ready()) // will need to created a bug report on this as we get an error in the Errorlog "SendReport(): not ready When the USB is not connected"
+            {       
+                UsbConsumerControl.press(Media);
+                UsbConsumerControl.release();
+            }
+#endif
+#if defined(CONFIG_BT_BLE_ENABLED)
+            for(uint8_t f=0;f<sizeof(bltControl_Commands)/sizeof(bltControl_Commands[0]);f++)
+            {
+                
+                if (Media == bltControl_Commands[f])
+                {
+                    debugf("BLE Media = %04x Bit=%d MAP=%02x %02x\n",Media,f,(uint8_t)(((0x01<<f) & 0xFF)),(uint8_t)(((0x01<<f) & 0xFF00)>> 8));
+                    if (BleKeyboard.isConnected())
+                    {
+                        MediaKeyReport _mediaKeyReport;
+                        _mediaKeyReport[0] = (uint8_t)(((0x01<<f) & 0xFF)    );
+                        _mediaKeyReport[1] = (uint8_t)(((0x01<<f) & 0xFF00)>> 8);
+                        BleKeyboard.write(_mediaKeyReport);
+                    }
+                    else
+                    {
+                        debugln("No BLE connection");
+                    }
+                }
+            }
+#endif
+            while (millis() <= WaitTime && running)
+            {
+                delay(1);
+            }
+        }
+    }
     // Create are own pressRaw releaseRaw as then we can use the CurrentKeyReport
     // and save the status to enter a UniCode
     void DuckScript::pressRaw(uint8_t Key)
@@ -980,6 +1073,8 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         USB.begin();
         UsbKeyboard.begin();
         UsbMouse.begin();
+        UsbGamepad.begin();
+        UsbConsumerControl.begin();        
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
         BleKeyboard.deviceManufacturer = (CUSTOM_USB_MANUFACTURER);
@@ -991,7 +1086,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
 
     struct TaskParameters {
         int ScripNo;
-        char *fileName;
+        char fileName[32];
     };
     
     void duckscripts_task(TaskParameters *TParameter)
@@ -1018,7 +1113,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         if(RunTask)
         {
             static TaskParameters TParameters;
-            TParameters.fileName = filename;
+            strncpy(TParameters.fileName ,filename,sizeof(TParameters.fileName));
             Task = 0;
             while (Task < DUCKSCRIPTLEN)
             {

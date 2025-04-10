@@ -1,0 +1,3 @@
+REM This file will be triggerd when the GPIO0 pin will go High ( it has pullup enabled)
+STRING \WWW
+LED 0 0 0

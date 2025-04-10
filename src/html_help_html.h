@@ -154,7 +154,7 @@ const uint8_t help_html[] = R"rawliteral(
                         </td>
                     </tr>
                     <tr>
-                        <td><code>F1</code> - <code>F24</code></td>
+                        <td><code>\F1</code> - <code>\F24</code></td>
                     </tr>
                 </tbody>
             </table>
@@ -179,6 +179,39 @@ const uint8_t help_html[] = R"rawliteral(
                     <tr>
                         <td><code>WINDOWS</code> <code>GUI</code> <code>\GUILEFT</code> <code>\GUIRICHT</code>
                             <code>\WINDOWSLEFT</code> <code>\WINDOWSRICHT</code> </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Media Keys</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>\MUTE</code> <code>\VOLUMEUP</code> <code>\VOLUMEDOWN</code> <code>\VOLUME+</code> <code>\VOLUME-</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>\BRIGHT+</code> <code>\BRIGHT-</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>\CALC</code> <code>\WWW</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>GPIO pins</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>The file "gpiolowxx" will be triggerd when the GPIO pin will go low and when relased (high) the file "gpiohixx" will be triggerd <br>
+                        So "gpiolo0" is for GPIO0 going low and "gpiohi12" is for GPIO12 going high </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
                     </tr>
                 </tbody>
             </table>

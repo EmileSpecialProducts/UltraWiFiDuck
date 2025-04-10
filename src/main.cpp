@@ -8,8 +8,10 @@
 #include "webserver.h"
 #include "settings.h"
 #include "led.h"
+#include "GPIO_trigger.hpp"
 
 //SET_LOOP_TASK_STACK_SIZE(16 * 1024); // 16KB
+GpioTrigger Gpiotrigger;
 
 void setup() {
     debug_init();
@@ -25,11 +27,13 @@ void setup() {
 
     delay(200);
     webserver::begin();
+    Gpiotrigger.begin(settings::getRGBLedPinNum());
     duckscripts_run(settings::getAutorun());
     debugln("End of Setup");
 }
 
 void loop() {
     webserver::update();
+    Gpiotrigger.update();
     debug_update();
 }
