@@ -4,7 +4,8 @@ DELAY 500
 REM The next line will start PowerShell as Administrator
 PowerShell\SHIFT\CONTROL\ENTER
 DELAY 2000
-REM as the next line start with a Command no Enter is Added but added 
+REM as the next line Confirm to start as a Administrator 
+REM Pressin the SHIFT TAB and relaseing the SHIFT and then enter
 \SHIFT\t\SHIFT\ENTER
 DELAY 500
 Get-ExecutionPolicy -List

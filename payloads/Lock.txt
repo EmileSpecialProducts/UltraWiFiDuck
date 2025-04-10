@@ -1,4 +1,4 @@
-REM This will lock a PC and display a full screen lock screen 
+REM This will display a full screen web page that looks like a ransomware  
 KEYDELAY 20
 GUI r
 DELAY 500
@@ -6,5 +6,7 @@ STRING https://emilespecialproducts.github.io/UltraWiFiDuck/web/lock.htm
 REM Use STRING command as if we will use just \ENTER it will add an <enter> at the end of the line 
 REM in resulting in two <enters> one from \ENTER and the other from the end of the line
 STRING \ENTER
+REM Wait untill the paged is loaded
 DELAY 1000
+REM goto fullscreen mode
 STRING \F11

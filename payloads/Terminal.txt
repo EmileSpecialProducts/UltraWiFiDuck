@@ -1,0 +1,11 @@
+DELAY 1000
+GUI x
+DELAY 500
+REM This will start a Terminal window
+STRING i
+DELAY 2000
+# this is a test
+DELAY 2000
+dir
+DELAY 2000
+exit

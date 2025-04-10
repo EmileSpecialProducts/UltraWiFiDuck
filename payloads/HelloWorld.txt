@@ -9,7 +9,7 @@ STRING Hello World!
 STRING \ENTER
 STRING Hello
 STRING \SPACEWorld 2
-REM a line that has no Start of line command will give a <Enter> at the end of a line
+REM a line that has no "Start of line command" will give a <Enter> at the end of a line
 
 \SHIFT 
 hello world 1
