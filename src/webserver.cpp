@@ -180,6 +180,7 @@ namespace webserver
                   });
 
 #ifdef OTA_UPDATE
+
         // Arduino OTA Update
         ArduinoOTA.onStart([]()
                            { debugln("OTA Update Start"); });
@@ -199,6 +200,7 @@ namespace webserver
                 }
         );
         ArduinoOTA.setHostname(HOSTNAME);
+        ArduinoOTA.setPassword("WiFi2Duck");
         ArduinoOTA.begin();
 #endif
         if (MDNS.begin(HOSTNAME))
