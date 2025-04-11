@@ -107,6 +107,8 @@ void Commandline(char * Command, String *buffer)
         *buffer = "Version " + String(VERSION) + " " + String(__DATE__ " " __TIME__ " ");
         #if defined (CONFIG_IDF_TARGET_ESP32S3)
         *buffer+="ESP-S3";
+        #elif defined (CONFIG_IDF_TARGET_ESP32S2)
+        *buffer+="ESP-S2";
         #elif defined (CONFIG_IDF_TARGET_ESP32C3)
         *buffer+="ESP-C3";
         #elif defined (CONFIG_IDF_TARGET_ESP32C6)
