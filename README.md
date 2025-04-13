@@ -3,6 +3,11 @@
 <p align="center">
 <img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="64">
 </p>
+<p align="center">
+  <a href="https://buymeacoffee.com/emilespecialproducts">
+    <img alt="BuymeaCoffee" src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png">
+  </a>
+</p>
 
 <p align="center">
 <img alt="Ultra WiFi Duck" src="3D-PrintFiles/S3/DuckS3.png" width="320">
