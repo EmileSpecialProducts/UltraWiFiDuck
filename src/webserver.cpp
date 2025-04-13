@@ -50,7 +50,7 @@ namespace webserver
     void begin()
     {
         // Access Point
-        WiFi.hostname(HOSTNAME);
+        WiFi.hostname(settings::getHostName());
         if (strlen(settings::getSSID()) > 0 && ( strlen(settings::getPassword()) >= 8 || strlen(settings::getPassword()) == 0))
         {
             debugf("Connecting to  \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
@@ -199,18 +199,18 @@ namespace webserver
                 else if (error == OTA_END_ERROR) debugln("OTA End Failed"); 
                 }
         );
-        ArduinoOTA.setHostname(HOSTNAME);
+        ArduinoOTA.setHostname(settings::getHostName());
         ArduinoOTA.setPassword("WiFi2Duck");
         ArduinoOTA.begin();
 #endif
-        if (MDNS.begin(HOSTNAME))
+        if (MDNS.begin(settings::getHostName()))
         {
             MDNS.addService("http", "tcp", 80);
         }
         // Start Server
         server.begin();
         debug("You can now connect to http://");
-        debug(HOSTNAME);
+        debug(settings::getHostName());
         debug(".local or http://");
         debugln(WiFi.localIP());
         WaitTime = millis();

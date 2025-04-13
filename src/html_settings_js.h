@@ -22,6 +22,7 @@ function load_settings() {
             var password = lines[4].split("=")[1];
             var autorun = lines[5].split("=")[1];
             var RGBLedPin = lines[6].split("=")[1];
+            var HostName = lines[7].split("=")[1];
 
             E("APssid").innerHTML = APssid;
             E("APpassword").innerHTML = APpassword;
@@ -30,6 +31,8 @@ function load_settings() {
             E("password").innerHTML = password;
             E("autorun").innerHTML = autorun;
             E("RGBLedPin").innerHTML = RGBLedPin;
+            E("HostName").innerHTML = HostName;
+            
         })
         .catch(error => {
             console.error('Error:', error);
@@ -41,6 +44,26 @@ function load_settings() {
 
 // ===== Startup ===== //
 window.addEventListener("load", function () {
+
+  E("edit_HostName").onclick = function () {
+        var newHostName = prompt("HostName (1-32 chars)", E("HostName").innerHTML);
+        if (newHostName) {
+            if (newHostName.length >= 1 && newHostName.length <= 32) {
+                fetch("/run?cmd=set HostName " + newHostName )
+                    .then(response => response.text())
+                    .then(content => {
+                        //E("editor").value = content;
+                        console.log(content);
+                        load_settings();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else {
+                alert("ERROR: Invalid length");
+            }
+        }
+    }
 
     E("edit_APssid").onclick = function () {
         var newAPssid = prompt("APSSID (1-32 chars)", E("APssid").innerHTML);

@@ -33,6 +33,11 @@ const uint8_t settings_html[] = R"rawliteral(
             <h1>Settings</h1>
             <p>Reboot the device to apply new settings.</p>
             <table>
+                <tr id="edit_HostName">
+                    <td>Hostname:</td>
+                    <td id="HostName"></td>
+                    <td><button class="primary">edit</button></td>
+                </tr>
                 <tr id="edit_APssid">
                     <td>APSSID:</td>
                     <td id="APssid"></td>

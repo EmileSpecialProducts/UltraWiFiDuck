@@ -21,6 +21,7 @@ namespace settings
         char password[65];
         char autorun[65];
         char RGBLedPin[5];
+        char hostname[65];
 
     } settings_t;
 
@@ -70,6 +71,7 @@ namespace settings
         setPassword(WIFI_PASSWORD);
         setRGBLedPin(RGBLEDPIN);
         setAutorun("");
+        setHostName("UltraWiFIDuck");
     }
 
     void save()
@@ -103,6 +105,9 @@ namespace settings
         + "\n"
         + "RGBLedPin="
         + String(getRGBLedPin())
+        + "\n"
+        + "HostName="
+        + String(getHostName())
         + "\n";
         debug(s);
         return s;
@@ -155,6 +160,10 @@ namespace settings
     {
         return data.autorun;
     }
+    char *getHostName()
+    {
+        return data.hostname;
+    }
 
     void set(const char *name, const char *value)
     {
@@ -186,6 +195,10 @@ namespace settings
         else if (strcmp(name, "autorun") == 0)
         {
             setAutorun(value);
+        }
+        else if (strcmp(name, "HostName") == 0)
+        {
+            setHostName(value);
         }
     }
 
@@ -247,6 +260,15 @@ namespace settings
         {
             memset(data.autorun, 0, sizeof(data.autorun));
             strncpy(data.autorun, autorun, sizeof(data.autorun) - 1);
+        }
+    }
+    
+    void setHostName(const char *hostname)
+    {
+        if (hostname)
+        {
+            memset(data.hostname, 0, sizeof(data.hostname));
+            strncpy(data.hostname, hostname, sizeof(data.hostname) - 1);
         }
     }
 }
