@@ -11,3 +11,4 @@
 #include "html_settings_js.h"
 #include "html_style_css.h"
 #include "html_favicon_ico.h"
+#include "html_bmc_qr_png.h"

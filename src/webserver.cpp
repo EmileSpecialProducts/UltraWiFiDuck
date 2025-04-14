@@ -100,9 +100,10 @@ namespace webserver
                         else
                         {
                         if (request->url() == "/favicon.ico")
-                                reply(request, 200, "image/x-icon", favicon_ico, sizeof(favicon_ico));
-                        else
-                        if (request->url() == "/credits.html")
+                            reply(request, 200, "image/x-icon", favicon_ico, sizeof(favicon_ico));
+                        else if (request->url() == "/bmc_qr.png")
+                                reply(request, 200, "image/x-icon", bmc_qr_png, sizeof(bmc_qr_png));
+                        else if (request->url() == "/credits.html")
                                 reply(request, 200, "text/html", credits_html, sizeof(credits_html) - 1);
                         else if (request->url() == "/error404.html")
                                 reply(request, 404, "text/html", error404_html, sizeof(error404_html) - 1);

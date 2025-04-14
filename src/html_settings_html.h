@@ -89,6 +89,12 @@ const uint8_t settings_html[] = R"rawliteral(
             </p>
         </section>
         <footer>
+        <p align="center">
+        <h4>Buy Me Coffee</h4>
+            <a href="https://buymeacoffee.com/emilespecialproducts">
+                <img alt="BuymeaCoffee" src="bmc_qr.png">
+            </a>
+        </p>
             You can find the source of of this software at this github
             <a href="https://github.com/EmileSpecialProducts/UltraWiFiDuck" target="_blank">archive</a>
             .

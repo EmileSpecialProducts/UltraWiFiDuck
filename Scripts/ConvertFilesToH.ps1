@@ -30,3 +30,4 @@ function ConvertFileToBin ($Infile , $Outfile)
 }
 
 ConvertFileToBin '../web/favicon.ico' '../src/html_favicon_ico.h' 
+ConvertFileToBin '../web/bmc_qr.png' '../src/html_bmc_qr_png.h' 
