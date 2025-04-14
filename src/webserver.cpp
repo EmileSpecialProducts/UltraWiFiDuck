@@ -28,16 +28,15 @@ bool WiFiConected = false;
 
 void reply(AsyncWebServerRequest *request, int code, const char *type, const uint8_t *data, size_t len)
 {
-    debugf("reply Len = %d code = %d Type= %s\n ", len, code, type);
-        request->send(code, type, data, len);
-        /*
+    debugf("reply Len = %d code = %d Type= %s\n ", len, code, type);  
+    //request->send(code, type, data, len);
         AsyncWebServerResponse *response =
             request->beginResponse(code, type, data, len);
 
         // response->addHeader("Content-Encoding", "gzip");
         // response->addHeader("Content-Encoding", "7zip");
+        response->addHeader("Access-Control-Allow-Origin","*");    
         request->send(response);
-        */
 }
 
 namespace webserver
