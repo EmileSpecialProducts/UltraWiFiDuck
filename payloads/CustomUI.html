@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Custom Button</title>
+    <script>
+        
+        function RunScript(Host,Script) {
+        console.log(Host+"?cmd=run "+ Script)
+            fetch(Host+"/run?cmd=run " + Script)
+            .then(response => response.text())
+            .then(content => {
+                //E("editor").value = content;
+                console.log(content);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function Nuck() {
+            // Add the devices that you whant to run a script on
+            RunScript('http://ultrawifiducks3.local','/Lock.txt');
+        }
+        
+    </script>
+    
+</head>
+<body>
+    <main>
+        <section>
+            <h2>UltraWiFiDuck</h2>
+            <h3>Functions</h3>
+            <table id="ducky-functions-table">  
+                <thead>
+                    <tr>
+                        <th>Custom Button </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <button class="danger" slot="activate" onclick="Nuck()" >Nuck a other devices </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        You can find the source of of this software at this github
+        <a href="https://github.com/EmileSpecialProducts/UltraWiFiDuck" target="_blank">archive</a>
+    </footer>
+</body>
+</html>
