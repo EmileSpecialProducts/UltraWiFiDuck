@@ -277,3 +277,9 @@ Software libraries used in this project:
 ## Original wifiduck
 As this is a Fork from [spacehuhn.com](https://spacehuhn.com) [github](https://github.com/spacehuhntech/WiFiDuck)
 
+  <p align="center">
+  <h4>Buy Me Coffee</h4>
+      <a href="https://buymeacoffee.com/emilespecialproducts">
+          <img alt="BuymeaCoffee" src="web/bmc_qr.png">
+      </a>
+  </p>
