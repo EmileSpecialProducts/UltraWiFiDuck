@@ -202,12 +202,46 @@ const uint8_t help_html[] = R"rawliteral(
                     </tr>
                 </tbody>
             </table>
+            <h3>Mouse</h3>
+            <table id="ducky-functions-table">
+                <thead>
+                    <tr>
+                        <th>Command</th>
+                        <th>Example</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>MOUSE </code> or <code>MOVE </code> </td>
+                        <td><code>MOUSE 20 -10 </code></td>
+                        <td>Moves the mouse 20 to the right and 10 up
+                            <br> MOUSE X Y Wheel Pan 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>MOUSE CLICK</code></td>
+                        <td><code>MOUSE CLICK ALL</code></td>
+                        <td>Click the mouse button <br> Options LEFT RIGHT MIDDLE BACKWARD FORWARD ALL </td>
+                    </tr>
+                    <tr>
+                        <td><code>MOUSE PRESS</code> And <code>MOUSE RELEASE</code>  </td>
+                        <td><code>MOUSE PRESS ALL</code></td>
+                        <td>PRESS/RELEASE the mouse button <br> Options LEFT RIGHT MIDDLE BACKWARD FORWARD ALL </td>
+                    </tr>
+                    <tr>
+                        <td><code>MOUSE DELAY</code> or <code>MOUSE_DELAY</code></td>
+                        <td><code>MOUSE DELAY 200</code></td>
+                        <td>Time in ms between every mouse command</td>
+                    </tr>
+                </tbody>
+            </table>
             <h3>GPIO pins</h3>
             <table>
                 <thead>
                     <tr>
                         <th>The file "gpiolowxx" will be triggerd when the GPIO pin will go low and when relased (high) the file "gpiohixx" will be triggerd <br>
-                        So "gpiolo0" is for GPIO0 going low and "gpiohi12" is for GPIO12 going high </th>
+                        So "gpiolow0" is for GPIO0 going low and "gpiohi9" is for GPIO9 going high </th>
                     </tr>
                 </thead>
                 <tbody>
