@@ -26,8 +26,7 @@ function fixFileName(fileName) {
         if (fileName[0] != '/') {
             fileName = '/' + fileName;
         }
-
-        fileName = fileName.replace(/ /g, '\-');
+        //fileName = fileName.replace(/ /g, '\-');
     }
     return fileName;
 }
