@@ -6,32 +6,51 @@
 bool getArgument(char *Command, int i, char *buffer , int bufferlen )
 {
     int index = 0;
+    bool quote=false;
+    debugf("GetArg %s, %d\n",Command,i);    
     memset(buffer, 0, bufferlen);
-    do
+    while (*Command)
     {
-        while (*Command == ' ') Command++;
+        while (*Command == ' ') { Command++; bufferlen--; }
         if(index==i)
         {
-            while (*Command != ' ' && *Command != 0)
+            while ((*Command != ' ' || quote==true) && *Command != 0)
                 {
                     if (bufferlen > 1)
                     {
-                        *buffer = *Command;
-                        buffer++;
-                        Command++;
+                        debug(*Command);
+
+                        if(*Command =='\"') 
+                        {    
+                            quote=!quote;
+                            debug('#');
+                        }
+                        else
+                        {
+                            *buffer = *Command;
+                            buffer++;
+                        }
+                        Command++; 
+                        bufferlen--; 
                     }
                 }
+            debugln(buffer);
             return true;
         }
         index++;
-        while (*Command != ' ' && *Command !=0)     
+        while ((*Command != ' ' || quote==true) && *Command !=0)
+        {  
+            if(*Command =='\"') 
+                quote=!quote;
             Command++;
-    } while (*Command);
+        }
+    } 
     return false;
 }
 
 void fixPath(String &path)
 {
+    path.replace("\"", "");
     if (!path.startsWith("/"))
     {
         path = "/" + path;
@@ -42,16 +61,13 @@ String listDir(String dirName)
 {
     String res="";
     res.reserve(255);
-    debugln("DIR1" + dirName);
     fixPath(dirName);
-    debugln("DIR2" + dirName);
-    
         File root = LittleFS.open(dirName);
         File file = root.openNextFile();
         while (file)
         {
             debugln("DIR3" + String(file.name()));
-            res += String(file.name()) + " " + String(file.size()) +"\n";
+            res += "\""+String(file.name()) + "\" " + String(file.size()) +"\n";
             file = root.openNextFile();
         }
         if (res.length() == 0)
@@ -77,7 +93,7 @@ void Commandline(char * Command, String *buffer)
             if (duckscript.running)
             {
                 Ready = false;
-                *buffer += "running "+duckscript.currentScript() + " " + duckscript.running_line + "\n";
+                *buffer += "running \""+duckscript.currentScript() + "\" " + duckscript.running_line + "\n";
             }
         }
         if (Ready == true)
@@ -162,12 +178,12 @@ void Commandline(char * Command, String *buffer)
     }
     else if (strncmp(commandbuffer, "cat", 3) == 0)
     {   // this will not work for big files > 2K
-        String filename;
         char value[64];
         getArgument(Command, 1, value, sizeof(value));
-        filename = value;
+        String filename=String(value);
         fixPath(filename);
-
+        debugln(filename);
+ 
         File f = LittleFS.open(filename);
 
         int buf_size{2048};
@@ -214,8 +230,9 @@ void Commandline(char * Command, String *buffer)
     {
         char value[64];
         getArgument(Command, 1, value, sizeof(value));
-        String filename = String(value);
+        String filename=String(value);
         fixPath(filename);
+        debugln(filename);
         File f=LittleFS.open(filename,"w");
         f.close();
         *buffer = "> Created file \"" + filename + "\"";
@@ -224,9 +241,9 @@ void Commandline(char * Command, String *buffer)
     {
         char value[64];
         getArgument(Command, 1, value, sizeof(value));
-
-        String filename = String(value);
+        String filename=String(value);
         fixPath(filename);
+        debugln(filename);
         LittleFS.remove(filename);
         *buffer = "> removed file \"" + filename + "\"";
     }
@@ -236,12 +253,12 @@ void Commandline(char * Command, String *buffer)
         getArgument(Command, 1, value, sizeof(value));
         char value2[64];
         getArgument(Command, 2, value2, sizeof(value2));
-        String fileA = String(value);
-        String fileB = String(value2);
-        fixPath(fileA);
-        fixPath(fileB);
-        LittleFS.rename(fileA, fileB);
-        *buffer = "> renamed \"" + fileA + "\" to \"" + fileB + "\"";
+        String fileold = String(value);
+        String filenew = String(value2);
+        fixPath(fileold);
+        fixPath(filenew);
+        LittleFS.rename(fileold, filenew);
+        *buffer = "> renamed \"" + fileold + "\" to \"" + filenew + "\"";
     }
     else if (strncmp(commandbuffer, "format", 6) == 0)
     {
@@ -256,4 +273,4 @@ void Commandline(char * Command, String *buffer)
     {
         *buffer += "Unknown Command";
     }
-    }
+}

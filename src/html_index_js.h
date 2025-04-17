@@ -57,44 +57,53 @@ function Teststatus()
             //E("editor").value = content;
             //console.log(content);
             status_list = content;
-            
             var table = document.getElementById('file_id');
                 for (var r = 0, n = table.rows.length; r < n; r++) {
                     table.rows[r].cells[3].innerHTML = "";
                 }
-           
-            var lines = status_list.split(/\n/);
-            for (var i = 0; i < lines.length; i++) {
-                var data = lines[i].split(" ");
-                var Status = data[0];
-                var fileName = data[1];
-                var Line = data[2];
-                //console.log("Status: " + Status + " fileName: " + fileName + " Line: " + Line);
-                if (Status == "running" &&!(Line === undefined) && !(fileName === undefined)) {
-                    E("File" + fileName).innerHTML = "Running @ Line = " + Line;
-                    isrunning = true; 
-                }
-            }
-            if (isrunning)
+            if(status_list.match('Ultra WifiDuck -- Ready') )
             {
-                StatusUpdateRunning = true;
-                setTimeout(Teststatus, 500);
+                console.log("No Running Tasks");
+                StatusUpdateRunning = false;
             }
             else
             {
-                StatusUpdateRunning = false;
+                var lines = status_list.split(/\n/);
+                for (var i = 0; i < lines.length; i++) {
+                    var data = lines[i].match(/(?:[^\s"]+|"[^"]*")+/g);
+                    if(data != null && data[0] != undefined && data[1] != undefined && data[2] != undefined)
+                    {
+                        var Status = data[0];
+                        var fileName = data[1].replace(/['"]/g, '');
+                        var Line = data[2];
+                        //console.log("Status: " + Status + " fileName: " + fileName + " Line: " + Line);
+                        if (Status == "running" &&!(Line === undefined) && !(fileName === undefined)) {
+                            E("File" + fileName).innerHTML = "Running @ Line = " + Line;
+                            isrunning = true; 
+                        }
+                    }
+                }
+                if (isrunning)
+                {
+                    StatusUpdateRunning = true;
+                    setTimeout(Teststatus, 500);
+                }
+                else
+                {
+                    StatusUpdateRunning = false;
+                }
             }
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
+
 // ! Updates file list and memory usage
 function update_file_list() {
     fetch("/run?cmd=ls")
         .then(response => response.text())
         .then(content => {
-            //console.log(content);
             file_list = content;
 
             var lines = file_list.split(/\n/);
@@ -110,26 +119,32 @@ function update_file_list() {
             tableHTML += "<tbody id=\"file_id\">\n";
 
             for (var i = 0; i < lines.length; i++) {
-                var data = lines[i].split(" ");
-                var fileName = data[0];
-                var fileSize = data[1];
+                //var data = lines[i].split(" ");
+                //console.log(lines[i]);
+                var data = lines[i].match(/(?:[^\s"]+|"[^"]*")+/g);
+                if(data != null)
+                {
+                    var fileName = data[0].replace(/['"]/g, '');
+                    var fileSize = data[1];
 
-                if (fileName.length > 0) {
-                    if (i == 0 && !file_opened) {
-                        read(fileName);
+                    if (fileName.length > 0) {
+                        if (i == 0 && !file_opened) {
+                            read(fileName);
+                        }
+                        tableHTML += "<tr>\n";
+                        tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileName + "</td>\n";
+                        tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileSize + "</td>\n";
+                        tableHTML += "<td>\n";
+                        tableHTML += "<button class=\"primary\" onclick=\"read('" + fileName + "')\">Edit</button>\n";
+                        tableHTML += "<button class=\"success\" onclick=\"run('" + fileName + "')\">Run</button>\n";
+                        tableHTML += "<button class=\"warn\" onclick=\"stop('" + fileName + "')\">Stop</button>\n";
+                        tableHTML += "<button class=\"danger\" onclick=\"rename('" + fileName + "')\">Ren</button>\n";
+                        tableHTML += "<button class=\"danger\" onclick=\"remove('" + fileName + "')\">Del</button>\n";
+                        tableHTML += "</td>\n";
+                        tableHTML += "<td id=\"File/"+ fileName +"\">\n";
+                        tableHTML += "</td>\n";
+                        tableHTML += "</tr>\n";
                     }
-                    tableHTML += "<tr>\n";
-                    tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileName + "</td>\n";
-                    tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileSize + "</td>\n";
-                    tableHTML += "<td>\n";
-                    tableHTML += "<button class=\"primary\" onclick=\"read('" + fileName + "')\">Edit</button>\n";
-                    tableHTML += "<button class=\"success\" onclick=\"run('" + fileName + "')\">Run</button>\n";
-                    tableHTML += "<button class=\"warn\" onclick=\"stop('" + fileName + "')\">Stop</button>\n";
-                    tableHTML += "<button class=\"danger\" onclick=\"remove('" + fileName + "')\">Delete</button>\n";
-                    tableHTML += "</td>\n";
-                    tableHTML += "<td id=\"File/"+ fileName +"\">\n";
-                    tableHTML += "</td>\n";
-                    tableHTML += "</tr>\n";
                 }
             }
             tableHTML += "</tbody>\n";
@@ -185,7 +200,7 @@ function format() {
 
 // ! Run script
 function run(fileName) {
-    fetch("/run?cmd=run " + fixFileName(fileName) + "")
+    fetch("/run?cmd=run \"" + encodeURIComponent(fileName)+"\"")
         .then(response => response.text())
         .then(content => {
             //E("editor").value = content;
@@ -200,7 +215,7 @@ function run(fileName) {
 
 // ! Stop running specific script
 function stop(fileName) {
-    fetch("/run?cmd=stop " + fixFileName(fileName) +"" )
+    fetch("/run?cmd=stop \"" + encodeURIComponent(fileName)+"\"" )
         .then(response => response.text())
         .then(content => {
             //E("editor").value = content;
@@ -259,8 +274,8 @@ function create(fileName) {
 
 // ! Delete a file
 function remove(fileName) {
-    if (confirm("This will delete File" + fileName)) {
-        fetch("/run?cmd=remove " + fileName)
+    if (confirm("This will delete File " + fileName)) {
+        fetch("/run?cmd=remove \"" + encodeURIComponent(fixFileName(fileName))+"\"")
             .then(response => response.text())
             .then(content => {
                 console.log("Remove " + content);
@@ -273,8 +288,24 @@ function remove(fileName) {
     }
 }
 
+function rename(OldfileName) {
+    var newfilename;
+    var newfilename = prompt("New FileName (1-32 chars) ", OldfileName);
+    if (newfilename) {
+        fetch("/run?cmd=rename \"" + encodeURIComponent(fixFileName(OldfileName))+"\" \""+encodeURIComponent(fixFileName(newfilename))+"\"")
+            .then(response => response.text())
+            .then(content => {
+                console.log("rename " + content);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        update_file_list();
+    }
+}
+
 function autorun(fileName) {
-    fetch("/run?cmd=set autorun " + fileName)
+    fetch("/run?cmd=set autorun \"" + encodeURIComponent(fixFileName(fileName))+"\"")
         .then(response => response.text())
         .then(content => {
             console.log("set autorun " + content);
@@ -282,16 +313,14 @@ function autorun(fileName) {
         .catch(error => {
             console.error('Error:', error);
         });
-
-
 }
 
 // ! Write content to file
 function write(fileName, content) {
     fileName = fixFileName(fileName);
-    console.log("Write content.length= " + content.length)
+    //console.log("Write content.length= " + content.length)
     if (content.length == 0) { // As we can not send a file that has 0 length 
-        fetch("/run?cmd=create " + fileName)
+        fetch("/run?cmd=create \"" + fileName+"\"")
             .then(response => response.text())
             .then(content => {
                 console.log("create: " + content);
@@ -363,7 +392,6 @@ window.addEventListener("load", function () {
         if (confirm("Run this script automatically on startup?\nYou can disable it in the settings."))
             autorun(get_editor_filename());
     }
-
 
     UpdateVersion();
     update_file_list();

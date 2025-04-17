@@ -17,6 +17,19 @@ const uint8_t index_html[] = R"rawliteral(
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="script.js"></script>
     <script src="index.js"></script>
+    <script>
+        function validateForm() {
+            console.log("validateForm");
+          let x = !document.forms[myUpload][filename].value;
+          console.log(x);
+          console.log(document.forms);
+          if (x == "") {
+            alert("Name must be filled out");
+            return false;
+          }
+          alert("End Of validateForm");
+        }
+        </script>
 </head>
 
 <body>
@@ -42,10 +55,16 @@ const uint8_t index_html[] = R"rawliteral(
             <h1>Scripts <a class="reload" id="scriptsReload">&#x21bb;</a></h1>
             <table class="table" id="scriptTable"></table>
             <div class="row">
+                <button class="warn" id="stopall">stopall</button>
                 <input placeholder="Filename /<name>" type="text" class="smooth" value="/" id="newFile" />
                 <button class="success" onclick="create(get_new_filename())">create</button>
-                <button class="warn" id="stopall">stopall</button>
             </div>
+            <div class="row">    
+                <form method="post" action="upload" enctype="multipart/form-data" name="myUpload" onsubmit="return validateForm()">
+                    <input  type="file" id="myFile" name="filename">
+                    <button class="success" type="submit" id="upload">Upload</button>
+                  </form>
+                </div>
         </section>
         <section>
             <h1>Editor <a class="reload" id="editorReload">&#x21bb;</a></h1>

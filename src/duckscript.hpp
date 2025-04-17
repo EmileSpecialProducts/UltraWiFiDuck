@@ -63,7 +63,7 @@ public:
   void Runfile(String fileName);
   void stop();
   bool isRunning();
-  String FixPath(String Path);
+  
   String currentScript();
   void WriteLine();
   uint32_t getUniCode(char *buffer, uint8_t *utf_len_return);
@@ -98,4 +98,4 @@ void duckscript_begin();
 void duckscripts_run(char *filename);
 void duckscripts_stop(char *filename);
 void duckscripts_stopall();
-
+String FixPath(String Path);

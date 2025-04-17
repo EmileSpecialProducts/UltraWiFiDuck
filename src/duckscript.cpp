@@ -308,12 +308,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         return running;
     }
 
-    String DuckScript::FixPath(String Path)
-    {
-        if (Path.startsWith("/"))
-            return (Path);
-        return ("/" + Path);
-    }
+    
 
     String DuckScript::currentScript()
     {
@@ -506,7 +501,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             mouse_release(buttons);
             return;
         }
-        else if (strncmp(Line_BufferPtr, "MOUSE ", 6) == 0)
+        else if (strncmp(Line_BufferPtr, "MOUSE ", 6) == 0 || strncmp(Line_BufferPtr, "MOVE ", 5) == 0)
         {
             int c[4] = {0, 0, 0, 0};
             for (uint8_t i = 0; i < sizeof(c) / sizeof(c[0]); ++i)
@@ -1102,7 +1097,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         bool RunTask = true;
         while (Task < DUCKSCRIPTLEN)
         {
-            if (DuckScripts[Task].currentScript()==String(filename))
+            if (DuckScripts[Task].currentScript()==FixPath(String(filename)))
             {
                 RunTask = false;
                 debugf("Script is already running\n");
@@ -1140,9 +1135,12 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
     {
         int Task = 0;
         debugf("duckscripts_stop(%s)\n", filename);
+        String file_name = FixPath(String(filename));    
         for (DuckScript duckscript : DuckScripts)
         {
-            if (duckscript.currentScript() == filename)
+            if(duckscript.isRunning())
+                debugln("running [" +duckscript.currentScript() +"] [" +file_name+"]");
+            if (duckscript.currentScript() == file_name)
             {
                 debugf("duckscripts_stoping %s\n", duckscript.currentScript());
                 duckscript.stop();
@@ -1161,4 +1159,11 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 duckscript.stop();
             }
         }
+    }
+
+    String FixPath(String Path)
+    {
+        if (Path.startsWith("/"))
+            return (Path);
+        return ("/" + Path);
     }
