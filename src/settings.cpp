@@ -152,8 +152,11 @@ namespace settings
 
     int getRGBLedPinNum()
     {
+        if(strlen(data.RGBLedPin)>0)
+        {
         if (atoi(data.RGBLedPin) >= 0 && atoi(data.RGBLedPin) <=48 )
             return atoi(data.RGBLedPin);
+        }
         return -1;
     }
     char *getAutorun()
@@ -245,6 +248,7 @@ namespace settings
             strncpy(data.APchannel, channel, 4);
         }
     }
+
     void setRGBLedPin(const char *pin)
     {
         if (pin && ((strcmp(pin, "") == 0) || ((atoi(pin) >= 0) && (atoi(pin) <= 48))))

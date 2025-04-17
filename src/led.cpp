@@ -13,22 +13,30 @@ namespace led
 
     void begin()
     {
-        strip.setPin(settings::getRGBLedPinNum());
-        strip.begin();
-        setColor(0, 0, 0);
+        //DEBUG_PORT.printf("settings::getRGBLedPinNum() %d\n",settings::getRGBLedPinNum());
+        if(settings::getRGBLedPinNum()!=-1)
+        {
+            strip.setPin(settings::getRGBLedPinNum());
+            strip.begin();
+            setColor(0, 0, 0);
+        }
+
     }
 
     void setColor(int r, int g, int b, int start , int end )
     {
-        if (start == 0 && end ==0 )
+        if(settings::getRGBLedPinNum()!=-1)
         {
-            end = strip.numPixels();
+            if (start == 0 && end ==0 )
+            {
+                end = strip.numPixels();
+            }
+            if (end > strip.numPixels()) end = strip.numPixels();
+            for (size_t i = start; i < end; i++)
+            {
+                strip.setPixelColor(i, r, g, b);
+            }
+            strip.show();       
         }
-        if (end > strip.numPixels()) end = strip.numPixels();
-        for (size_t i = start; i < end; i++)
-        {
-            strip.setPixelColor(i, r, g, b);
-        }
-        strip.show();
     }
 }
