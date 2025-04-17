@@ -147,8 +147,10 @@ namespace webserver
         server.on("/upload", HTTP_POST, 
                 [](AsyncWebServerRequest *request)
                   {
-                    debugln("File upload completed");
-                    request->send(200, "text/plain; chartset=\"UTF-8\"", "File upload completed"); 
+                    debugln("File upload completed " + request->url());
+                    //request->send(200, "text/plain; chartset=\"UTF-8\"", "File upload completed");
+                    //request->send(200);
+                    request->redirect("/"); 
                   }, 
                 [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
                   {
@@ -209,10 +211,10 @@ namespace webserver
         }
         // Start Server
         server.begin();
-        debug("You can now connect to http://");
-        debug(settings::getHostName());
-        debug(".local or http://");
-        debugln(WiFi.localIP());
+        DEBUG_PORT.print("You can now connect to http://");
+        DEBUG_PORT.print(settings::getHostName());
+        DEBUG_PORT.print(".local or http://");
+        DEBUG_PORT.println(WiFi.localIP());
         WaitTime = millis();
     }
 
