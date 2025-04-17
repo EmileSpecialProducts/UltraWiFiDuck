@@ -9,9 +9,9 @@ const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,35,
 #elif defined (CONFIG_IDF_TARGET_ESP32S2)
 const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,26};
 #elif defined (CONFIG_IDF_TARGET_ESP32C3)
-const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,10};
+const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10};
 #elif defined (CONFIG_IDF_TARGET_ESP32C6)
-const uint8_t gpio_pins[]={0};
+const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,27};
 #elif defined (CONFIG_IDF_TARGET_ESP32)
 const uint8_t gpio_pins[]={0};
 #endif
@@ -21,7 +21,7 @@ class GpioTrigger
 {
 private:
     uint8_t pinstate[gpio_pins_len]; 
-    uint8_t ledpinNum;
+    int ledpinNum;
 public:
     GpioTrigger();
     void begin(int ledpinNum);
