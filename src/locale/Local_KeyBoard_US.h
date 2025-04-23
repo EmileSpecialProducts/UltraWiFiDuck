@@ -39,7 +39,7 @@ UnicodeToKeyCode_t Keyboard_US[] =
         {'<', {HID_KEY_SHIFT_LEFT, HID_KEY_COMMA, 0}},
         {'=', {HID_KEY_EQUAL, 0}},
         {'>', {HID_KEY_SHIFT_LEFT, HID_KEY_PERIOD, 0}},
-        {'?', {HID_KEY_SHIFT_LEFT, HID_KEY_BRACKET_LEFT, 0}},
+        {'?', {HID_KEY_SHIFT_LEFT, HID_KEY_SLASH, 0}},
         {'@', {HID_KEY_SHIFT_LEFT, HID_KEY_2, 0}},
         {'A', {HID_KEY_SHIFT_LEFT, HID_KEY_A, 0}},
         {'B', {HID_KEY_SHIFT_LEFT, HID_KEY_B, 0}},
