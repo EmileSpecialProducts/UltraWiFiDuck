@@ -224,7 +224,7 @@ You can find some more examples in the [PowershellTestScript.ps1](https://github
 | remove <...> | Deletes file | `remove example.duck` |
 | cat <...> | Returns content of file | `cat example.duck` |
 | rename -fileA,a <value> -fileB,b <value> | Renames file | `rename example.duck example.txt` |
-| write -f/ile <value> -c/ontent <value> | Writes (appends) data to file | `write example.txt "Hello World!"` |
+
 
 ## How to Debug
 
