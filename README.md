@@ -197,7 +197,14 @@ This will create a file led.txt using powershell
 ```
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=write led.txt `"LED 10 10 10`nDELAY 1000`nLED 0 0 0`nDELAY 1000`nRESTART`""
 ```
+But the best is to upload a file using the powershell or CURL
 You can find some more examples in the [PowershellTestScript.ps1](https://github.com/EmileSpecialProducts/UltraWiFiDuck/blob/master/test/PowershellTestScript.ps1)
+
+### CURL
+Upload using linux CURL 
+```
+curl -X POST -F "data=$(printf "GUI r\nnotepad\nHello");filename=test123.txt;type=application/octet-stream" http://UltraWiFiDuck.local/upload
+```
 
 ### General
 
@@ -209,7 +216,7 @@ You can find some more examples in the [PowershellTestScript.ps1](https://github
 | settings | Returns list of settings | `settings` |
 | set -n/ame <value> -v/alue <value> | Sets value of a specific setting | `set ssid "why fight duck"` |
 | reset | Resets all settings to their default values | `reset` |
-| status | Returns status of i2c connection with Atmega32u4 | `status` |
+| status | Returns status | `status` |
 | run <...> | Starts executing a Ducky script | `run example.txt` |
 | stop <...> | Stops executing a Ducky script | `stop example.txt` |
 
@@ -244,13 +251,16 @@ But best to upload them to the LittleFS firts and test and then replace the Flas
 ### Translate Keyboard Layout
 
 Currently supported keyboard layouts:
-NONE, US , US-INT, BG  
+NONE, US , US-INT , BG , DE , FR  
 
 But you can enter the UFT8 characters and they will be typed using the <Alt> and Unicode on the numberpad
 
 LOCALE DE
+
 STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
-ENTER
+
+\ENTER
+
 
 ## Disclaimer
 
