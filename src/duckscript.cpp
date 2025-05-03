@@ -199,8 +199,8 @@ Keyboards_t Local_Keyboards[] =
 DuckScript DuckScripts[DUCKSCRIPTLEN];
 
     DuckScript::DuckScript()
-    {
-        KeyboardUniCodes = Keyboard_US_INT;
+    {    
+        KeyboardUniCodes = GetLocalKeyboard(settings::getLocalName());
         debugf("DuckScript Constructor\n");
     } //  constructor to initilize
 
@@ -427,6 +427,24 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         return (utf_code);
     }
 
+    UnicodeToKeyCode_t *DuckScript::GetLocalKeyboard(char *BufferPtr)
+    {
+        debugf("GetLocalKeyboard (%s)\n",BufferPtr);
+        UnicodeToKeyCode_t *LKeyboardUniCodes= Keyboard_US_INT;
+        for (int Lang = 0; Lang < (sizeof(Local_Keyboards) / sizeof(Local_Keyboards[0])); Lang++)
+        {
+            debugf("%s %p\n",Local_Keyboards[Lang].KeyboardName,(void *) (Local_Keyboards[Lang].KeyboardUniCodes));
+            if (strncmp(Local_Keyboards[Lang].KeyboardName, BufferPtr, strlen(Local_Keyboards[Lang].KeyboardName)) == 0)
+            {
+                LKeyboardUniCodes = Local_Keyboards[Lang].KeyboardUniCodes;
+                debugf("New LOCALE = %s\n", Local_Keyboards[Lang].KeyboardName,(void *)LKeyboardUniCodes);
+                break;
+            }
+        }
+        debugf("LP=%p\n",(void *) (LKeyboardUniCodes));
+        return LKeyboardUniCodes;
+    }
+
     void DuckScript::LineCommand()
     {
         KeyReport StartKeyReport;
@@ -545,16 +563,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         else if (strncmp(Line_BufferPtr, "LOCALE ", 7) == 0)
         {
             PointToNextParammeter();
-            for (int Lang = 0; Lang < (sizeof(Local_Keyboards) / sizeof(Local_Keyboards[0])); Lang++)
-            {
-                debug(Local_Keyboards[Lang].KeyboardName);
-                if (strncmp(Local_Keyboards[Lang].KeyboardName, Line_BufferPtr, strlen(Local_Keyboards[Lang].KeyboardName)) == 0)
-                {
-                    KeyboardUniCodes = Local_Keyboards[Lang].KeyboardUniCodes;
-                    debugf("New LOCALE = %s\n", Local_Keyboards[Lang].KeyboardName);
-                    break;
-                }
-            }
+            KeyboardUniCodes = GetLocalKeyboard(Line_BufferPtr);
             return;
         }
         else if (strncmp(Line_BufferPtr, "STRING ", 7) == 0)

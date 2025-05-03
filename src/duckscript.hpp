@@ -15,7 +15,7 @@
 #include "USBHIDKeyboard.h"
 #include "USBHIDGamepad.h"
 #include "USBHIDConsumerControl.h"
-
+#include "USBHIDSystemControl.h"
 #endif
 
 #if defined(CONFIG_BT_BLE_ENABLED)
@@ -24,6 +24,7 @@
 #endif
 #include <FS.h> // File
 #include <LittleFS.h>
+#include "settings.h"
 
 typedef struct UnicodeToKeyCode_t
 {
@@ -63,7 +64,7 @@ public:
   void Runfile(String fileName);
   void stop();
   bool isRunning();
-  
+  UnicodeToKeyCode_t *GetLocalKeyboard(char *BufferPtr);   
   String currentScript();
   void WriteLine();
   uint32_t getUniCode(char *buffer, uint8_t *utf_len_return);
