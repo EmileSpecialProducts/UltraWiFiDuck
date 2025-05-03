@@ -23,6 +23,7 @@ function load_settings() {
             var autorun = lines[5].split("=")[1];
             var RGBLedPin = lines[6].split("=")[1];
             var HostName = lines[7].split("=")[1];
+            var Localkeyboard = lines[8].split("=")[1];
 
             E("APssid").innerHTML = APssid;
             E("APpassword").innerHTML = APpassword;
@@ -32,6 +33,7 @@ function load_settings() {
             E("autorun").innerHTML = autorun;
             E("RGBLedPin").innerHTML = RGBLedPin;
             E("HostName").innerHTML = HostName;
+            E("LocalName").innerHTML =Localkeyboard;
             
         })
         .catch(error => {
@@ -192,6 +194,25 @@ window.addEventListener("load", function () {
         } 
     }
 
+    E("edit_Local").onclick = function () {
+    const Locals = ["US", "US-INT", "FR", "DE","BG","NONE"];
+    var newLocal = prompt("Password (8-64 chars)", E("LocalName").innerHTML);
+    if (newLocal && Locals.indexOf(newLocal) >=0) {
+            fetch("/run?cmd=set LocalName \"" + newLocal+"\"")
+                .then(response => response.text())
+                .then(content => {
+                    //E("editor").value = content;
+                    console.log(content);
+                    load_settings();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            alert("ERROR: Invalid length");
+        }
+    } 
+    
     E("disable_autorun").onclick = function () {
         fetch("/run?cmd=set autorun")
             .then(response => response.text())

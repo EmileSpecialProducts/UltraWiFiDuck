@@ -1,5 +1,5 @@
 const uint8_t settings_html[] = R"rawliteral(
-<!--
+ <!--
    This software is licensed under the MIT License. See the license file for details.
    Source: https://github.com/spacehuhntech/WiFiDuck
 -->
@@ -71,6 +71,11 @@ const uint8_t settings_html[] = R"rawliteral(
                 <tr id="edit_RGBLedPin">
                     <td>RGBLedPin:</td>
                     <td id="RGBLedPin"></td>
+                    <td><button class="primary">edit</button></td>
+                </tr>
+                <tr id="edit_Local">
+                    <td>Local Keyboard:</td>
+                    <td id="LocalName"></td>
                     <td><button class="primary">edit</button></td>
                 </tr>
             </table>

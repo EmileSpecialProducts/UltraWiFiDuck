@@ -100,7 +100,7 @@ const uint8_t help_html[] = R"rawliteral(
                         <td><code>LOCALE</code></td>
                         <td><code>LOCALE US-INT</code></td>
                         <td>Sets the keyboard layout. Available:
-                            <code>US</code>,<code>US-INT</code>, <code>BG</code>,<code>NONE</code>,
+                            <code>US</code>,<code>US-INT</code>, <code>FR</code>, <code>DE</code>, <code>BG</code>, <code>NONE</code>,
                         </td>
                     </tr>
                     <tr>

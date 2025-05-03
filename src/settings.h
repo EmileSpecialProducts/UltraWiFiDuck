@@ -28,7 +28,7 @@ namespace settings
   char *getPassword();
   char *getAutorun();
   char *getHostName();
-  
+  char *getLocalName();
 
   int getAPChannelNum();
   int getRGBLedPinNum();
@@ -43,4 +43,5 @@ namespace settings
   void setAutorun(const char *autorun);
   void setRGBLedPin(const char *pin);
   void setHostName(const char *hostename);
+  void setLocalName(const char *localname);
 }

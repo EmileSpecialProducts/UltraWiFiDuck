@@ -22,6 +22,7 @@ namespace settings
         char autorun[65];
         char RGBLedPin[5];
         char hostname[65];
+        char localname[10];
 
     } settings_t;
 
@@ -72,6 +73,7 @@ namespace settings
         setRGBLedPin(RGBLEDPIN);
         setAutorun("");
         setHostName("UltraWiFIDuck");
+        setLocalName("US-INT");
     }
 
     void save()
@@ -108,6 +110,9 @@ namespace settings
         + "\n"
         + "HostName="
         + String(getHostName())
+        + "\n"
+        + "LocalName="
+        + String(getLocalName())
         + "\n";
         debug(s);
         return s;
@@ -167,6 +172,10 @@ namespace settings
     {
         return data.hostname;
     }
+    char *getLocalName()
+    {
+        return data.localname;
+    }
 
     void set(const char *name, const char *value)
     {
@@ -202,6 +211,10 @@ namespace settings
         else if (strcmp(name, "HostName") == 0)
         {
             setHostName(value);
+        }
+        else if (strcmp(name, "LocalName") == 0)
+        {
+            setLocalName(value);
         }
     }
 
@@ -273,6 +286,14 @@ namespace settings
         {
             memset(data.hostname, 0, sizeof(data.hostname));
             strncpy(data.hostname, hostname, sizeof(data.hostname) - 1);
+        }
+    }
+    void setLocalName(const char *localname)
+    {
+        if (localname)
+        {
+            memset(data.localname, 0, sizeof(data.localname));
+            strncpy(data.localname, localname, sizeof(data.localname) - 1);
         }
     }
 }
