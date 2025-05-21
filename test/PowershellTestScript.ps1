@@ -84,3 +84,21 @@ Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=remove setting.js"
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=remove setting.html"
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=remove style.css"
 
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/index.html"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/index.js"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/script.js"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/help.html"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/settings.html"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/settings.js"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/style.css"
+
+For ($i = 0; $i -le 50; $i++) { 
+    $URL="http://UltraWiFiDuck.local";
+    $file ="index.html"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+    $file ="index.js"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+    $file ="script.js"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+    $file ="help.html"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+    $file ="settings.html"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+    $file ="settings.js"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+    $file ="style.css"; $a = Invoke-WebRequest -URI "$URL/$file" ; write-host "$file" $i $a.StatusCode $a.RawContentLength 
+}
