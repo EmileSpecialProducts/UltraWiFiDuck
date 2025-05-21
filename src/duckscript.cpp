@@ -11,6 +11,7 @@ USBHIDMouse UsbMouse;
 USBHIDKeyboard UsbKeyboard;
 USBHIDGamepad UsbGamepad;
 USBHIDConsumerControl UsbConsumerControl; 
+USBHIDSystemControl UsbSystemControl;
 USBHID hid;
 #endif
 
@@ -127,8 +128,8 @@ struct Control_Command
 
 const Control_Command Control_Commands[] =
 {
-    {"POWER",CONSUMER_CONTROL_POWER},// Not working
-    {"SLEEP",CONSUMER_CONTROL_SLEEP},// Not working
+    {"OSPOWER",CONSUMER_CONTROL_POWER},// Not working on Windows 
+    {"OSSLEEP",CONSUMER_CONTROL_SLEEP},// Not working on Windows 
     {"MUTE",CONSUMER_CONTROL_MUTE},
     {"VOLUMEUP",CONSUMER_CONTROL_VOLUME_INCREMENT},
     {"VOLUMEDOWN",CONSUMER_CONTROL_VOLUME_DECREMENT},
@@ -139,24 +140,32 @@ const Control_Command Control_Commands[] =
     {"BRIGHT-",CONSUMER_CONTROL_BRIGHTNESS_DECREMENT},
     {"WWW",CONSUMER_CONTROL_HOME}        
 };
+
+const Control_Command System_Commands[] =
+{
+    {"POWER",SYSTEM_CONTROL_POWER_OFF},    
+    {"SLEEP",SYSTEM_CONTROL_STANDBY },     
+    {"WAKE" ,SYSTEM_CONTROL_WAKE_HOST}    
+};
+
 const uint16_t bltControl_Commands[] =
 { // the Control Commands keys are defined in the BleComboKeyboard.cpp file.
-    0xB5,          //   USAGE (Scan Next Track)     ; bit 0: 1
-    0xB6,          //   USAGE (Scan Previous Track) ; bit 1: 2
-    0xB7,          //   USAGE (Stop)                ; bit 2: 4
-    0xCD,          //   USAGE (Play/Pause)          ; bit 3: 8
-    0xE2,          //   USAGE (Mute)                ; bit 4: 16
-    0xE9,          //   USAGE (Volume Increment)    ; bit 5: 32
-    0xEA,          //   USAGE (Volume Decrement)    ; bit 6: 64
-    0x0223,        //   Usage (WWW Home)            ; bit 7: 128
-    0x0194,        //   Usage (My Computer) ; bit 0: 1
-    0x0192,        //   Usage (Calculator)  ; bit 1: 2
-    0x022A,        //   Usage (WWW fav)     ; bit 2: 4
-    0x0221,        //   Usage (WWW search)  ; bit 3: 8
-    0x0226,        //   Usage (WWW stop)    ; bit 4: 16
-    0x0224,        //   Usage (WWW back)    ; bit 5: 32
-    0x0183,        //   Usage (Media sel)   ; bit 6: 64
-    0x018A         //   Usage (Mail)        ; bit 7: 128
+    CONSUMER_CONTROL_SCAN_NEXT,             //   USAGE (Scan Next Track)     ; bit 0: 1
+    CONSUMER_CONTROL_SCAN_PREVIOUS ,        //   USAGE (Scan Previous Track) ; bit 1: 2
+    CONSUMER_CONTROL_STOP ,                 //   USAGE (Stop)                ; bit 2: 4
+    CONSUMER_CONTROL_PLAY_PAUSE ,           //   USAGE (Play/Pause)          ; bit 3: 8
+    CONSUMER_CONTROL_MUTE,                  //   USAGE (Mute)                ; bit 4: 16
+    CONSUMER_CONTROL_VOLUME_INCREMENT,      //   USAGE (Volume Increment)    ; bit 5: 32
+    CONSUMER_CONTROL_VOLUME_DECREMENT,      //   USAGE (Volume Decrement)    ; bit 6: 64
+    CONSUMER_CONTROL_HOME,                  //   Usage (WWW Home)            ; bit 7: 128
+    CONSUMER_CONTROL_LOCAL_BROWSER,         //   Usage (My Computer) ; bit 0: 1
+    CONSUMER_CONTROL_CALCULATOR,            //   Usage (Calculator)  ; bit 1: 2
+    CONSUMER_CONTROL_BOOKMARKS  ,           //   Usage (WWW fav)     ; bit 2: 4
+    CONSUMER_CONTROL_SEARCH  ,              //   Usage (WWW search)  ; bit 3: 8
+    CONSUMER_CONTROL_BR_STOP,               //   Usage (WWW stop)    ; bit 4: 16
+    CONSUMER_CONTROL_BACK,                  //   Usage (WWW back)    ; bit 5: 32
+    CONSUMER_CONTROL_CONFIGURATION,         //   Usage (Media sel)   ; bit 6: 64
+    CONSUMER_CONTROL_EMAIL_READER           //   Usage (Mail)        ; bit 7: 128
 };
 
 const struct KeyCommand StartOfLineKeys[] = {
@@ -187,14 +196,15 @@ const struct KeyCommand StartOfLineKeys[] = {
     {"WINDOWSRICHT", HID_KEY_GUI_RIGHT},
     {"WINDOWS", HID_KEY_GUI_LEFT}};
 
-Keyboards_t Local_Keyboards[] =
+const Keyboards_t Local_Keyboards[] =
     {
         {"US-INT", Keyboard_US_INT},
         {"US", Keyboard_US},
         {"BG", Keyboard_BG},
         {"DE", Keyboard_DE},
         {"FR", Keyboard_French},
-        {"NONE", Keyboard_NONE}};
+        {"NONE", Keyboard_NONE}
+    };
 
 DuckScript DuckScripts[DUCKSCRIPTLEN];
 
@@ -353,6 +363,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                     
                     if (commands == sizeof(KeyCommands) / sizeof(KeyCommands[0]))
                     { // no Command found
+                        debugln("No KeyCommand found");
                         for (commands = 0; commands < sizeof(Control_Commands) / sizeof(Control_Commands[0]); commands++)
                         {
                             if (strncmp(Line_BufferPtr, Control_Commands[commands].StrCommand, strlen(Control_Commands[commands].StrCommand)) == 0)
@@ -364,7 +375,20 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                             }
                         }
                         if (commands == sizeof(Control_Commands) / sizeof(Control_Commands[0])){
-                                press('\\');
+                            debugf("No Control_Commands found [%s]\n",Line_BufferPtr);
+                            for (commands = 0; commands < sizeof(System_Commands) / sizeof(System_Commands[0]); commands++)
+                            {
+                                if (strncmp(Line_BufferPtr, System_Commands[commands].StrCommand, strlen(System_Commands[commands].StrCommand)) == 0)
+                                {
+                                    debugf("Found System_Commands : %s\n", System_Commands[commands].StrCommand);
+                                    Line_BufferPtr += strlen(System_Commands[commands].StrCommand);
+                                    UsbSystemControl.press(System_Commands[commands].RawKeycode);
+                                    break;
+                                }
+                            }
+                            if (commands == sizeof(System_Commands) / sizeof(System_Commands[0])){
+                                    press('\\');
+                            }       
                         }
                     }
                 }
@@ -427,10 +451,10 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         return (utf_code);
     }
 
-    UnicodeToKeyCode_t *DuckScript::GetLocalKeyboard(char *BufferPtr)
+    const UnicodeToKeyCode_t *DuckScript::GetLocalKeyboard(char *BufferPtr)
     {
         debugf("GetLocalKeyboard (%s)\n",BufferPtr);
-        UnicodeToKeyCode_t *LKeyboardUniCodes= Keyboard_US_INT;
+        const UnicodeToKeyCode_t *LKeyboardUniCodes= Keyboard_US_INT;
         for (int Lang = 0; Lang < (sizeof(Local_Keyboards) / sizeof(Local_Keyboards[0])); Lang++)
         {
             debugf("%s %p\n",Local_Keyboards[Lang].KeyboardName,(void *) (Local_Keyboards[Lang].KeyboardUniCodes));
@@ -717,7 +741,12 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             }
         }
         if (KeyboardUniCodes[codes].unicode == 0) // The last line in the LOCAL Keyboard_ table
-        {                                         // This will write the UniCode to the Keyboard as ALT+ decimal number
+        {   
+            // To enter a UniCode there ar diffrent way to do this
+            // Mode 1 : <ALT>decimalnumber<ALTup>
+            // Mode 2 : for  ChromeOS, macOS, Linux  <Ctrl><SHIF><U><Releas-all>HEXUnicode<enter>
+            
+            // This will write the UniCode to the Keyboard as ALT+0 decimal number
             // But we have to save the CurrentKeyReport
             KeyReport KeyReportSaved = CurrentKeyReport;
             uint8_t Keymask = 0;
@@ -1078,7 +1107,8 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         UsbKeyboard.begin();
         UsbMouse.begin();
         UsbGamepad.begin();
-        UsbConsumerControl.begin();        
+        UsbConsumerControl.begin(); 
+        UsbSystemControl.begin();       
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
         BleKeyboard.deviceManufacturer = (CUSTOM_USB_MANUFACTURER);

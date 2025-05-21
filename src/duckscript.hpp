@@ -34,8 +34,8 @@ typedef struct UnicodeToKeyCode_t
 
 typedef struct Keyboards_t
 {
-  char KeyboardName[12];
-  UnicodeToKeyCode_t *KeyboardUniCodes;
+  const char KeyboardName[12];
+  const UnicodeToKeyCode_t *KeyboardUniCodes;
 } Keyboards_t;
 
 class DuckScript // declared/created using class keyword
@@ -49,7 +49,7 @@ class DuckScript // declared/created using class keyword
   unsigned int defaultKeyDelay = 20;   // The delay in ms between key presses
   unsigned int defaultMouseDelay = 20; // The delay in ms between mouse presses
  
-  UnicodeToKeyCode_t *KeyboardUniCodes;
+  const UnicodeToKeyCode_t *KeyboardUniCodes;
   KeyReport CurrentKeyReport = {0, 0, {0, 0, 0, 0, 0, 0}};
   KeyReport LastSendKeyReport = {0, 0, {0, 0, 0, 0, 0, 0}};
   uint32_t StartoflineTime = 0;
@@ -64,7 +64,7 @@ public:
   void Runfile(String fileName);
   void stop();
   bool isRunning();
-  UnicodeToKeyCode_t *GetLocalKeyboard(char *BufferPtr);   
+  const UnicodeToKeyCode_t *GetLocalKeyboard(char *BufferPtr);   
   String currentScript();
   void WriteLine();
   uint32_t getUniCode(char *buffer, uint8_t *utf_len_return);
