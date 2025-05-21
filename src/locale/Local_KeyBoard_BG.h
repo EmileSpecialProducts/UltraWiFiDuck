@@ -5,7 +5,7 @@
 // Bulgarian (Phonetic Traditional) Keyboard 
 #include "Local_KeyBoard.h"
 
-UnicodeToKeyCode_t Keyboard_BG[] =
+const UnicodeToKeyCode_t Keyboard_BG[] =
     {
         {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
         {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab

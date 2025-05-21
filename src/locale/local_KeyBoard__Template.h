@@ -12,7 +12,7 @@
 // This can be useful for testing multiple languages
 // And this can be useful as a Starting template for different languages.
 
-UnicodeToKeyCode_t Keyboard_Template[] =
+const UnicodeToKeyCode_t Keyboard_Template[] =
     {
         {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
         {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab

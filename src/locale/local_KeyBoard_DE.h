@@ -8,7 +8,7 @@
 // And this can be useful as a Starting template for different languages.
 
 // https://kbdlayout.info/kbdgr
-UnicodeToKeyCode_t Keyboard_DE[] =
+const UnicodeToKeyCode_t Keyboard_DE[] =
     {
         {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
         {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab

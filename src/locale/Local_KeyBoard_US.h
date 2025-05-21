@@ -2,7 +2,7 @@
 #include "Local_KeyBoard.h"
 // https://learn.microsoft.com/en-us/globalization/windows-keyboard-layouts
 // https://kbdlayout.info/
-UnicodeToKeyCode_t Keyboard_US[] =
+const UnicodeToKeyCode_t Keyboard_US[] =
     {
         {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
         {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab

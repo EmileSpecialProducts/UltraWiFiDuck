@@ -10,7 +10,7 @@
 
 //https://learn.microsoft.com/en-us/globalization/keyboards/kbdfrna
  
-UnicodeToKeyCode_t Keyboard_French[] =
+const UnicodeToKeyCode_t Keyboard_French[] =
     {
         {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
         {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab

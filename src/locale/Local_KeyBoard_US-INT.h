@@ -3,7 +3,7 @@
 // https://kbdlayout.info/
 #include "Local_KeyBoard.h"
 
-UnicodeToKeyCode_t Keyboard_US_INT[] =
+const  UnicodeToKeyCode_t Keyboard_US_INT[] =
     {
         {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
         {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab

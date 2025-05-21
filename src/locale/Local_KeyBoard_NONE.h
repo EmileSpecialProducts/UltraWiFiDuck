@@ -6,7 +6,7 @@
 // This keyboard will not do any key translation and will only use the ALT + Unicode number to enter the keys.
 // This can be useful for testing meltable languages
 
-UnicodeToKeyCode_t Keyboard_NONE[] =
+const UnicodeToKeyCode_t Keyboard_NONE[] =
 {
     {'\b', {HID_KEY_BACKSPACE, 0}}, // BS Backspace
     {'\t', {HID_KEY_TAB, 0}},       // BS TAB Tab
