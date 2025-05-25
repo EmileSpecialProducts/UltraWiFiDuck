@@ -19,9 +19,14 @@
 #endif
 
 #if defined(CONFIG_BT_BLE_ENABLED)
-#include "BleComboMouse.h"
-#include "BleComboKeyboard.h"
+#include "BleConnectionStatus.h"
+#include "BleCompositeHID.h"
+#include "KeyboardDevice.h"
+#include "MouseDevice.h"
 #endif
+
+#include "USB-HID-Types.h"
+
 #include <FS.h> // File
 #include <LittleFS.h>
 #include "settings.h"

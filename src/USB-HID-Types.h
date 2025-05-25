@@ -1,0 +1,86 @@
+#ifndef USB_HID_TYPES_H
+#define USB_HID_TYPES_H
+
+#ifndef CONFIG_TINYUSB_HID_ENABLED
+// From the file https://github.com/espressif/arduino-esp32/blob/master/libraries/USB/src/USBHIDConsumerControl.h
+// Power Control
+#define CONSUMER_CONTROL_POWER 0x0030
+#define CONSUMER_CONTROL_RESET 0x0031
+#define CONSUMER_CONTROL_SLEEP 0x0032
+
+// Screen Brightness
+#define CONSUMER_CONTROL_BRIGHTNESS_INCREMENT 0x006F
+#define CONSUMER_CONTROL_BRIGHTNESS_DECREMENT 0x0070
+
+// These HID usages operate only on mobile systems (battery powered) and
+// require Windows 8 (build 8302 or greater).
+#define CONSUMER_CONTROL_WIRELESS_RADIO_CONTROLS      0x000C
+#define CONSUMER_CONTROL_WIRELESS_RADIO_BUTTONS       0x00C6
+#define CONSUMER_CONTROL_WIRELESS_RADIO_LED           0x00C7
+#define CONSUMER_CONTROL_WIRELESS_RADIO_SLIDER_SWITCH 0x00C8
+
+// Media Control
+#define CONSUMER_CONTROL_RECORD           0x00B2
+#define CONSUMER_CONTROL_FAST_FORWARD     0x00B3
+#define CONSUMER_CONTROL_REWIND           0x00B4
+#define CONSUMER_CONTROL_SCAN_NEXT        0x00B5
+#define CONSUMER_CONTROL_SCAN_PREVIOUS    0x00B6
+#define CONSUMER_CONTROL_STOP             0x00B7
+#define CONSUMER_CONTROL_EJECT            0x00B8
+#define CONSUMER_CONTROL_PLAY_PAUSE       0x00CD
+#define CONSUMER_CONTROL_VOLUME           0x00E0
+#define CONSUMER_CONTROL_MUTE             0x00E2
+#define CONSUMER_CONTROL_BASS             0x00E3
+#define CONSUMER_CONTROL_TREBLE           0x00E4
+#define CONSUMER_CONTROL_BASS_BOOST       0x00E5
+#define CONSUMER_CONTROL_VOLUME_INCREMENT 0x00E9
+#define CONSUMER_CONTROL_VOLUME_DECREMENT 0x00EA
+#define CONSUMER_CONTROL_BASS_INCREMENT   0x0152
+#define CONSUMER_CONTROL_BASS_DECREMENT   0x0153
+#define CONSUMER_CONTROL_TREBLE_INCREMENT 0x0154
+#define CONSUMER_CONTROL_TREBLE_DECREMENT 0x0155
+
+// Application Launcher
+#define CONSUMER_CONTROL_CONFIGURATION 0x0183
+#define CONSUMER_CONTROL_EMAIL_READER  0x018A
+#define CONSUMER_CONTROL_CALCULATOR    0x0192
+#define CONSUMER_CONTROL_LOCAL_BROWSER 0x0194
+
+// Browser/Explorer Specific
+#define CONSUMER_CONTROL_SEARCH    0x0221
+#define CONSUMER_CONTROL_HOME      0x0223
+#define CONSUMER_CONTROL_BACK      0x0224
+#define CONSUMER_CONTROL_FORWARD   0x0225
+#define CONSUMER_CONTROL_BR_STOP   0x0226
+#define CONSUMER_CONTROL_REFRESH   0x0227
+#define CONSUMER_CONTROL_BOOKMARKS 0x022A
+
+// Mouse Horizontal scroll
+#define CONSUMER_CONTROL_PAN 0x0238
+
+//  Low level key report: up to 6 keys and shift, ctrl etc at once
+typedef struct {
+  uint8_t modifiers;
+  uint8_t reserved;
+  uint8_t keys[6];
+} KeyReport;
+
+#define SYSTEM_CONTROL_NONE      0
+#define SYSTEM_CONTROL_POWER_OFF 1
+#define SYSTEM_CONTROL_STANDBY   2
+#define SYSTEM_CONTROL_WAKE_HOST 3
+
+#endif // CONFIG_TINYUSB_HID_ENABLED
+
+#ifndef CONFIG_TINYUSB_HID_ENABLED
+// From the file https://github.com/espressif/arduino-esp32/blob/master/libraries/USB/src/USBHIDMouse.h
+#define MOUSE_LEFT     0x01
+#define MOUSE_RIGHT    0x02
+#define MOUSE_MIDDLE   0x04
+#define MOUSE_BACKWARD 0x08
+#define MOUSE_FORWARD  0x10
+#define MOUSE_ALL      0x1F
+
+#endif //CONFIG_TINYUSB_HID_ENABLED
+
+#endif // USB_HID_TYPES_H

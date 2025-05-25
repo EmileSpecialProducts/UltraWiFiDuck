@@ -16,8 +16,12 @@ USBHID hid;
 #endif
 
 #if defined(CONFIG_BT_BLE_ENABLED)
-BleComboKeyboard BleKeyboard;
-BleComboMouse BleMouse(&BleKeyboard);
+
+
+BLEHostConfiguration bleHostConfig; 
+KeyboardDevice* bleKeyboard;
+MouseDevice* bleMouse;
+BleCompositeHID compositeHID((CUSTOM_USB_PRODUCT " BLE"), (CUSTOM_USB_MANUFACTURER), 100); 
 #endif
 
 #include "led.h"
@@ -148,6 +152,7 @@ const Control_Command System_Commands[] =
     {"WAKE" ,SYSTEM_CONTROL_WAKE_HOST}    
 };
 
+/*
 const uint16_t bltControl_Commands[] =
 { // the Control Commands keys are defined in the BleComboKeyboard.cpp file.
     CONSUMER_CONTROL_SCAN_NEXT,             //   USAGE (Scan Next Track)     ; bit 0: 1
@@ -167,7 +172,34 @@ const uint16_t bltControl_Commands[] =
     CONSUMER_CONTROL_CONFIGURATION,         //   Usage (Media sel)   ; bit 6: 64
     CONSUMER_CONTROL_EMAIL_READER           //   Usage (Mail)        ; bit 7: 128
 };
-
+*/
+const uint16_t bltControl_Commands[] =
+{ // the Control Commands keys are defined in the KeyboardDescriptors.h file.
+    0xB0,                                   //   USAGE (Play)
+    0xB1,                                   //   USAGE (Pause)
+    CONSUMER_CONTROL_RECORD,                //   USAGE (Record)
+    CONSUMER_CONTROL_FAST_FORWARD,          //   USAGE (Fast Forward)
+    CONSUMER_CONTROL_REWIND,                //   USAGE (Rewind)
+    CONSUMER_CONTROL_SCAN_NEXT,             //   USAGE (Scan Next Track)      
+    CONSUMER_CONTROL_SCAN_PREVIOUS,         //   USAGE (Scan Previous Track)  
+    CONSUMER_CONTROL_STOP ,                 //   USAGE (Stop)                
+    CONSUMER_CONTROL_EJECT,                 //   USAGE (Eject)    
+    0xB9,                                   //   USAGE (Random Play)         
+    0xBC,                                   //   USAGE (Repeat)
+    CONSUMER_CONTROL_PLAY_PAUSE,            //   USAGE (Play/Pause)          
+    CONSUMER_CONTROL_MUTE,                  //   USAGE (Mute)                
+    CONSUMER_CONTROL_VOLUME_INCREMENT,      //   USAGE (Volume Increment)    
+    CONSUMER_CONTROL_VOLUME_DECREMENT,      //   USAGE (Volume Decrement)    
+    CONSUMER_CONTROL_HOME,                  //   Usage (WWW Home)
+    CONSUMER_CONTROL_LOCAL_BROWSER,         //   Usage (My Computer) 
+    CONSUMER_CONTROL_CALCULATOR,            //   Usage (Calculator)  
+    CONSUMER_CONTROL_BOOKMARKS,             //   Usage (WWW fav)     
+    CONSUMER_CONTROL_SEARCH,                //   Usage (WWW search)  
+    CONSUMER_CONTROL_BR_STOP,               //   Usage (WWW stop)    
+    CONSUMER_CONTROL_BACK,                  //   Usage (WWW back)    
+    CONSUMER_CONTROL_CONFIGURATION,         //   Usage (Media sel)   
+    CONSUMER_CONTROL_EMAIL_READER,          //   Usage (Mail)        
+};
 const struct KeyCommand StartOfLineKeys[] = {
     {"CONTROL_LEFT", HID_KEY_CONTROL_LEFT},
     {"CONTROLLEFT", HID_KEY_CONTROL_LEFT},
@@ -382,7 +414,12 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                                 {
                                     debugf("Found System_Commands : %s\n", System_Commands[commands].StrCommand);
                                     Line_BufferPtr += strlen(System_Commands[commands].StrCommand);
+#ifdef CONFIG_TINYUSB_HID_ENABLED
                                     UsbSystemControl.press(System_Commands[commands].RawKeycode);
+#endif
+#if defined(CONFIG_BT_BLE_ENABLED)
+                                    ; 
+#endif
                                     break;
                                 }
                             }
@@ -830,13 +867,13 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 
                 if (Media == bltControl_Commands[f])
                 {
-                    debugf("BLE Media = %04x Bit=%d MAP=%02x %02x\n",Media,f,(uint8_t)(((0x01<<f) & 0xFF)),(uint8_t)(((0x01<<f) & 0xFF00)>> 8));
-                    if (BleKeyboard.isConnected())
+                    debugf("BLE Media = %04x Bit=%d MAP=%04x\n",Media,f,(((uint32_t)0x01)<<f));
+                    if(compositeHID.isConnected())
                     {
-                        MediaKeyReport _mediaKeyReport;
-                        _mediaKeyReport[0] = (uint8_t)(((0x01<<f) & 0xFF)    );
-                        _mediaKeyReport[1] = (uint8_t)(((0x01<<f) & 0xFF00)>> 8);
-                        BleKeyboard.write(_mediaKeyReport);
+
+                        KeyboardMediaInputReport _mediaKeyReport;
+                        _mediaKeyReport =(KeyboardMediaInputReport ) (((uint32_t)0x01)<<f);
+                        bleKeyboard->setMediaKeyReport(&_mediaKeyReport);
                     }
                     else
                     {
@@ -953,9 +990,9 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                     UsbKeyboard.sendReport(k);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-                if (BleKeyboard.isConnected())
+                if(compositeHID.isConnected())
                 {
-                    BleKeyboard.sendReport(k);
+                    bleKeyboard->setKeyReport((KeyboardInputReport *)k);
                 }
                 else
                 {
@@ -980,8 +1017,13 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.move(x, y, wheel, pan);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if (BleKeyboard.isConnected())
-                BleMouse.move(x, y, wheel, pan);
+            if(compositeHID.isConnected())
+            { 
+                debugf("blemove %d %d %d %d\n",x, y, wheel, pan);
+                bleMouse->mouseMove(x, y, wheel, pan);
+            }
+            else
+                debugln("ble Not connected");
 #endif
             while (millis() <= WaitTime && running)
             {
@@ -999,8 +1041,8 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.move(x, y, wheel, pan);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if (BleKeyboard.isConnected())
-                BleMouse.move(x, y, wheel, pan);
+            if(compositeHID.isConnected())
+                bleMouse->mouseMove(x, y, wheel, pan);
 #endif
         }
     }
@@ -1034,8 +1076,8 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.click(b);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if (BleKeyboard.isConnected())
-                BleMouse.click(b);
+            if(compositeHID.isConnected())
+                bleMouse->mouseClick(b);
 #endif
             while (millis() <= WaitTime && running)
             {
@@ -1054,8 +1096,8 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.release(b);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if (BleKeyboard.isConnected())
-                BleMouse.release(b);
+            if(compositeHID.isConnected())
+                bleMouse->mouseRelease(b);
 #endif
             while (millis() <= WaitTime && running)
             {
@@ -1074,8 +1116,8 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.press(b);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if (BleKeyboard.isConnected())
-                BleMouse.press(b);
+            if(compositeHID.isConnected())
+                bleMouse->mousePress(b);
 #endif
             while (millis() <= WaitTime && running)
             {
@@ -1091,8 +1133,11 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             UsbKeyboard.releaseAll();
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-        BleKeyboard.releaseAll();
-        BleMouse.release(MOUSE_ALL);
+        if(compositeHID.isConnected())
+        {
+            bleKeyboard->resetKeys();
+            bleMouse->mouseRelease(MOUSE_ALL);
+        }
 #endif
     }
 
@@ -1111,10 +1156,24 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         UsbSystemControl.begin();       
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-        BleKeyboard.deviceManufacturer = (CUSTOM_USB_MANUFACTURER);
-        BleKeyboard.deviceName = (CUSTOM_USB_PRODUCT " BLE");
-        BleKeyboard.begin();
-        BleMouse.begin();
+    // Set up keyboard
+    KeyboardConfiguration bleKeyboardConfig;
+    bleKeyboardConfig.setUseMediaKeys(true);  // Media keys are not enabled by default
+    bleKeyboardConfig.setAutoReport(true);
+    bleKeyboard = new KeyboardDevice(bleKeyboardConfig);
+
+    // Set up mouse
+    MouseConfiguration bleMouseConfig;
+    bleMouseConfig.setAutoReport(true);
+    bleMouse = new MouseDevice(bleMouseConfig);
+
+     // Add both devices to the composite HID device to manage them
+    compositeHID.addDevice(bleKeyboard);
+    compositeHID.addDevice(bleMouse);
+
+    // Start the composite HID device to broadcast HID reports
+    compositeHID.begin();
+
 #endif
     }
 
