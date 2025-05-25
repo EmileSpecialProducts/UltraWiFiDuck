@@ -28,15 +28,17 @@ bool WiFiConected = false;
 
 void reply(AsyncWebServerRequest *request, int code, const char *type, const uint8_t *data, size_t len)
 {
-    debugf("reply Len = %d code = %d Type= %s\n ", len, code, type);  
-    //request->send(code, type, data, len);
+    //debugf("reply Len = %d code = %d Type= %s\n ", len, code, type);  
+    request->send(code, type, data, len);
+#ifdef _NOT_IN_USE_    
         AsyncWebServerResponse *response =
             request->beginResponse(code, type, data, len);
 
         // response->addHeader("Content-Encoding", "gzip");
         // response->addHeader("Content-Encoding", "7zip");
-        response->addHeader("Access-Control-Allow-Origin","*");    
+        //response->addHeader("Access-Control-Allow-Origin","*");    
         request->send(response);
+#endif        
 }
 
 namespace webserver
@@ -95,7 +97,7 @@ namespace webserver
                     {
                         if (LittleFS.exists(request->url())) // exists will give a error in the error log see: https://github.com/espressif/arduino-esp32/issues/7615
                         {
-                            request->send(LittleFS, request->url(), String(), false);
+                            request->send(LittleFS, request->url(), "");
                         }
                         else
                         {
@@ -154,7 +156,7 @@ namespace webserver
                   }, 
                 [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
                   {
-                    debugf("Upload[%s]: start=%u, len=%u, final=%d\n", filename.c_str(), index, len, final);
+                    //debugf("Upload[%s]: start=%u, len=%u, final=%d\n", filename.c_str(), index, len, final);
                     if (!index) {
                     request->_tempFile = LittleFS.open("/"+ filename, "w+");
                     }
@@ -210,6 +212,9 @@ namespace webserver
             MDNS.addService("http", "tcp", 80);
         }
         // Start Server
+        DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*"); 
+        DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD");
+        DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "content-type");
         server.begin();
         DEBUG_PORT.print("You can now connect to http://");
         DEBUG_PORT.print(settings::getHostName());
