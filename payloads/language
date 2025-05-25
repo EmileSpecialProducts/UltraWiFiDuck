@@ -1,0 +1,11 @@
+LOCALE BG
+STRING АаБб
+
+LOCALE BG
+STRING АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЬьЮюЯя
+STRING абвгдежзийклмнопрсттсуфхцчшщъьюяѫѣ
+LOCALE US 
+STRING AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqUuVvWwXxYyZz
+LOCALE NONE
+STRING АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЬьЮюЯя
+STRING абвгдежзийклмнопрсттсуфхцчшщъьюяѫѣ
