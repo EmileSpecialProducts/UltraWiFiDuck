@@ -13,20 +13,21 @@
 <img alt="Ultra WiFi Duck" src="3D-PrintFiles/S3/DuckS3.png" width="320">
 </p>
 
-This project Ultra WiFi Duck and utilizes the native USB/Bluetooth function of ESP32, ESP S2/S3/C3 chip. 
-ESP32 S2/S3 can emulate USB devices the ESP32, S3/C3 support Bluetooth . 
+This project Ultra WiFi Duck and utilizes the native USB/Bluetooth function of ESP32, ESP S2/S3/C3/C6 chip. 
+ESP32 S2/S3 can emulate USB devices the ESP32, S3/C3/C6 support Bluetooth . 
 It also supports mouse emulation.
 It also can be connected to you Wifi network or generate its own access point or connect to you Wifi.
-It is still under construction but form 2025-03-28 it is in a more stable state, but is clasic ESP32 is not yet supported. 
+It is still under construction but form 2025-05-25 it is in a more stable state, clasic ESP32 is not supported. 
 
-## Install / Flash the ESP32-S2/S3/C3
+## Install / Flash the ESP32-S2/S3/C3/C6
 You can install the software from your browser you will not need knowledge of the ESP programming environment No software development IDE needed 
 The install from the [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html 
 
 You will need to select the Flash size 4/8/16Mb. 
 I recommend a ESP32-S3 that has a USB/Bluetooth and COM port for software installation and RGB led.    
 The ESP32-S2-mini has 4Mb But you will have **2Mb** for scripts and USB emulation
-The ESP32-C3 has only Bluetooth 
+The ESP32-C3/C6 has only Bluetooth 
+
 You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from the GUI Settings Page.
 
 ## Supported devices 
@@ -35,8 +36,8 @@ You can also add a 2812b led strip up to 144 Leds, and config the GPIO pin from 
 | `ESP32-S3` | `Yes`| `Yes` | Best device for the job |
 | `ESP32-S2` | `Yes`| `No` |  |
 | `ESP32-C3` | `No` | `Yes`|  |
-| `ESP32` | `No` | `Yes`| Not working yet but compiles  |
-| `ESP32-C6` | `No` | `Yes`| Not yet supported as platformIO does not support the device |
+| `ESP32-C6` | `No` | `Yes`|  |
+| `ESP32` | `No` | `Yes`| Not Supported  |
 
 ---
 
