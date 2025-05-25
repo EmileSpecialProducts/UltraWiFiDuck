@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define VERSION "2.1.0"
+#define VERSION "2.2.0"
 #define PRODUCTNAME "UltraWiFiDuck"
 /*! ===== DEBUG Settings ===== */
 //#define ENABLE_DEBUG
@@ -18,7 +18,7 @@
 #define SERIAL_BAUD DEBUG_BAUD
 
 #define BUFFER_SIZE 1024
-#define PACKET_SIZE 32
+
 
 /*! ===== WiFi Settings ===== */
 #define WIFI_APSSID "UltraWiFiDuck"
