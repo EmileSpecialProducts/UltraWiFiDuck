@@ -66,7 +66,6 @@ String listDir(String dirName)
         File file = root.openNextFile();
         while (file)
         {
-            debugln("DIR3" + String(file.name()));
             res += "\""+String(file.name()) + "\" " + String(file.size()) +"\n";
             file = root.openNextFile();
         }
@@ -116,7 +115,10 @@ void Commandline(char * Command, String *buffer)
          + String(esp_get_free_internal_heap_size())
          + " byte free internal_heap_size\n"
          + String(getArduinoLoopTaskStackSize())
-         + " byte ArduinoLoopTaskStackSize";
+         + " byte ArduinoLoopTaskStackSize\n"
+         + String(ESP.getSketchSize())
+         + " byte getSketchSize\n"
+         ;
     }
     else if (strncmp(commandbuffer, "version", 7) == 0) // * Prints the current version number
     {
@@ -137,6 +139,7 @@ void Commandline(char * Command, String *buffer)
 #ifdef ENABLE_DEBUG
         *buffer+="\nDebug Enabled";
 #endif
+        *buffer+="\nTemperature: " + String(temperatureRead()) + " °C "; // internal TemperatureSensor
     }
     else if (strncmp(commandbuffer, "set", 3) == 0)
     {
