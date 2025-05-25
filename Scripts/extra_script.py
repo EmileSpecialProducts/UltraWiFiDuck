@@ -35,6 +35,7 @@ def PostBuild(source, target, env):
     # print(env.subst("${__get_board_f_boot(__env__)}"))
     # print(env.subst("${__get_board_memory_type(__env__)}"))  #
     # print(env.subst("${__get_board_f_cpu(__env__)}"))
+    
     # print( board_config.get("build.psram_type", "qspi"))
     # print( board_config.get("build.memory_type", "AAAA"))
     # print( board_config.get("build.cpu_type", "AAAB"))
@@ -42,30 +43,32 @@ def PostBuild(source, target, env):
     # print(env.subst("$UPLOADCMD"))
     # Get source dir (.pio/name_env/)
     # source = env.get("PROJECT_BUILD_DIR") + "/" + env.get("PIOENV")
-
-    print("ESP32_APP_OFFSET=" + env.get("ESP32_APP_OFFSET"))
-
+    # print("ESP32_APP_OFFSET=" + env.get("ESP32_APP_OFFSET"))
     platformpakkages = env.get("PROJECT_PACKAGES_DIR")
     board_boot_mode = env.subst("${__get_board_boot_mode(__env__)}")
     board = env.get("BOARD")
     board_mcu = env.get("BOARD_MCU")
     pioenv=env.get("PIOENV")
     source = env.get("PROJECT_BUILD_DIR") + "\\" + pioenv
+    endmb = source.rfind("MB")
+    startmb = source[:endmb+2].rfind("-")
+    flashsize=source[startmb+1:endmb+2]
+    print("flashsize = "+flashsize)
     print("BOARD_MCU " + board_mcu)
     print("BOARD_BOOT_MODE " + board_boot_mode)
     print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
     print("BOARD = " + board + " board_mcu = " + board_mcu + " board_boot_mode = " + board_boot_mode)
-    upload = env.subst("$UPLOADERFLAGS").split()
-    nextMB=False
-    flashsize="0MB"
-    for x in upload:
-        # print("Upload :"+x)
-        if nextMB:  
-            flashsize = x
-            nextMB = False
-        if x == "--flash_size":
-            nextMB=True
-    print("flashsize = "+flashsize)
+    # This does not work from Ardino version V3.xx
+    #upload = env.subst("$UPLOADERFLAGS").split()
+    #nextMB=False
+    #for x in upload:
+    #    # print("Upload :"+x)
+    #    if nextMB:  
+    #        flashsize = x
+    #        nextMB = False
+    #    if x == "--flash_size":
+    #        nextMB=True
+    # print("flashsize = "+flashsize)
     # Save at destination docs/bins
     destination = os.getcwd() + "\\firmware" 
     if not os.path.exists(destination):
