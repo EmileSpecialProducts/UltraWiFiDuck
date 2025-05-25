@@ -10,7 +10,6 @@
 #include "led.h"
 #include "GPIO_trigger.hpp"
 
-//SET_LOOP_TASK_STACK_SIZE(16 * 1024); // 16KB
 GpioTrigger Gpiotrigger;
 
 void setup() {
