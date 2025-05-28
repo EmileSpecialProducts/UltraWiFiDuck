@@ -29,7 +29,6 @@
 #define RGBLEDPIN ""
 
 #define HOSTNAME "UltraWiFiDuck"
-#define URL "UltraWiFiDuck.duck"
 
 #define CUSTOM_USB_PRODUCT "UltraWiFiDuck"
 #define CUSTOM_USB_PID 0x0002
