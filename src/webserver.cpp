@@ -81,7 +81,6 @@ namespace webserver
 
             dnsServer.setTTL(300);
             dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
-            // dnsServer.start(53, URL, apIP);
 
             /* Setup the DNS server redirecting all the domains to the apIP */
             //dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
