@@ -50,54 +50,96 @@ def PostBuild(source, target, env):
     board_mcu = env.get("BOARD_MCU")
     pioenv=env.get("PIOENV")
     source = env.get("PROJECT_BUILD_DIR") + "\\" + pioenv
-    endmb = source.rfind("MB")
-    startmb = source[:endmb+2].rfind("-")
-    flashsize=source[startmb+1:endmb+2]
-    print("flashsize = "+flashsize)
+    flash_image=env.get("FLASH_EXTRA_IMAGES")
+    #print("flash_image =",flash_image)
     print("BOARD_MCU " + board_mcu)
-    print("BOARD_BOOT_MODE " + board_boot_mode)
-    print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
-    print("BOARD = " + board + " board_mcu = " + board_mcu + " board_boot_mode = " + board_boot_mode)
-    # This does not work from Ardino version V3.xx
-    #upload = env.subst("$UPLOADERFLAGS").split()
-    #nextMB=False
-    #for x in upload:
-    #    # print("Upload :"+x)
-    #    if nextMB:  
-    #        flashsize = x
-    #        nextMB = False
-    #    if x == "--flash_size":
-    #        nextMB=True
-    # print("flashsize = "+flashsize)
-    # Save at destination docs/bins
-    destination = os.getcwd() + "\\firmware" 
-    if not os.path.exists(destination):
-        os.mkdir(destination)
-    destination = (
-        destination + "\\" + board_mcu + "_" + flashsize + "_" + board_boot_mode
-    )  
-    if not os.path.exists(destination):
-        os.mkdir(destination)
-
-    print("destination = " + destination)
-
-    shutil.copyfile(source + "\\bootloader.bin", destination + "\\bootloader.bin")
-    shutil.copyfile(source + "\\partitions.bin", destination + "\\partitions.bin")
-    shutil.copyfile(
-        platformpakkages
-        + "\\framework-arduinoespressif32\\tools\\partitions\\boot_app0.bin",
-        destination + "\\boot_app0.bin",
-    )
-    shutil.copyfile(source + "\\firmware.bin", destination + "\\firmware.bin")
-    flash = env.subst("$FLASH_EXTRA_IMAGES")
-    # print(flash)
-    parts = flash.split()
-    print("---------------------------------------------------------")
-    print(parts[0] + " " + str(int(parts[0], 16)) + " " + parts[1])
-    print(parts[2] + " " + str(int(parts[2], 16)) + " " + parts[3])
-    print(parts[4] + " " + str(int(parts[4], 16)) + " " + parts[5])
-    print(env.get("ESP32_APP_OFFSET") + " " + str(int(env.get("ESP32_APP_OFFSET"), 16)) + " " +source + "\\firmware.bin")
-    print("---------------------------------------------------------")
+    if board_mcu == "esp8266":
+        print("CPU is esp8266 " + source )
+        destination = os.getcwd() + "\\firmware"
+        if not os.path.exists(destination):
+            os.mkdir(destination)
+        destination = (
+            destination + "\\" + board_mcu
+        )  
+        if not os.path.exists(destination):
+            os.mkdir(destination)
+        print("destination = " + destination)
+        shutil.copyfile(source + "\\firmware.bin", destination + "\\firmware.bin")
+        partition_file=env.get("LDSCRIPT_PATH")
+        print("partition_file " , partition_file)   
+        mklittlefs=env.get("PROJECT_CORE_DIR")+"\\tools\\tool-mklittlefs\\mklittlefs.exe"
+        print("MKSPIFFSTOOL ",mklittlefs)
+        littlefsdir = os.getcwd() + "\\payloads"    
+        # mklittlefs doc -> https://github.com/jason2866/mklittlefs
+        #env.Execute(mklittlefs +" -a -c "+littlefsdir + " -s "+ str(littlefs_size) + " " + destination + "\\littlefs.bin")
+        # list all the files 
+        #env.Execute(mklittlefs +" -l " + destination + "\\littlefs.bin") 
+        images=env.get("FLASH_EXTRA_IMAGES")
+        print("images " , images)
+        print("Do not know how to make the littlefs for the 8266 yet!!!!")    
+        ################################################################################
+    else:
+        if "OTA" in pioenv:
+            print("Not gererating ESP-Web-tool dowload files")  
+        else:
+            for flash_row in flash_image:
+                print("Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
+            #print("BOARD_MCU " + board_mcu)
+            #print("BOARD_BOOT_MODE " + board_boot_mode)
+            #print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
+            #print("BOARD = " + board + " board_mcu = " + board_mcu + " board_boot_mode = " + board_boot_mode)
+            ##### Generate the littlefs from littlefs dir 
+            mklittlefs=env.get("PROJECT_CORE_DIR")+"\\tools\\tool-mklittlefs\\mklittlefs.exe"
+            #print("MKSPIFFSTOOL ",mklittlefs)
+            littlefsdir = os.getcwd() + "\\payloads"    
+            partition=env.get("PARTITIONS_TABLE_CSV")
+            print("partition " , partition)    
+            import csv
+            # get the littlefs_size form the PARTITIONS_TABLE_CSV 
+            littlefs_size=0
+            littlefs_offset="?"
+            endofmemmory=0
+            with open(partition) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    print(f'\t{row[0]} Name  , {row[1]} Type , {row[2]} SubType {row[3]} Offset {row[4]} Size .')
+                    if row[3].startswith("0x") and row[4].startswith("0x") and endofmemmory < (int(row[3], 0) + int(row[4], 0)) :
+                        endofmemmory = (int(row[3], 0) + int(row[4], 0))
+                    if row[0] == "spiffs" : 
+                        littlefs_size =  int(row[4], 0)
+                        littlefs_offset =int(row[3], 0)
+                    if row[0] == "littlefs" : 
+                        littlefs_size =  int(row[4], 0)
+                        littlefs_offset =int(row[3], 0)  
+            print("endofmemmory = ", endofmemmory , " ", int( (endofmemmory+0x80000) / 0x100000))
+            flashsize = str(int( (endofmemmory+0x80000) / 0x100000)) + "MB" 
+            print("flashsize = ",flashsize)            
+            print("littlefs size = ",littlefs_size ," Offset = ", littlefs_offset)
+            destination = os.getcwd() + "\\firmware" 
+            if not os.path.exists(destination):
+                os.mkdir(destination)
+            destination = (
+                destination + "\\" + board_mcu + "_" + flashsize + "_" + board_boot_mode
+            )  
+            if not os.path.exists(destination):
+                os.mkdir(destination)
+            print("destination = " + destination)
+            
+            for flash_row in flash_image:
+                if flash_row[1].endswith("bootloader.bin"):
+                    shutil.copyfile(flash_row[1], destination + "\\bootloader.bin")
+                if flash_row[1].endswith("partitions.bin"):
+                    shutil.copyfile(flash_row[1], destination + "\\partitions.bin")
+                if flash_row[1].endswith("boot_app0.bin"):
+                    shutil.copyfile(flash_row[1], destination + "\\boot_app0.bin")
+                print("flash_row Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
+            shutil.copyfile(source + "\\firmware.bin", destination + "\\firmware.bin")
+            print("littlefs file = ",destination + "\\littlefs.bin")
+            # mklittlefs doc -> https://github.com/jason2866/mklittlefs
+            env.Execute(mklittlefs +" -a -c "+littlefsdir + " -s "+ str(littlefs_size) + " " + destination + "\\littlefs.bin")
+            # list all the files 
+            env.Execute(mklittlefs +" -l " + destination + "\\littlefs.bin")    
+            ################################################################################
 
 # env.AddPostAction("buildprog", PostBuild)
 

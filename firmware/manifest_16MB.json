@@ -1,6 +1,6 @@
 {
   "name": "UltraWifiDuck_16MB",
-  "version": "2025.05.25",
+  "version": "2025.08.16",
   "home_assistant_domain": "UltraWifiDuck",
   "funding_url": "https://github.com/EmileSpecialProducts/UltraWifiDuck/",
   "builds": [   
@@ -10,7 +10,8 @@
         { "path": "./esp32c3_16MB_qio/bootloader.bin", "offset": 0 },
         { "path": "./esp32c3_16MB_qio/partitions.bin", "offset": 32768 },
         { "path": "./esp32c3_16MB_qio/boot_app0.bin", "offset": 57344 },
-        { "path": "./esp32c3_16MB_qio/firmware.bin", "offset": 65536 }
+        { "path": "./esp32c3_16MB_qio/firmware.bin", "offset": 65536 },
+        { "path": "./esp32c3_16MB_qio/littlefs.bin", "offset": 2031616 }
       ]
     },   
     {
@@ -19,7 +20,8 @@
         { "path": "./esp32s2_16MB_qio/bootloader.bin", "offset": 4096 },
         { "path": "./esp32s2_16MB_qio/partitions.bin", "offset": 32768 },
         { "path": "./esp32s2_16MB_qio/boot_app0.bin", "offset": 57344 },
-        { "path": "./esp32s2_16MB_qio/firmware.bin", "offset": 65536 }
+        { "path": "./esp32s2_16MB_qio/firmware.bin", "offset": 65536 },
+        { "path": "./esp32s2_16MB_qio/littlefs.bin", "offset": 2031616 }
       ]
     },
     {
@@ -28,7 +30,8 @@
         { "path": "./esp32s3_16MB_qio/bootloader.bin", "offset": 0 },
         { "path": "./esp32s3_16MB_qio/partitions.bin", "offset": 32768 },
         { "path": "./esp32s3_16MB_qio/boot_app0.bin", "offset": 57344 },
-        { "path": "./esp32s3_16MB_qio/firmware.bin", "offset": 65536 }
+        { "path": "./esp32s3_16MB_qio/firmware.bin", "offset": 65536 },
+        { "path": "./esp32s3_16MB_qio/littlefs.bin", "offset": 2031616 }
       ]
     },
     {
@@ -37,7 +40,8 @@
         { "path": "./esp32c6_16MB_qio/bootloader.bin", "offset": 0 },
         { "path": "./esp32c6_16MB_qio/partitions.bin", "offset": 32768 },
         { "path": "./esp32c6_16MB_qio/boot_app0.bin", "offset": 57344 },
-        { "path": "./esp32c6_16MB_qio/firmware.bin", "offset": 65536 }
+        { "path": "./esp32c6_16MB_qio/firmware.bin", "offset": 65536 },
+        { "path": "./esp32c6_16MB_qio/littlefs.bin", "offset": 2031616 }
       ]
     }
   ]
