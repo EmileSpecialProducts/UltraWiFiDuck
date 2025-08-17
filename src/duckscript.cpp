@@ -440,6 +440,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                     break;
                 }
                 Line_BufferPtr += utf_code_len; // point to the next utf char
+                if ( utf_code != 10 && utf_code != 13 )
                 press(utf_code);
             }
         }
