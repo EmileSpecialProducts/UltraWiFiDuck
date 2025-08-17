@@ -48,6 +48,26 @@ function updatestatus()
     if (!StatusUpdateRunning)
         Teststatus();
 }
+  function isWebFile(path) {
+    var ext = /(?:\.([^.]+))?$/.exec(path)[1];
+    if (typeof ext !== undefined) {
+      switch (ext) {
+        case "htm":
+        case "html":
+        case "js":
+        case "json":
+        case "css":
+        case "xml":
+        case "png":
+        case "jpg":
+        case "gif":
+        case "ico":
+        case "bmp":    
+          return true;
+      }
+    }
+    return false;
+  }
 function Teststatus()
 {
     var isrunning = false;
@@ -126,7 +146,6 @@ function update_file_list() {
                 {
                     var fileName = data[0].replace(/['"]/g, '');
                     var fileSize = data[1];
-
                     if (fileName.length > 0) {
                         if (i == 0 && !file_opened) {
                             read(fileName);
@@ -136,8 +155,14 @@ function update_file_list() {
                         tableHTML += "<td onclick=\"read('" + fileName + "')\">" + fileSize + "</td>\n";
                         tableHTML += "<td>\n";
                         tableHTML += "<button class=\"primary\" onclick=\"read('" + fileName + "')\">Edit</button>\n";
-                        tableHTML += "<button class=\"success\" onclick=\"run('" + fileName + "')\">Run</button>\n";
-                        tableHTML += "<button class=\"warn\" onclick=\"stop('" + fileName + "')\">Stop</button>\n";
+                        if( isWebFile(fileName) )
+                        {
+                            tableHTML += "<button class=\"success\" onclick=\"window.open('"+ fileName + "', '_blank').focus(); \">Open</button>\n";    
+                        } else {
+                            tableHTML += "<button class=\"success\" onclick=\"run('" + fileName + "')\">Run</button>\n";
+                            tableHTML += "<button class=\"warn\" onclick=\"stop('" + fileName + "')\">Stop</button>\n";
+                        }
+                        
                         tableHTML += "<button class=\"danger\" onclick=\"rename('" + fileName + "')\">Ren</button>\n";
                         tableHTML += "<button class=\"danger\" onclick=\"remove('" + fileName + "')\">Del</button>\n";
                         tableHTML += "</td>\n";
@@ -210,7 +235,6 @@ function run(fileName) {
         .catch(error => {
             console.error('Error:', error);
         });
-   
 }
 
 // ! Stop running specific script
