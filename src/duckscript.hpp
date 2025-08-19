@@ -23,6 +23,7 @@
 #include "BleCompositeHID.h"
 #include "KeyboardDevice.h"
 #include "MouseDevice.h"
+#include <NimBLEDevice.h>
 #endif
 
 #include "USB-HID-Types.h"
@@ -91,6 +92,8 @@ public:
   void mouse_release(uint8_t b);
   void mouse_press(uint8_t b);
   void ReleaseKeyboardMouse();
+  uint8_t capsLock();
+  uint8_t numLock();
 };
 #if defined (CONFIG_IDF_TARGET_ESP32C3)
 // As the ESP32C3 has only 320 KB ram

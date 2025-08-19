@@ -149,8 +149,14 @@ const uint8_t help_html[] = R"rawliteral(
                     <tr>
                         <td><code>\ARROW_U</code> <code>\ARROW_D</code> <code>\ARROW_L</code> <code>\ARROW_R</code>
                             <code>\TAB</code> <code>\t</code> <code>\END</code> <code>\ESC</code> <code>\ESCAPE</code>
-                            <code>\SPACE</code> <code>\PAUSE</code> <code>\BREAK</code> <code>\CAPSLOCK</code>
-                            <code>\NUMLOCK</code> <code>\PRINTSCREEN</code> <code>\SCROLLLOCK</code> <code>\\</code>
+                            <code>\SPACE</code> <code>\PAUSE</code> <code>\BREAK</code> 
+                            <code>\PRINTSCREEN</code> <code>\SCROLLLOCK</code> <code>\\</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <code>\CAPSLOCK</code> <code>\CAPSLOCKON</code> <code>\CAPSLOCKOFF</code>
+                            <code>\NUMLOCK</code> <code>\NUMLOCKON</code> <code>\NUMLOCKOFF</code>
                         </td>
                     </tr>
                     <tr>
@@ -178,7 +184,8 @@ const uint8_t help_html[] = R"rawliteral(
                     </tr>
                     <tr>
                         <td><code>WINDOWS</code> <code>GUI</code> <code>\GUILEFT</code> <code>\GUIRICHT</code>
-                            <code>\WINDOWSLEFT</code> <code>\WINDOWSRICHT</code> </td>
+                            <code>\WINDOWSLEFT</code> <code>\WINDOWSRICHT</code> 
+                        </td>
                     </tr>
                 </tbody>
             </table>

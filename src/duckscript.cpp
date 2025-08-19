@@ -21,7 +21,7 @@ USBHID hid;
 BLEHostConfiguration bleHostConfig; 
 KeyboardDevice* bleKeyboard;
 MouseDevice* bleMouse;
-BleCompositeHID compositeHID((CUSTOM_USB_PRODUCT " BLE"), (CUSTOM_USB_MANUFACTURER), 100); 
+BleCompositeHID bleCompositeHID((CUSTOM_USB_PRODUCT " BLE"), (CUSTOM_USB_MANUFACTURER), 100); 
 #endif
 
 #include "led.h"
@@ -375,57 +375,89 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 }
                 else
                 {
-                    int commands = 0;
-                    for (commands = 0; commands < sizeof(KeyCommands) / sizeof(KeyCommands[0]); commands++)
-                    {
-                        if (strncmp(Line_BufferPtr, KeyCommands[commands].StrCommand, strlen(KeyCommands[commands].StrCommand)) == 0)
-                        {
-                            debugf("Found Command : %s\n", KeyCommands[commands].StrCommand);
-                            Line_BufferPtr += strlen(KeyCommands[commands].StrCommand);
-                            if ((KeyCommands[commands].RawKeycode & 0xf0) == 0xE0) //  a modifier release key
-                                toggelmodifiers(KeyCommands[commands].RawKeycode); // change a modifier release key to releas modifier key
-                            else
-                            {
-                                pressRaw(KeyCommands[commands].RawKeycode);
-                                releaseRaw(KeyCommands[commands].RawKeycode);
-                            }
-                            break;
+                    if (strncmp(Line_BufferPtr,"CAPSLOCKON",11)== 0){
+                        Line_BufferPtr +=11;
+                        debugf("Found Command :CAPSLOCKON\n");
+                        if(capsLock()==0) {
+                                    pressRaw(HID_KEY_CAPS_LOCK);
+                                    releaseRaw(HID_KEY_CAPS_LOCK);
                         }
-                    }
-                    
-                    if (commands == sizeof(KeyCommands) / sizeof(KeyCommands[0]))
-                    { // no Command found
-                        debugln("No KeyCommand found");
-                        for (commands = 0; commands < sizeof(Control_Commands) / sizeof(Control_Commands[0]); commands++)
+
+                    } else if (strncmp(Line_BufferPtr,"CAPSLOCKOFF",12)== 0){
+                        Line_BufferPtr +=12;
+                        debugf("Found Command :CAPSLOCKOFF\n");
+                        if(capsLock()==1) {
+                                    pressRaw(HID_KEY_CAPS_LOCK);
+                                    releaseRaw(HID_KEY_CAPS_LOCK);
+                        }
+                    } else if (strncmp(Line_BufferPtr,"NUMLOCKON",10)== 0){
+                        Line_BufferPtr +=10;
+                        debugf("Found Command :NUMLOCKON\n");
+                        if(numLock()==0) {
+                                    pressRaw(HID_KEY_NUM_LOCK);
+                                    releaseRaw(HID_KEY_NUM_LOCK);
+                        }
+                    } else if (strncmp(Line_BufferPtr,"NUMLOCKOFF",11)== 0){
+                        Line_BufferPtr +=11;
+                        debugf("Found Command :NUMLOCKOFF\n");
+                        if(numLock()==1) {
+                                    pressRaw(HID_KEY_NUM_LOCK);
+                                    releaseRaw(HID_KEY_NUM_LOCK);
+                        }                        
+                    } else 
+                    {
+                        int commands = 0;
+                        for (commands = 0; commands < sizeof(KeyCommands) / sizeof(KeyCommands[0]); commands++)
                         {
-                            if (strncmp(Line_BufferPtr, Control_Commands[commands].StrCommand, strlen(Control_Commands[commands].StrCommand)) == 0)
+                            if (strncmp(Line_BufferPtr, KeyCommands[commands].StrCommand, strlen(KeyCommands[commands].StrCommand)) == 0)
                             {
-                                debugf("Found Control_Command : %s\n", Control_Commands[commands].StrCommand);
-                                Line_BufferPtr += strlen(Control_Commands[commands].StrCommand);
-                                pressMedia(Control_Commands[commands].RawKeycode);
+                                debugf("Found Command : %s\n", KeyCommands[commands].StrCommand);
+                                Line_BufferPtr += strlen(KeyCommands[commands].StrCommand);
+                                if ((KeyCommands[commands].RawKeycode & 0xf0) == 0xE0) //  a modifier release key
+                                    toggelmodifiers(KeyCommands[commands].RawKeycode); // change a modifier release key to releas modifier key
+                                else
+                                {
+                                    pressRaw(KeyCommands[commands].RawKeycode);
+                                    releaseRaw(KeyCommands[commands].RawKeycode);
+                                }
                                 break;
                             }
                         }
-                        if (commands == sizeof(Control_Commands) / sizeof(Control_Commands[0])){
-                            debugf("No Control_Commands found [%s]\n",Line_BufferPtr);
-                            for (commands = 0; commands < sizeof(System_Commands) / sizeof(System_Commands[0]); commands++)
+                        
+                        if (commands == sizeof(KeyCommands) / sizeof(KeyCommands[0]))
+                        { // no Command found
+                            debugln("No KeyCommand found");
+                            for (commands = 0; commands < sizeof(Control_Commands) / sizeof(Control_Commands[0]); commands++)
                             {
-                                if (strncmp(Line_BufferPtr, System_Commands[commands].StrCommand, strlen(System_Commands[commands].StrCommand)) == 0)
+                                if (strncmp(Line_BufferPtr, Control_Commands[commands].StrCommand, strlen(Control_Commands[commands].StrCommand)) == 0)
                                 {
-                                    debugf("Found System_Commands : %s\n", System_Commands[commands].StrCommand);
-                                    Line_BufferPtr += strlen(System_Commands[commands].StrCommand);
-#ifdef CONFIG_TINYUSB_HID_ENABLED
-                                    UsbSystemControl.press(System_Commands[commands].RawKeycode);
-#endif
-#if defined(CONFIG_BT_BLE_ENABLED)
-                                    ; 
-#endif
+                                    debugf("Found Control_Command : %s\n", Control_Commands[commands].StrCommand);
+                                    Line_BufferPtr += strlen(Control_Commands[commands].StrCommand);
+                                    pressMedia(Control_Commands[commands].RawKeycode);
                                     break;
                                 }
                             }
-                            if (commands == sizeof(System_Commands) / sizeof(System_Commands[0])){
-                                    press('\\');
-                            }       
+                            if (commands == sizeof(Control_Commands) / sizeof(Control_Commands[0])){
+                                debugf("No Control_Commands found [%s]\n",Line_BufferPtr);
+                                for (commands = 0; commands < sizeof(System_Commands) / sizeof(System_Commands[0]); commands++)
+                                {
+                                    if (strncmp(Line_BufferPtr, System_Commands[commands].StrCommand, strlen(System_Commands[commands].StrCommand)) == 0)
+                                    {
+                                        debugf("Found System_Commands : %s\n", System_Commands[commands].StrCommand);
+                                        Line_BufferPtr += strlen(System_Commands[commands].StrCommand);
+    #ifdef CONFIG_TINYUSB_HID_ENABLED
+                                        UsbSystemControl.press(System_Commands[commands].RawKeycode);
+    #endif
+    #if defined(CONFIG_BT_BLE_ENABLED)
+                                        ; 
+    #endif
+                                        break;
+                                    }
+                                }
+                                if (commands == sizeof(System_Commands) / sizeof(System_Commands[0])){
+                                        press('\\');
+                                }       
+                            }
                         }
                     }
                 }
@@ -792,7 +824,15 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             uint32_t divider = 10000;
             bool startSending = false;
             debugf("Unicode Not found %d ", Unicode);
+            uint8_t num_Lock=numLock();
             releaseAll();
+            if( num_Lock == 0 )
+            {
+                debugln("NUMLOCK WAS NOT on");
+                pressRaw(HID_KEY_NUM_LOCK);
+                releaseRaw(HID_KEY_NUM_LOCK);
+            }
+
             while (divider)
             {
                 n = Unicode / divider;
@@ -845,6 +885,12 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 }
             }
             releaseRaw(HID_KEY_ALT_LEFT);
+            if( num_Lock == 0 )
+            {
+                debugln("NUMLOCK RESTORE");
+                pressRaw(HID_KEY_NUM_LOCK);
+                releaseRaw(HID_KEY_NUM_LOCK);
+            }
             CurrentKeyReport = KeyReportSaved;
         }
     }
@@ -869,7 +915,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 if (Media == bltControl_Commands[f])
                 {
                     debugf("BLE Media = %04x Bit=%d MAP=%04x\n",Media,f,(((uint32_t)0x01)<<f));
-                    if(compositeHID.isConnected())
+                    if(bleCompositeHID.isConnected())
                     {
 
                         KeyboardMediaInputReport _mediaKeyReport;
@@ -991,7 +1037,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                     UsbKeyboard.sendReport(k);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-                if(compositeHID.isConnected())
+                if(bleCompositeHID.isConnected())
                 {
                     bleKeyboard->setKeyReport((KeyboardInputReport *)k);
                 }
@@ -1018,7 +1064,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.move(x, y, wheel, pan);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if(compositeHID.isConnected())
+            if(bleCompositeHID.isConnected())
             { 
                 debugf("blemove %d %d %d %d\n",x, y, wheel, pan);
                 bleMouse->mouseMove(x, y, wheel, pan);
@@ -1042,7 +1088,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.move(x, y, wheel, pan);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if(compositeHID.isConnected())
+            if(bleCompositeHID.isConnected())
                 bleMouse->mouseMove(x, y, wheel, pan);
 #endif
         }
@@ -1077,7 +1123,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.click(b);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if(compositeHID.isConnected())
+            if(bleCompositeHID.isConnected())
                 bleMouse->mouseClick(b);
 #endif
             while (millis() <= WaitTime && running)
@@ -1097,7 +1143,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.release(b);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if(compositeHID.isConnected())
+            if(bleCompositeHID.isConnected())
                 bleMouse->mouseRelease(b);
 #endif
             while (millis() <= WaitTime && running)
@@ -1117,7 +1163,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbMouse.press(b);
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-            if(compositeHID.isConnected())
+            if(bleCompositeHID.isConnected())
                 bleMouse->mousePress(b);
 #endif
             while (millis() <= WaitTime && running)
@@ -1134,13 +1180,123 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             UsbKeyboard.releaseAll();
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
-        if(compositeHID.isConnected())
+        if(bleCompositeHID.isConnected())
         {
             bleKeyboard->resetKeys();
             bleMouse->mouseRelease(MOUSE_ALL);
         }
 #endif
     }
+
+#if defined(CONFIG_TINYUSB_ENABLED)
+bool UsbKeyboardLed_falid=false;
+bool UsbStart=false; 
+
+arduino_usb_hid_keyboard_event_data_t UsbKeyboardLed;
+static void usbEventCallback(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
+  if (event_base == ARDUINO_USB_EVENTS) {
+    arduino_usb_event_data_t *data = (arduino_usb_event_data_t *)event_data;
+    switch (event_id) {
+      case ARDUINO_USB_STARTED_EVENT: 
+            UsbStart=true;
+            //debugln("USB PLUGGED"); 
+            break;
+      case ARDUINO_USB_STOPPED_EVENT: 
+            UsbKeyboardLed_falid=false;
+            //debugln("USB UNPLUGGED"); 
+            break;
+      case ARDUINO_USB_SUSPEND_EVENT: 
+            //debugf("USB SUSPENDED: remote_wakeup_en: %u\n", data->suspend.remote_wakeup_en); 
+            break;
+      case ARDUINO_USB_RESUME_EVENT:  
+            //debugln("USB RESUMED"); 
+            break;
+      default: break;
+    }
+  }
+}
+
+void UsbKeyboardEventCallback(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
+  if (event_base == ARDUINO_USB_HID_KEYBOARD_EVENTS) {
+    arduino_usb_hid_keyboard_event_data_t *data = (arduino_usb_hid_keyboard_event_data_t *)event_data;
+
+    if (event_id == ARDUINO_USB_HID_KEYBOARD_LED_EVENT) {
+      if(UsbKeyboardLed.capslock != data->capslock) 
+        if( data->capslock != 0 ) debugln("capslock  ON"); else debugln("capslock OFF");
+      if(UsbKeyboardLed.numlock != data->numlock) 
+        if( data->numlock != 0 ) debugln("numlock  ON"); else debugln("numlock OFF");
+      if(UsbKeyboardLed.scrolllock != data->scrolllock) 
+        if( data->scrolllock != 0 ) debugln("scrolllock  ON"); else debugln("scrolllock OFF");
+      if(UsbKeyboardLed.compose != data->compose) 
+        if( data->compose != 0 ) debugln("compose  ON"); else debugln("compose OFF");
+      if(UsbKeyboardLed.kana != data->kana) 
+        if( data->kana != 0 ) debugln("kana  ON"); else debugln("kana OFF");
+        UsbKeyboardLed=*data;
+         UsbKeyboardLed_falid=true;
+        
+/*    led_response_received = true;
+      led_event_count++;
+      led_event_time = millis();
+
+      caps_status = data->capslock != 0;
+      num_status = data->numlock != 0;
+      scroll_status = data->scrolllock != 0;
+      numlock_checked = true;
+
+      if (caps_sent_time > 0 && caps_delay == 0)
+        caps_delay = led_event_time - caps_sent_time;
+      if (num_sent_time > 0 && num_delay == 0)
+        num_delay = led_event_time - num_sent_time;
+      if (scroll_sent_time > 0 && scroll_delay == 0)
+        scroll_delay = led_event_time - scroll_sent_time;
+*/
+    } else 
+  debugf("USB event_id %d\n",event_id);  
+  } else
+  ;//debugf("USB event_base %d\n",*event_base);
+}
+#endif
+#if defined(CONFIG_BT_BLE_ENABLED)
+KeyboardOutputReport bleKeyboardLed;
+void OnLEDEvent(KeyboardOutputReport data){
+    bleKeyboardLed=data;
+    debugln(
+    "LED Report: Number Lock: " + String(data.numLockActive) + 
+    " Caps Lock: " + String(data.capsLockActive) + 
+    " Scroll Lock: " + String(data.scrollLockActive) + 
+    " Compose: " + String(data.composeActive) + 
+    " Kana: " + String(data.kanaActive));
+}
+#endif
+
+uint8_t  DuckScript::numLock()
+{
+uint8_t  numLock_return=-1;
+#if defined(CONFIG_BT_BLE_ENABLED)
+    if (bleCompositeHID.isConnected())
+        bleKeyboardLed.numLockActive? numLock_return=1: numLock_return=0;
+#endif
+#if defined(CONFIG_TINYUSB_ENABLED)
+    if (USB)
+        UsbKeyboardLed.numlock? numLock_return=1: numLock_return=0;
+#endif    
+return numLock_return;
+}
+
+uint8_t  DuckScript::capsLock()
+{
+uint8_t capsLock_return=-1;
+#if defined(CONFIG_BT_BLE_ENABLED)
+    if (bleCompositeHID.isConnected())
+        bleKeyboardLed.capsLockActive? capsLock_return=1: capsLock_return=0;
+#endif
+#if defined(CONFIG_TINYUSB_ENABLED)
+    if (hid.ready())
+        UsbKeyboardLed.capslock ? capsLock_return=1: capsLock_return=0;
+#endif    
+return capsLock_return;
+}
+
 
     void duckscript_begin()
     {
@@ -1154,14 +1310,19 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         UsbMouse.begin();
         UsbGamepad.begin();
         UsbConsumerControl.begin(); 
-        UsbSystemControl.begin();       
+        UsbSystemControl.begin(); 
+        USB.onEvent(usbEventCallback);
+        UsbKeyboard.onEvent(UsbKeyboardEventCallback);           
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
+
     // Set up keyboard
     KeyboardConfiguration bleKeyboardConfig;
     bleKeyboardConfig.setUseMediaKeys(true);  // Media keys are not enabled by default
     bleKeyboardConfig.setAutoReport(true);
     bleKeyboard = new KeyboardDevice(bleKeyboardConfig);
+    FunctionSlot<KeyboardOutputReport> OnLEDEventSlot(OnLEDEvent);
+    bleKeyboard->onLED.attach(OnLEDEventSlot);
 
     // Set up mouse
     MouseConfiguration bleMouseConfig;
@@ -1169,12 +1330,14 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
     bleMouse = new MouseDevice(bleMouseConfig);
 
      // Add both devices to the composite HID device to manage them
-    compositeHID.addDevice(bleKeyboard);
-    compositeHID.addDevice(bleMouse);
-
+    bleCompositeHID.addDevice(bleKeyboard);
+    bleCompositeHID.addDevice(bleMouse);
+    
     // Start the composite HID device to broadcast HID reports
-    compositeHID.begin();
+    bleCompositeHID.begin();
 
+
+    
 #endif
     }
 
