@@ -137,7 +137,9 @@ function update_file_list() {
             tableHTML += "</tr>\n";
             tableHTML += "</thead>\n";
             tableHTML += "<tbody id=\"file_id\">\n";
-
+            // sort case-insensitive
+            const collator = new Intl.Collator('en');
+            lines.sort(collator.compare);
             for (var i = 0; i < lines.length; i++) {
                 //var data = lines[i].split(" ");
                 //console.log(lines[i]);

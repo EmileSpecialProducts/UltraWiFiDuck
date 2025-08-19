@@ -48,7 +48,6 @@ const uint8_t index_html[] = R"rawliteral(
             <div class="row">
                 <p><b>Storage: </b><span id="freeMemory">-</span></p>
                 <button class="danger" id="format">format</button>
-                
             </div>
         </section>
         <section>
