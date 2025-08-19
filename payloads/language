@@ -1,11 +1,12 @@
+DELAY 5000
 LOCALE BG
 STRING АаБб
-
+LOCALE NONE
+STRING АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЬьЮюЯя
+STRING абвгдежзийклмнопрсттсуфхцчшщъьюяѫѣ
 LOCALE BG
 STRING АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЬьЮюЯя
 STRING абвгдежзийклмнопрсттсуфхцчшщъьюяѫѣ
 LOCALE US 
 STRING AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqUuVvWwXxYyZz
-LOCALE NONE
-STRING АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЬьЮюЯя
-STRING абвгдежзийклмнопрсттсуфхцчшщъьюяѫѣ
+
