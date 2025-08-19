@@ -191,7 +191,7 @@ namespace webserver
                          { debugln("OTA Update End"); });
         ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
                               {
-            debugf("OTA Progress: %u%%\n", (progress/(total/100)));
+            debugf("OTA Progress: %02u%%\n", (progress/(total/100)));
             });
         ArduinoOTA.onError([](ota_error_t error)
                 {
