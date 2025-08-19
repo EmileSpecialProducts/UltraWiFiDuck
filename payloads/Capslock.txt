@@ -1,0 +1,30 @@
+REM \CAPSLOCKON will set the CAPSLOCK ON 
+STRING \CAPSLOCKON
+DELAY 100 
+REM \CAPSLOCK will toggle the CAPSLOCK as it was on now it will be off 
+STRING \CAPSLOCK
+DELAY 100
+REM \CAPSLOCKOFF will set the CAPSLOCK OFF in this case as it was toggled off it will do nothing
+STRING \CAPSLOCKOFF
+DELAY 10
+REM \CAPSLOCK will toggle the CAPSLOCK as it was off now it will be on 
+STRING \CAPSLOCK
+DELAY 100
+REM \CAPSLOCKOFF will set the CAPSLOCK OFF in this case as it was toggled on it will do goto ON
+STRING \CAPSLOCKOFF
+DELAY 10
+REM \CAPSLOCK will toggle the CAPSLOCK 
+STRING \CAPSLOCK
+DELAY 100
+REM \NUMLOCKON will set the NUMLOCK ON 
+STRING \NUMLOCKON
+DELAY 100
+REM \NUMLOCK will toggle the NUMLOCK 
+STRING \NUMLOCK
+DELAY 100
+REM \NUMLOCK will toggle the NUMLOCK 
+STRING \NUMLOCK
+DELAY 1000 
+REM \NUMLOCKOFF will set the NUMLOCK OFF 
+STRING \NUMLOCKOFF
+RESTART
