@@ -82,8 +82,8 @@ def PostBuild(source, target, env):
         if "OTA" in pioenv:
             print("Not gererating ESP-Web-tool dowload files")  
         else:
-            for flash_row in flash_image:
-                print("Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
+            #for flash_row in flash_image:
+            #    print("Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
             #print("BOARD_MCU " + board_mcu)
             #print("BOARD_BOOT_MODE " + board_boot_mode)
             #print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
@@ -98,11 +98,14 @@ def PostBuild(source, target, env):
             # get the littlefs_size form the PARTITIONS_TABLE_CSV 
             littlefs_size=0
             littlefs_offset="?"
+            app0_size=0
+            app0_offset="?"
             endofmemmory=0
             with open(partition) as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 for row in csv_reader:
-                    print(f'\t{row[0]} Name  , {row[1]} Type , {row[2]} SubType {row[3]} Offset {row[4]} Size .')
+                    # row[0] = Name, row[1]= Type, row[2]= SubType, row[3]= Offset, row[4]= Size  
+                    print(f'{row[0]: <16} {row[1]: <16} {row[2]: <16} {row[3]: <16} {row[4]: <16}')
                     if row[3].startswith("0x") and row[4].startswith("0x") and endofmemmory < (int(row[3], 0) + int(row[4], 0)) :
                         endofmemmory = (int(row[3], 0) + int(row[4], 0))
                     if row[0] == "spiffs" : 
@@ -111,10 +114,13 @@ def PostBuild(source, target, env):
                     if row[0] == "littlefs" : 
                         littlefs_size =  int(row[4], 0)
                         littlefs_offset =int(row[3], 0)  
-            print("endofmemmory = ", endofmemmory , " ", int( (endofmemmory+0x80000) / 0x100000))
+                    if row[0] == "app0" : 
+                        app0_size =  int(row[4], 0)
+                        app0_offset =int(row[3], 0)  
+            #print("endofmemmory = ", endofmemmory , " ", int( (endofmemmory+0x80000) / 0x100000))
             flashsize = str(int( (endofmemmory+0x80000) / 0x100000)) + "MB" 
             print("flashsize = ",flashsize)            
-            print("littlefs size = ",littlefs_size ," Offset = ", littlefs_offset)
+            #print("littlefs size = ",littlefs_size ," Offset = ", littlefs_offset)
             destination = os.getcwd() + "\\firmware" 
             if not os.path.exists(destination):
                 os.mkdir(destination)
@@ -123,8 +129,7 @@ def PostBuild(source, target, env):
             )  
             if not os.path.exists(destination):
                 os.mkdir(destination)
-            print("destination = " + destination)
-            
+            print("destination = " + destination)            
             for flash_row in flash_image:
                 if flash_row[1].endswith("bootloader.bin"):
                     shutil.copyfile(flash_row[1], destination + "\\bootloader.bin")
@@ -134,11 +139,12 @@ def PostBuild(source, target, env):
                     shutil.copyfile(flash_row[1], destination + "\\boot_app0.bin")
                 print("flash_row Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
             shutil.copyfile(source + "\\firmware.bin", destination + "\\firmware.bin")
-            print("littlefs file = ",destination + "\\littlefs.bin")
+            print("firmware  Offset = ", hex(app0_offset) ,app0_offset,"File = ",source + "\\firmware.bin" )
+            print("littlefs  Offset = ", hex(littlefs_offset) ,littlefs_offset,"File = ",destination + "\\littlefs.bin" )
             # mklittlefs doc -> https://github.com/jason2866/mklittlefs
             env.Execute(mklittlefs +" -a -c "+littlefsdir + " -s "+ str(littlefs_size) + " " + destination + "\\littlefs.bin")
             # list all the files 
-            env.Execute(mklittlefs +" -l " + destination + "\\littlefs.bin")    
+            # env.Execute(mklittlefs +" -l " + destination + "\\littlefs.bin")    
             ################################################################################
 
 # env.AddPostAction("buildprog", PostBuild)
