@@ -1,0 +1,3 @@
+REM This file will be triggerd when the GPIO9 pin will go High ( it has pullup enabled)
+REM GPIO9 is Bootpin for ESP32-C3/C6 GPIO0 is Bootpin for ESP32-S2/S3
+LED 0 0 0
