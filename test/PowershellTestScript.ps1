@@ -1,10 +1,11 @@
 For ($i = 0; $i -le 50; $i++) { $a = Invoke-WebRequest -URI http://UltraWiFiDuck.local/index.html ; write-host $i $a.StatusCode $a.RawContentLength }
 
-
 # write is not working any more.
 #Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=write led.txt `"LED 10 10 10`nDELAY 1000`nLED 0 0 0`nDELAY 1000`nRESTART`""
 #Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=write mouse.txt `"MOUSE 10 0 `nDELAY 1000`nMOUSE -10 0`nDELAY 1000`nRESTART`""
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=run led.txt"
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=run gpiolow9"
+
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=run mouse.txt"
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=status"
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=stop mouse.txt"
