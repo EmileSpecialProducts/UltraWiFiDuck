@@ -13,7 +13,6 @@ namespace settings
     // ===== PRIVATE ===== //
     typedef struct settings_t
     {
-
         char APssid[33];
         char APpassword[65];
         char APchannel[5];
@@ -58,6 +57,7 @@ namespace settings
         else
         {
             debugln("Load File Not found");
+            reset();
             save();
         }
     }

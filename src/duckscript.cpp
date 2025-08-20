@@ -1192,7 +1192,6 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
 bool UsbKeyboardLed_falid=false;
 bool UsbStart=false; 
 
-arduino_usb_hid_keyboard_event_data_t UsbKeyboardLed;
 static void usbEventCallback(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
   if (event_base == ARDUINO_USB_EVENTS) {
     arduino_usb_event_data_t *data = (arduino_usb_event_data_t *)event_data;
@@ -1210,6 +1209,26 @@ static void usbEventCallback(void *arg, esp_event_base_t event_base, int32_t eve
             break;
       case ARDUINO_USB_RESUME_EVENT:  
             //debugln("USB RESUMED"); 
+            break;
+      default: break;
+    }
+  }
+}
+
+arduino_usb_hid_keyboard_event_data_t UsbKeyboardLed;
+
+static void hidEventCallback(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
+  debugln("HID Event");
+    if (event_base == ARDUINO_USB_HID_EVENTS) {
+    arduino_usb_hid_event_data_t *data = (arduino_usb_hid_event_data_t *)event_data;
+    switch (event_id) {
+      case   ARDUINO_USB_HID_SET_IDLE_EVENT: 
+            //UsbStart=true;
+            debugln("HID IDLE_EVENT"); 
+            break;
+      case ARDUINO_USB_HID_SET_PROTOCOL_EVENT: 
+            //UsbKeyboardLed_falid=false;
+            debugln("HID PROTOCOL_EVENT"); 
             break;
       default: break;
     }
@@ -1312,6 +1331,7 @@ return capsLock_return;
         UsbConsumerControl.begin(); 
         UsbSystemControl.begin(); 
         USB.onEvent(usbEventCallback);
+        hid.onEvent(hidEventCallback);
         UsbKeyboard.onEvent(UsbKeyboardEventCallback);           
 #endif
 #if defined(CONFIG_BT_BLE_ENABLED)
@@ -1334,10 +1354,7 @@ return capsLock_return;
     bleCompositeHID.addDevice(bleMouse);
     
     // Start the composite HID device to broadcast HID reports
-    bleCompositeHID.begin();
-
-
-    
+    bleCompositeHID.begin();    
 #endif
     }
 

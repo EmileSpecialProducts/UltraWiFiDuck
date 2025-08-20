@@ -26,7 +26,17 @@
 #define WIFI_CHANNEL "1"
 #define WIFI_SSID ""
 #define WIFI_PASSWORD ""
+
+
+#if   defined(CONFIG_IDF_TARGET_ESP32C3)
+#define RGBLEDPIN "8"
+#elif defined(CONFIG_IDF_TARGET_ESP32C6)
+#define RGBLEDPIN "8"
+#elif defined(CONFIG_IDF_TARGET_ESP32S2)
 #define RGBLEDPIN ""
+#elif defined(CONFIG_IDF_TARGET_ESP32S3)
+#define RGBLEDPIN "48"
+#endif
 
 #define HOSTNAME "UltraWiFiDuck"
 
