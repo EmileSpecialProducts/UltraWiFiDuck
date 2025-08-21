@@ -1,5 +1,14 @@
 # Ultra WiFi Duck
 
+
+  <p align="center"> The link to the YouTube introduction</p>
+  <p align="center">
+  <a href="https://www.youtube.com/watch?v=6gU9pseou6g">
+    <img alt="BuymeaCoffee" src="https://img.youtube.com/vi/6gU9pseou6g/hqdefault.jpg">
+  </a>
+</p>
+
+
 <p align="center">
 <img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="64">
 </p>
@@ -145,8 +154,10 @@ To write text, that does not need a enter use the STRING function.
 | `\F1` - `\F24` |
 | `\NUM_0` - `\NUM_9` `\NUM_ASTERIX` `\NUM_ENTER` `\NUM_MINUS` `\NUM_DOT` `\NUM_PLUS`  |
 | `\MENU` `\APP` `\DELETE` `\HOME` `\ENTER` `\n` `\INSERT` `\PAGEUP` `\PAGEDOWN` `\ARROWUP` `\ARROWDOWN` `\ARROWLEFT` `\ARROWRIGHT`| 
-| `\ARROW_U` `\ARROW_D` `\ARROW_L` `\ARROW_R` `\TAB` `\t` `\END` `\ESC` `\ESCAPE` `\SPACE` `\PAUSE` `\BREAK` `\CAPSLOCK` `\NUMLOCK` `\PRINTSCREEN` |
+| `\ARROW_U` `\ARROW_D` `\ARROW_L` `\ARROW_R` `\TAB` `\t` `\END` `\ESC` `\ESCAPE` `\SPACE` `\PAUSE` `\BREAK` `\PRINTSCREEN` |
 | `\SCROLLLOCK`  `\\` |
+| `\CAPSLOCK` `\NUMLOCK` `\CAPSLOCKON` `\NUMLOCKON` `\CAPSLOCKOFF` `\NUMLOCKOFF` |
+| `\POWER` `\SLEEP` `\WAKE`  only works for USB | 
 
 ### Modifier Keys
 
@@ -156,6 +167,14 @@ To write text, that does not need a enter use the STRING function.
 | `\SHIFT` `\SHIFTLEFT` `\SHIFTRICHT` |
 | `\ALT` `\ALTLEFT` `\ALTRICHT`|
 | `\WINDOWS` `\GUI` `\GUILEFT` `\GUIRICHT` `\WINDOWSLEFT` `\WINDOWSRICHT`|
+
+### Media Keys
+
+| Key |
+| --- |
+| `\MUTE` `\VOLUMEUP` `\VOLUMEDOWN` `\VOLUME+` `\VOLUME-` |
+| `\POWER` `\SLEEP` `\WAKE` This will only work on USB connection |
+| `\OSSLEEP` `\OSPOWER` Will not working on Windows |
 
 ### Examples
 
@@ -238,8 +257,11 @@ curl -X POST -F "data=$(printf "GUI r\nnotepad\nHello");filename=test123.txt;typ
 
 You can debug the software when using the OTA version as this will also print all the debug information to the serial port.
 To debug / Develop the HTML/JS files just upload the file to the LittleFS.
-Is the files are on the LittleFS it will use these files instead of the HTML/JS files from the Flash  ROM.
-If you did really messed up you just can delete them using the PowerShell commands.
+If the files are on the LittleFS it will use these files instead of the HTML/JS files from the Flash ROM.
+If you did really messed up you just can delete them using the PowerShell/CURL commands.
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=remove index.html"
+or
+curl -X POST "http://UltraWiFiDuck.local/run?cmd=remove%20index.js"
 
 
 ## Development
@@ -280,10 +302,11 @@ See the [license file](LICENSE) for details.
 Software libraries used in this project:
   - [Arduino](https://www.arduino.cc)
   - [Neopixel Library](https://github.com/adafruit/Adafruit_NeoPixel)
-  - [Dotstar Library](https://github.com/adafruit/Adafruit_DotStar)
-  - [AVR, ESP8266 & SAMD Arduino Core](https://github.com/spacehuhn/hardware/tree/master/wifiduck)
-  - [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
-  - [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
+  - [ESPAsyncTCP](https://github.com/ESP32Async/AsyncTCP)
+  - [ESPAsyncWebServer](https://github.com/ESP32Async/ESPAsyncWebServer)
+  - [NimBLE](https://github.com/h2zero/NimBLE-Arduino)
+  - [Callback](https://github.com/tomstewart89/Callback)
+  - [ESP32-BLE-CompositeHID](https://github.com/Mystfit/ESP32-BLE-CompositeHID) but then the fork [ESP32-BLE-CompositeHID](https://github.com/EmileSpecialProducts/ESP32-BLE-CompositeHID)
 
 ## Original wifiduck
 As this is a Fork from [spacehuhn.com](https://spacehuhn.com) [github](https://github.com/spacehuhntech/WiFiDuck)
