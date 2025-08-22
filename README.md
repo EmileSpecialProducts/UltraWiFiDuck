@@ -1,13 +1,12 @@
 # Ultra WiFi Duck
 
 
+  <a href="https://www.youtube.com/watch?v=6gU9pseou6g">
   <p align="center"> The link to the YouTube introduction</p>
   <p align="center">
-  <a href="https://www.youtube.com/watch?v=6gU9pseou6g">
     <img alt="BuymeaCoffee" src="https://img.youtube.com/vi/6gU9pseou6g/hqdefault.jpg">
-  </a>
 </p>
-
+</a>
 
 <p align="center">
 <img alt="WiFi Duck Logo" src="web/Under-Construction.png" width="64">
