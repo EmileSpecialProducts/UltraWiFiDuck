@@ -159,6 +159,7 @@ const uint8_t help_html[] = R"rawliteral(
                             <code>\NUMLOCK</code> <code>\NUMLOCKON</code> <code>\NUMLOCKOFF</code>
                         </td>
                     </tr>
+
                     <tr>
                         <td><code>\F1</code> - <code>\F24</code></td>
                     </tr>
@@ -207,6 +208,16 @@ const uint8_t help_html[] = R"rawliteral(
                     <tr>
                         <td><code>\CALC</code> <code>\WWW</code></td>
                     </tr>
+                    <tr>
+                        <td>
+                            <code>\POWER</code> <code>\SLEEP</code> <code>\WAKE</code>
+                            This will only work on USB connection
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>\OSSLEEP</code> <code>\OSPOWER</code> Will not working on Windows </td>
+                    </tr>
+                    
                 </tbody>
             </table>
             <h3>Mouse</h3>
