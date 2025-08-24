@@ -7,14 +7,14 @@ GpioTrigger::GpioTrigger()
 }
 
 
-void GpioTrigger::begin(int ledpinNum)
+void GpioTrigger::begin(int ledpNum)
 {
     int f;
-    debugf("GpioTrigger::begin %d\n", ledpinNum);
-    GpioTrigger::ledpinNum=ledpinNum;
+    debugf("GpioTrigger::begin %d\n", ledpNum);
+    GpioTrigger::ledpinNum=ledpNum;
     for(f=0;f< gpio_pins_len ;f++)
     {
-        if (GpioTrigger::ledpinNum != gpio_pins[f] )
+        if (ledpNum != gpio_pins[f] )
         {
          pinMode(gpio_pins[f],INPUT_PULLUP);
         }

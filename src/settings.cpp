@@ -22,7 +22,6 @@ namespace settings
         char RGBLedPin[5];
         char hostname[65];
         char localname[10];
-
     } settings_t;
 
     settings_t data;
@@ -57,7 +56,6 @@ namespace settings
         else
         {
             debugln("Load File Not found");
-            reset();
             save();
         }
     }
@@ -157,10 +155,13 @@ namespace settings
 
     int getRGBLedPinNum()
     {
-        if(strlen(data.RGBLedPin)>0)
+        if(data.RGBLedPin && strlen(data.RGBLedPin)>0)
         {
         if (atoi(data.RGBLedPin) >= 0 && atoi(data.RGBLedPin) <=48 )
-            return atoi(data.RGBLedPin);
+            {
+                debugf("RGBPin=%d\n", atoi(data.RGBLedPin));
+                return atoi(data.RGBLedPin);
+            }
         }
         return -1;
     }
@@ -257,8 +258,8 @@ namespace settings
     {
         if (channel && ((strcmp(channel, "auto") == 0) || ((atoi(channel) >= 1) && (atoi(channel) <= 13))))
         {
-            memset(data.APchannel, 0, 5);
-            strncpy(data.APchannel, channel, 4);
+            memset(data.APchannel, 0, sizeof(data.APchannel));
+            strncpy(data.APchannel, channel, sizeof(data.APchannel)-1);
         }
     }
 
@@ -266,8 +267,8 @@ namespace settings
     {
         if (pin && ((strcmp(pin, "") == 0) || ((atoi(pin) >= 0) && (atoi(pin) <= 48))))
         {
-            memset(data.RGBLedPin, 0, 5);
-            strncpy(data.RGBLedPin, pin, 4);
+            memset(data.RGBLedPin, 0, sizeof(data.RGBLedPin));
+            strncpy(data.RGBLedPin, pin, sizeof(data.RGBLedPin)-1);
         }
     }
 
