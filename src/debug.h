@@ -16,12 +16,27 @@
 
 #define debug_update() \
     {\
-        if (DEBUG_PORT.available()) {\
-        String output;\
-        String input = DEBUG_PORT.readStringUntil('\n');\
-        Commandline((char *)input.c_str(), &output);\
-        DEBUG_PORT.println(output);\
-       }\
+        static char input[40]="";\
+        static char output[2048]="";\
+        static int input_len=0;\
+        while(DEBUG_PORT.available()) {\
+            int c= DEBUG_PORT.read();\
+            if ( c=='\b' )\
+            {\
+                if(input_len > 0) input[--input_len]=0;\
+            }\
+            if ( c=='\r' || c=='\n' )\
+            {\
+                if(strlen(input)>0){ Commandline(input, output, sizeof(output));DEBUG_PORT.println(output);}\
+                memset(input,0,sizeof(input));\
+                input_len=0;\
+            }\
+            if(c>=' ' && c<127 && input_len < (sizeof(input)-1))\
+            {\
+                input[input_len++]=(char)c;\
+                input[input_len]=0;\
+            }\
+        }\
     }
 
 
