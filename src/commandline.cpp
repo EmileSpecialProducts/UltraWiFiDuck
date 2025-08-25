@@ -60,13 +60,16 @@ void fixPath(String &path)
 String listDir(String dirName)
 {
     String res="";
+    bool first = true;
     res.reserve(255);
     fixPath(dirName);
         File root = LittleFS.open(dirName);
         File file = root.openNextFile();
         while (file)
         {
-            res += "\""+String(file.name()) + "\" " + String(file.size()) +"\n";
+            if(!first) res+="\n";    
+            first=false;
+            res += "\""+String(file.name()) + "\" " + String(file.size()) ;
             file = root.openNextFile();
         }
         if (res.length() == 0)
@@ -75,10 +78,10 @@ String listDir(String dirName)
     return res;
 }
 
-void Commandline(char * Command, String *buffer)
+void Commandline(char * Command, char *buffer, int buffer_len )
 {
     char commandbuffer[32];
-    *buffer = "";
+    buffer[0] = 0;
     memset(commandbuffer, 0, sizeof(commandbuffer));
     debugln("Commandline [" + String(Command) + "]");
     getArgument(Command, 0, commandbuffer, sizeof(commandbuffer));
@@ -92,54 +95,47 @@ void Commandline(char * Command, String *buffer)
             if (duckscript.running)
             {
                 Ready = false;
-                *buffer += "running \""+duckscript.currentScript() + "\" " + duckscript.running_line + "\n";
+                snprintf(buffer,buffer_len,"running \"%s\" %d",duckscript.currentScript().c_str(),duckscript.running_line);
             }
         }
         if (Ready == true)
         {
             debugln("No Running Tasks");
-            *buffer = "Ultra WifiDuck -- Ready";
+            snprintf(buffer,buffer_len,"Ultra WifiDuck -- Ready");
         }
-        debug(*buffer);
-    } else if (strncmp(commandbuffer, "settings", 8) == 0) 
+    } 
+    else if (strncmp(commandbuffer, "settings", 8) == 0) 
     {
         settings::load();
-        *buffer=settings::toString();
-        debugln("settings:\n" + *buffer);
+        snprintf(buffer,buffer_len,"%s",settings::toString().c_str());
     }
-    else if (strncmp(commandbuffer, "ram", 3) == 0) // Prints number of free bytes in the RAM
-    {
-        *buffer = String(ESP.getFreeHeap()) + " bytes available\n"
-         + String(esp_get_free_heap_size())
-         + " byte free heap_size\n"
-         + String(esp_get_free_internal_heap_size())
-         + " byte free internal_heap_size\n"
-         + String(getArduinoLoopTaskStackSize())
-         + " byte ArduinoLoopTaskStackSize\n"
-         + String(ESP.getSketchSize())
-         + " byte getSketchSize\n"
-         ;
+    else if (strncmp(commandbuffer, "ram", 3) == 0) 
+    {   // Prints number of free bytes in the RAM
+        snprintf(buffer,buffer_len,"%d bytes available\n%d byte free heap_size\n%d byte free internal_heap_size\n%d byte ArduinoLoopTaskStackSize\n%d byte getSketchSize",
+            ESP.getFreeHeap(),
+            esp_get_free_heap_size(),
+            esp_get_free_internal_heap_size(),
+            getArduinoLoopTaskStackSize(),
+            ESP.getSketchSize()
+        );
     }
-    else if (strncmp(commandbuffer, "version", 7) == 0) // * Prints the current version number
-    {
-        *buffer = "Version " + String(VERSION) + " " + String(__DATE__ " " __TIME__ " ");
-        #if defined (CONFIG_IDF_TARGET_ESP32S3)
-        *buffer+="ESP-S3";
-        #elif defined (CONFIG_IDF_TARGET_ESP32S2)
-        *buffer+="ESP-S2";
-        #elif defined (CONFIG_IDF_TARGET_ESP32C3)
-        *buffer+="ESP-C3";
-        #elif defined (CONFIG_IDF_TARGET_ESP32C6)
-        *buffer+="ESP-C6";
-        #elif defined (CONFIG_IDF_TARGET_ESP32)
-        *buffer+="ESP-CLASIC";
-        #endif
-        *buffer+="\nesp_idf_version: " +String(ESP_IDF_VERSION_MAJOR) +"."+String(ESP_IDF_VERSION_MINOR)+"."+(ESP_IDF_VERSION_PATCH);
-        *buffer+="\narduino_version: " +String(ESP_ARDUINO_VERSION_MAJOR)+"."+String(ESP_ARDUINO_VERSION_MINOR)+"."+String(ESP_ARDUINO_VERSION_PATCH);
+    else if (strncmp(commandbuffer, "version", 7) == 0) 
+    {   // * Prints the current version number
 #ifdef ENABLE_DEBUG
-        *buffer+="\nDebug Enabled";
+        bool debug_enable= true;
+#else
+        bool debug_enable= false;
 #endif
-        *buffer+="\nTemperature: " + String(temperatureRead()) + " °C "; // internal TemperatureSensor
+        snprintf(buffer,buffer_len,"Version " VERSION " " __DATE__ " " __TIME__ " " _TARGET_ESP_ "\n"
+        "esp_idf_version: %d.%d.%d\n"
+        "arduino_version:  %d.%d.%d\n"
+        "%s"
+        "Temperature %d °C",    
+        ESP_IDF_VERSION_MAJOR,ESP_IDF_VERSION_MINOR,ESP_IDF_VERSION_PATCH,    
+        ESP_ARDUINO_VERSION_MAJOR,ESP_ARDUINO_VERSION_MINOR,ESP_ARDUINO_VERSION_PATCH,
+        debug_enable?"Debug Enabled\n":"",
+        temperatureRead()// internal TemperatureSensor
+        );    
     }
     else if (strncmp(commandbuffer, "set", 3) == 0)
     {
@@ -148,7 +144,7 @@ void Commandline(char * Command, String *buffer)
         getArgument(Command, 1, name, sizeof(name));
         getArgument(Command, 2, value, sizeof(value));
         //*buffer = "Arg[1] " + String(getArgument(Command, 1,name,sizeof(name))) + " Arg[2] " + String(getArgument(Command, 2,value,sizeof(value)));
-        *buffer = "> set \"" + String(name) + "\" to \"" + String(value) + "\"";
+        snprintf(buffer,buffer_len,"> set \"%s\" to \"%s\"",name, value);
         settings::set(name, value);
         settings::save();
     }
@@ -156,7 +152,7 @@ void Commandline(char * Command, String *buffer)
     {
         settings::reset();
         settings::save();
-        *buffer=settings::toString();
+        snprintf(buffer,buffer_len,"%s",settings::toString().c_str());
     }
     else if (strncmp(commandbuffer, "reboot", 5) == 0)
     {
@@ -167,17 +163,15 @@ void Commandline(char * Command, String *buffer)
         char value[64];
         getArgument(Command, 1, value, sizeof(value));
         debugf("LS value [%s]\n", value);
-        debugf("commandbuffer [%s]\n", commandbuffer);
-        *buffer = listDir(String(value));
+        snprintf(buffer,buffer_len,"%s",listDir(String(value)).c_str());
     }
     else if (strncmp(commandbuffer, "mem", 3) == 0)
     {
-        *buffer = String(LittleFS.totalBytes())
-         + " byte LittleFS\n"
-         + String(LittleFS.usedBytes())
-         + " byte used LittleFS\n"
-         + String(LittleFS.totalBytes() - LittleFS.usedBytes())
-         + " byte free LittleFS\n";
+        snprintf(buffer,buffer_len,"%d byte LittleFS\n%d byte used LittleFS\n%d byte free LittleFS",
+            LittleFS.totalBytes(),
+            LittleFS.usedBytes(),
+            LittleFS.totalBytes() - LittleFS.usedBytes()
+        );    
     }
     else if (strncmp(commandbuffer, "cat", 3) == 0)
     {   // this will not work for big files > 2K
@@ -186,28 +180,32 @@ void Commandline(char * Command, String *buffer)
         String filename=String(value);
         fixPath(filename);
         debugln(filename);
- 
-        File f = LittleFS.open(filename);
-
-        int buf_size{2048};
-        char filebuffer[buf_size];
-
-        if (f && f.available())
+        if (LittleFS.exists(filename))
         {
-            for (size_t i = 0; i < buf_size; ++i)
+            debugln("File found");
+            File f = LittleFS.open(filename);
+            int i=0;
+            buffer[0]=0;
+            while(f && f.available() && i<(buffer_len-1))
             {
-                if (!f.available() || (i == buf_size - 1))
-                {
-                    filebuffer[i] = '\0';
-                    i = buf_size;
-                }
-                else
-                {
-                    filebuffer[i] = f.read();
-                }
+                buffer[i++] = f.read();
+                buffer[i]=0;
             }
-            *buffer=filebuffer;
+            if(f && f.available())
+            {
+                DEBUG_PORT.write(buffer);
+                while(f && f.available())
+                {
+                    DEBUG_PORT.write(f.read());
+                }
+                snprintf(buffer,buffer_len,"File To big to Cat Output so on Serial port ony");
+                debugln("File is big");
+            } 
             f.close();
+        } else
+        {
+            debugln("File Not found");
+            snprintf(buffer,buffer_len,"File not found");
         }
     }
     else if (strncmp(commandbuffer, "run", 3) == 0)
@@ -215,19 +213,19 @@ void Commandline(char * Command, String *buffer)
         char value[64];
         getArgument(Command, 1, value, sizeof(value));
         duckscripts_run(value);
-        *buffer = "> started \"" + String(value) + "\"";
+        snprintf(buffer,buffer_len,"> started \"%s\"",value);
     }
     else if (strncmp(commandbuffer, "stopall", 7) == 0)
     {
         duckscripts_stopall();
-        *buffer = "> stoppedall";
+        snprintf(buffer,buffer_len,"> stoppedall");
     }
     else if (strncmp(commandbuffer, "stop", 4) == 0)
     {
         char value[64];
         getArgument(Command, 1, value, sizeof(value));
         duckscripts_stop(value);
-        *buffer = "> stopped \"" + String(value) + "\"";
+        snprintf(buffer,buffer_len,"> stopped \"%s\"",value);
     }
     else if (strncmp(commandbuffer, "create", 6) == 0)
     {
@@ -238,7 +236,7 @@ void Commandline(char * Command, String *buffer)
         debugln(filename);
         File f=LittleFS.open(filename,"w");
         f.close();
-        *buffer = "> Created file \"" + filename + "\"";
+        snprintf(buffer,buffer_len,"> Created file \"%s\"",filename);
     }
     else if (strncmp(commandbuffer, "remove", 6) == 0)
     {
@@ -248,7 +246,7 @@ void Commandline(char * Command, String *buffer)
         fixPath(filename);
         debugln(filename);
         LittleFS.remove(filename);
-        *buffer = "> removed file \"" + filename + "\"";
+        snprintf(buffer,buffer_len,"> removed file \"%s\"",filename);
     }
     else if (strncmp(commandbuffer, "rename", 6) == 0)
     {
@@ -261,19 +259,19 @@ void Commandline(char * Command, String *buffer)
         fixPath(fileold);
         fixPath(filenew);
         LittleFS.rename(fileold, filenew);
-        *buffer = "> renamed \"" + fileold + "\" to \"" + filenew + "\"";
+        snprintf(buffer,buffer_len,"> renamed \"%s\" to \"%s\"",fileold,filenew);
     }
     else if (strncmp(commandbuffer, "format", 6) == 0)
     {
         bool FormatStatus = LittleFS.format();
-        *buffer = "Formatted LittleFS ";
-        if (FormatStatus)
-            *buffer += "OK";
-        else
-            *buffer += "FAILED";
+        snprintf(buffer,buffer_len,"Formatted LittleFS %s",FormatStatus?"OK":"FAILED");
+    }
+    else if (strncmp(commandbuffer, "?", 1) == 0 || strncmp(commandbuffer, "help", 4) == 0)
+    {
+        snprintf(buffer,buffer_len,"status\nsettings\nram\ncat\nls\nmem\ncat\nrun\nstopall\nstop\ncreate\nremove\nrename\nformat");
     }
     else
     {
-        *buffer += "Unknown Command";
+        snprintf(buffer,buffer_len,"Unknown Command");
     }
 }

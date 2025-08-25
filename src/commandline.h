@@ -1,1 +1,1 @@
-void Commandline(char * Command, String *buffer);
+void Commandline(char * Command, char *buffer, int buffer_len);

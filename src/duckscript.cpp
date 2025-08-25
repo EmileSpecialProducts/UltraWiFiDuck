@@ -6,7 +6,6 @@
 #include "duckscript.hpp"
 
 #if defined(CONFIG_TINYUSB_ENABLED)
-
 USBHIDMouse UsbMouse;
 USBHIDKeyboard UsbKeyboard;
 USBHIDGamepad UsbGamepad;
@@ -16,8 +15,6 @@ USBHID hid;
 #endif
 
 #if defined(CONFIG_BT_BLE_ENABLED)
-
-
 BLEHostConfiguration bleHostConfig; 
 KeyboardDevice* bleKeyboard;
 MouseDevice* bleMouse;

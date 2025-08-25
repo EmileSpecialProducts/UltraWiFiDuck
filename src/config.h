@@ -28,13 +28,18 @@
 #define WIFI_PASSWORD ""
 
 
+
 #if   defined(CONFIG_IDF_TARGET_ESP32C3)
 #define RGBLEDPIN "8"
+#define _TARGET_ESP_ "ESP32-C3"
 #elif defined(CONFIG_IDF_TARGET_ESP32C6)
 #define RGBLEDPIN "8"
+#define _TARGET_ESP_ "ESP32-C6"
 #elif defined(CONFIG_IDF_TARGET_ESP32S2)
 #define RGBLEDPIN ""
+#define _TARGET_ESP_ "ESP32-S2"
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
+#define _TARGET_ESP_ "ESP32-S3"
 #define RGBLEDPIN "48"
 #endif
 

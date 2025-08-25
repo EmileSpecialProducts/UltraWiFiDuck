@@ -167,13 +167,12 @@ namespace webserver
             );
         server.on("/run", [](AsyncWebServerRequest *request)
                   {
-                      String buffer;
-                      buffer.reserve(1024);
+                      static char buffer[2048];
                       String message = "";
                       if (request->hasParam("cmd"))
                       {
                           message = request->getParam("cmd")->value();
-                          Commandline((char *)message.c_str(), &buffer);
+                          Commandline((char *)message.c_str(), buffer,sizeof(buffer));
                           request->send(200, "text/plain", buffer);
                       }
                       else
