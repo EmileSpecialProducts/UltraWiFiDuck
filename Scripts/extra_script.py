@@ -7,6 +7,11 @@ from shutil import copyfile
 
 def PostBuild(source, target, env):
     print("--------- Save Firmware before upload -------------------")
+    import datetime
+    now = datetime.datetime.now()
+    print(now)
+    from time import gmtime, strftime
+    print(strftime("%Y-%m-%d %H:%M:%S GMT", gmtime()))
     # https://esphome.github.io/esp-web-tools/
     # https://github.com/esphome/esp-web-tools
     # https://www.hackster.io/usini/platformio-esp32-starter-project-with-esp-web-tools-745568
