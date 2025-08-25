@@ -1,0 +1,24 @@
+REM This will display a full screen web page that looks like a ransomware 
+STRING \WWW
+REM go fast
+DEFAULTDELAY 0
+REM minimal key delay 
+KEYDELAY 1
+REM Wait untill brouser is loaded 
+DELAY 100
+STRING http://ultrawifiduck.local\ENTER
+REM new tab
+STRING \CTRLt
+STRING https://emilespecialproducts.github.io/UltraWiFiDuck/web/lock.htm
+STRING \ENTER
+REM new window  
+STRING \CTRLn
+STRING https://emilespecialproducts.github.io/UltraWiFiDuck/web/lock.htm
+STRING \ENTER
+REM new inprivate window  
+STRING \CTRL\SHIFTn
+STRING https://emilespecialproducts.github.io/UltraWiFiDuck/web/lock.htm
+STRING \ENTER
+REM Wait until the page is loaded. and then set full screen
+DELAY 500
+STRING \F11
