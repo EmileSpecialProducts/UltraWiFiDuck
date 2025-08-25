@@ -96,7 +96,14 @@ namespace webserver
                     {
                         if (LittleFS.exists(request->url())) // exists will give a error in the error log see: https://github.com/espressif/arduino-esp32/issues/7615
                         {
-                            request->send(LittleFS, request->url(), "");
+
+                            File Fh = LittleFS.open(request->url());
+                            int size = Fh.size();
+                            Fh.close(); // open close to clear the error
+                            if(size == 0) // we can not send a file with 0 length
+                                request->send(200, "text/plain", "");
+                            else
+                                request->send(LittleFS, request->url(), "");
                         }
                         else
                         {
