@@ -145,6 +145,7 @@ const Control_Command Control_Commands[] =
 const Control_Command System_Commands[] =
 {
     {"POWER",SYSTEM_CONTROL_POWER_OFF},    
+    {"POWER",SYSTEM_CONTROL_POWER_OFF},     
     {"SLEEP",SYSTEM_CONTROL_STANDBY },     
     {"WAKE" ,SYSTEM_CONTROL_WAKE_HOST}    
 };
@@ -440,13 +441,15 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                                 {
                                     if (strncmp(Line_BufferPtr, System_Commands[commands].StrCommand, strlen(System_Commands[commands].StrCommand)) == 0)
                                     {
-                                        debugf("Found System_Commands : %s\n", System_Commands[commands].StrCommand);
+                                        debugf("Found System_Commands : %s %d\n", System_Commands[commands].StrCommand,System_Commands[commands].RawKeycode);
                                         Line_BufferPtr += strlen(System_Commands[commands].StrCommand);
     #ifdef CONFIG_TINYUSB_HID_ENABLED
                                         UsbSystemControl.press(System_Commands[commands].RawKeycode);
+                                        UsbSystemControl.release();
     #endif
     #if defined(CONFIG_BT_BLE_ENABLED)
-                                        ; 
+                                        bleKeyboard->SystemControlPress(System_Commands[commands].RawKeycode);
+                                        bleKeyboard->SystemControlRelease();
     #endif
                                         break;
                                     }
@@ -1335,7 +1338,8 @@ return capsLock_return;
 
     // Set up keyboard
     KeyboardConfiguration bleKeyboardConfig;
-    bleKeyboardConfig.setUseMediaKeys(true);  // Media keys are not enabled by default
+    bleKeyboardConfig.setUseMediaKeys(true);  // Media keys are not enabled by default 
+    bleKeyboardConfig.setUseSystemControl(true); // SystemControl keys are not enabled by default
     bleKeyboardConfig.setAutoReport(true);
     bleKeyboard = new KeyboardDevice(bleKeyboardConfig);
     FunctionSlot<KeyboardOutputReport> OnLEDEventSlot(OnLEDEvent);

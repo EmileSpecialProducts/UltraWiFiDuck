@@ -211,7 +211,6 @@ const uint8_t help_html[] = R"rawliteral(
                     <tr>
                         <td>
                             <code>\POWER</code> <code>\SLEEP</code> <code>\WAKE</code>
-                            This will only work on USB connection
                         </td>
                     </tr>
                     <tr>
