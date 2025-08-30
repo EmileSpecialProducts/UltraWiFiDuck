@@ -130,7 +130,7 @@ void Commandline(char * Command, char *buffer, int buffer_len )
         "esp_idf_version: %d.%d.%d\n"
         "arduino_version:  %d.%d.%d\n"
         "%s"
-        "Temperature %d °C",    
+        "Temperature %3.1f °C",    
         ESP_IDF_VERSION_MAJOR,ESP_IDF_VERSION_MINOR,ESP_IDF_VERSION_PATCH,    
         ESP_ARDUINO_VERSION_MAJOR,ESP_ARDUINO_VERSION_MINOR,ESP_ARDUINO_VERSION_PATCH,
         debug_enable?"Debug Enabled\n":"",
