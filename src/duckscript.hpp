@@ -18,7 +18,7 @@
 #include "USBHIDSystemControl.h"
 #endif
 
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
 #include "BleConnectionStatus.h"
 #include "BleCompositeHID.h"
 #include "KeyboardDevice.h"

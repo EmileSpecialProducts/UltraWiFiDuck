@@ -14,7 +14,7 @@ USBHIDSystemControl UsbSystemControl;
 USBHID hid;
 #endif
 
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
 BLEHostConfiguration bleHostConfig; 
 KeyboardDevice* bleKeyboard;
 MouseDevice* bleMouse;
@@ -29,7 +29,6 @@ struct KeyCommand
     char StrCommand[15];
     uint8_t RawKeycode;
 };
-
 const KeyCommand KeyCommands[] =
 {
     {"n", HID_KEY_ENTER},
@@ -447,7 +446,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                                         UsbSystemControl.press(System_Commands[commands].RawKeycode);
                                         UsbSystemControl.release();
     #endif
-    #if defined(CONFIG_BT_BLE_ENABLED)
+    #if defined(CONFIG_SOC_BLE_SUPPORTED)
                                         bleKeyboard->SystemControlPress(System_Commands[commands].RawKeycode);
                                         bleKeyboard->SystemControlRelease();
     #endif
@@ -908,7 +907,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 UsbConsumerControl.release();
             }
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
             for(uint8_t f=0;f<sizeof(bltControl_Commands)/sizeof(bltControl_Commands[0]);f++)
             {
                 
@@ -1036,7 +1035,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 if (hid.ready()) // will need to created a bug report on this as we get an error in the Errorlog "SendReport(): not ready When the USB is not connected"
                     UsbKeyboard.sendReport(k);
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
                 if(bleCompositeHID.isConnected())
                 {
                     bleKeyboard->setKeyReport((KeyboardInputReport *)k);
@@ -1063,7 +1062,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             if (hid.ready())
                 UsbMouse.move(x, y, wheel, pan);
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
             if(bleCompositeHID.isConnected())
             { 
                 debugf("blemove %d %d %d %d\n",x, y, wheel, pan);
@@ -1087,7 +1086,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             if (hid.ready())
                 UsbMouse.move(x, y, wheel, pan);
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
             if(bleCompositeHID.isConnected())
                 bleMouse->mouseMove(x, y, wheel, pan);
 #endif
@@ -1122,7 +1121,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             if (hid.ready())
                 UsbMouse.click(b);
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
             if(bleCompositeHID.isConnected())
                 bleMouse->mouseClick(b);
 #endif
@@ -1142,7 +1141,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             if (hid.ready())
                 UsbMouse.release(b);
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
             if(bleCompositeHID.isConnected())
                 bleMouse->mouseRelease(b);
 #endif
@@ -1162,7 +1161,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             if (hid.ready())
                 UsbMouse.press(b);
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
             if(bleCompositeHID.isConnected())
                 bleMouse->mousePress(b);
 #endif
@@ -1179,7 +1178,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         if (hid.ready())
             UsbKeyboard.releaseAll();
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
         if(bleCompositeHID.isConnected())
         {
             bleKeyboard->resetKeys();
@@ -1275,7 +1274,7 @@ void UsbKeyboardEventCallback(void *arg, esp_event_base_t event_base, int32_t ev
   ;//debugf("USB event_base %d\n",*event_base);
 }
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
 KeyboardOutputReport bleKeyboardLed;
 void OnLEDEvent(KeyboardOutputReport data){
     bleKeyboardLed=data;
@@ -1291,7 +1290,7 @@ void OnLEDEvent(KeyboardOutputReport data){
 uint8_t  DuckScript::numLock()
 {
 uint8_t  numLock_return=-1;
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
     if (bleCompositeHID.isConnected())
         bleKeyboardLed.numLockActive? numLock_return=1: numLock_return=0;
 #endif
@@ -1305,7 +1304,7 @@ return numLock_return;
 uint8_t  DuckScript::capsLock()
 {
 uint8_t capsLock_return=-1;
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
     if (bleCompositeHID.isConnected())
         bleKeyboardLed.capsLockActive? capsLock_return=1: capsLock_return=0;
 #endif
@@ -1334,7 +1333,7 @@ return capsLock_return;
         hid.onEvent(hidEventCallback);
         UsbKeyboard.onEvent(UsbKeyboardEventCallback);           
 #endif
-#if defined(CONFIG_BT_BLE_ENABLED)
+#if defined(CONFIG_SOC_BLE_SUPPORTED)
 
     // Set up keyboard
     KeyboardConfiguration bleKeyboardConfig;

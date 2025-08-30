@@ -65,7 +65,7 @@ namespace webserver
             }
             if (!WiFiConected)
                 debugf("Connecting to  \"%s\":\"%s\" Failed\n", settings::getSSID(), settings::getPassword());
-#if not defined(CONFIG_BT_BLE_ENABLED)
+#if not defined(CONFIG_SOC_BLE_SUPPORTED)
 #if not defined(ESP8266)
             esp_wifi_set_ps(WIFI_PS_NONE); // Esp32 enters the power saving mode by default,
 #endif
