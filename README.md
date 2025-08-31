@@ -93,14 +93,6 @@ As the UltraWiFiDuck is also a web server you can put custom web pages/script on
 
 ## Usage
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=sSJuGXd8QRk">
-    <img alt="WiFi Duck Video Thumbnail" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/showcase.gif" width="400">
-    <br>
-    <b>Watch the full video</b>
-  </a>
-</p>
-
 1. Install the software on this [Web Page](https://emilespecialproducts.github.io/UltraWiFiDuck/upload.html) 
 
 2. Connect to the open WiFi network `UltaWiFiduck` no password <img alt="Ultra WiFi Duck" src="img/UltraWiFiDuck_WiFi.png" width="160">
@@ -212,11 +204,11 @@ Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=run mouse"
 Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=stop mouse"
 ```
 
-This will create a file led.txt using powershell
+This will get the status of the UltraWiFiDuck
 ```
-Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=write led.txt `"LED 10 10 10`nDELAY 1000`nLED 0 0 0`nDELAY 1000`nRESTART`""
+Invoke-WebRequest -URI "http://UltraWiFiDuck.local/run?cmd=status"
 ```
-But the best is to upload a file using the powershell or CURL
+
 You can find some more examples in the [PowershellTestScript.ps1](https://github.com/EmileSpecialProducts/UltraWiFiDuck/blob/master/test/PowershellTestScript.ps1)
 
 ### CURL
@@ -224,9 +216,9 @@ Upload using linux CURL
 ```
 curl -X POST -F "data=$(printf "GUI r\nnotepad\nHello");filename=test123.txt;type=application/octet-stream" http://UltraWiFiDuck.local/upload
 ```
+More examples are in the [curlTestScript.sh](https://github.com/EmileSpecialProducts/UltraWiFiDuck/blob/master/test/curlTestScript.sh) file
 
 ### General
-
 | Command | Description | Example |
 | ------- | ----------- | ------- |
 | help | Returns all available commands | `help` |
