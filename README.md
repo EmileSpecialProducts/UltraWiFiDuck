@@ -135,6 +135,8 @@ To write text, that does not need a enter use the STRING function.
 | `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) up to 144 Leds |
 | `MOUSE CLICK`| This is give a mouse click|
 | `MOUSE 10 10 `| This is move the mouse x y weel pan |
+| `RESTART `| This will restart the script |
+| `ENDSCRIPT `| This will end the script at this point |
 ### Standard Keys
 
 | Key |
