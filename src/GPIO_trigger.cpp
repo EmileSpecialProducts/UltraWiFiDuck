@@ -38,9 +38,9 @@ void GpioTrigger::update()
                 debugf("Pin %d %d",gpio_pins[f],pinstate[f]);
                 char filename[10];
                 if(pinstate[f]==0)   
-                    sprintf(filename,"gpiolow%d",gpio_pins[f]);
+                    sprintf(filename,"/gpiolow%d",gpio_pins[f]);
                     else
-                    sprintf(filename,"gpiohi%d",gpio_pins[f]);
+                    sprintf(filename,"/gpiohi%d",gpio_pins[f]);
                 duckscripts_run(filename);
             }
         }  
