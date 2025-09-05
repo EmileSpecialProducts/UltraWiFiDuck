@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define VERSION "3.0.1"
+#define VERSION "3.0.2"
 #define PRODUCTNAME "UltraWiFiDuck"
 /*! ===== DEBUG Settings ===== */
 //#define ENABLE_DEBUG

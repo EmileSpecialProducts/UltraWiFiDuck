@@ -60,7 +60,7 @@ class DuckScript // declared/created using class keyword
   KeyReport LastSendKeyReport = {0, 0, {0, 0, 0, 0, 0, 0}};
   uint32_t StartoflineTime = 0;
 public:
-  bool running = false;
+  volatile bool running = false;
   uint32_t running_line = 0; // This will indicat the current line number of the running script
   DuckScript();
   void Test();
@@ -71,7 +71,7 @@ public:
   void stop();
   bool isRunning();
   const UnicodeToKeyCode_t *GetLocalKeyboard(char *BufferPtr);   
-  String currentScript();
+  const char* currentScript();
   void WriteLine();
   uint32_t getUniCode(char *buffer, uint8_t *utf_len_return);
   void LineCommand();
@@ -107,4 +107,6 @@ void duckscript_begin();
 void duckscripts_run(char *filename);
 void duckscripts_stop(char *filename);
 void duckscripts_stopall();
-String FixPath(String Path);
+
+
+

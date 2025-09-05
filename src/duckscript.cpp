@@ -254,27 +254,18 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         if (fileName.length() > 0)
         {
             debugf("Run file %s\n", fileName.c_str());
-            file = LittleFS.open(FixPath(fileName));
+            file = LittleFS.open(fileName);
             running = true;
         }
         else
         {
             return;
         }
-        while (running)
+        while (this->isRunning())
         {
-            if (!file)
-            {
-                debugln("Running File error");
-                stop();
-                return;
-            }
-
             if (!file.available())
             {
-                debugln("Reached end of file");
-                stop();
-                return;
+                this->running= false; break;
             }
             Line_Buffer_i = 0;
             eol = false; // End of line
@@ -298,6 +289,7 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
             running_line++;
             Line_BufferPtr = Line_Buffer;
 #ifdef ENABLE_DEBUG
+            if(!this->isRunning())debug("stopping:");else debug("Running:");
             debug("Line:[");
             for (int f = 0; f < Line_Buffer_i; f++)
                 if (Line_Buffer[f] >= ' ')
@@ -309,37 +301,36 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                 debugf("%02x ", Line_Buffer[f]);
             debug("]...\n");
 #endif
-            if (strncmp(Line_BufferPtr, "RESTART", 7) == 0)
-            { // Restart the script
-                file.seek(0);
-                running_line = 0;
-            }
-            else
+            if (strncmp(Line_BufferPtr, "ENDSCRIPT", 9) == 0)
             {
-                LineCommand();
+                file.seek(file.size()); // jump to end of file
+                debugln("End of Script Command");
+            } else {
+                if (strncmp(Line_BufferPtr, "RESTART", 7) == 0)
+                { // Restart the script
+                    file.seek(0);
+                    running_line = 0;
+                }
+                else
+                {
+                    LineCommand();
+                }
             }
         }
-        if (file)
-            file.close();
+        file.close();
         ReleaseKeyboardMouse();
         debugln("End of Script");
     }
 
     void DuckScript::stop()
     {
-        if (running)
+        if (this->running)
         {
-            if (file)
-                debugf("Stop Script [%s] at  Line = %d \n", FixPath(file.name()).c_str(), running_line);
-            else
-                debugln("Stop Script No file");
-            running = false;
+            this->running = false;
+            debugf("Stop Script [%s] at Line = %d running %d\n", this->file.path(), this->running_line,this->isRunning()?1:0);
         }
         else
-            debugf("Script was already Stoped\n");
-        if (file)
-            file.close();
-        ReleaseKeyboardMouse();
+            debugf("Script was already Stoped\n");        
     }
 
     bool DuckScript::isRunning()
@@ -347,13 +338,11 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
         return running;
     }
 
-    
-
-    String DuckScript::currentScript()
+    const char* DuckScript::currentScript()
     {
         if (!running)
-            return String("");
-        return FixPath(file.name()); //  +" Line = " + String(running_line);
+            return "";
+        return file.path(); 
     }
 
     void DuckScript::WriteLine()
@@ -379,7 +368,6 @@ DuckScript DuckScripts[DUCKSCRIPTLEN];
                                     pressRaw(HID_KEY_CAPS_LOCK);
                                     releaseRaw(HID_KEY_CAPS_LOCK);
                         }
-
                     } else if (strncmp(Line_BufferPtr,"CAPSLOCKOFF",12)== 0){
                         Line_BufferPtr +=12;
                         debugf("Found Command :CAPSLOCKOFF\n");
@@ -1376,7 +1364,7 @@ return capsLock_return;
         bool RunTask = true;
         while (Task < DUCKSCRIPTLEN)
         {
-            if (DuckScripts[Task].currentScript()==FixPath(String(filename)))
+            if (strcmp(DuckScripts[Task].currentScript(),filename)==0)
             {
                 RunTask = false;
                 debugf("Script is already running\n");
@@ -1387,7 +1375,8 @@ return capsLock_return;
         if(RunTask)
         {
             static TaskParameters TParameters;
-            strncpy(TParameters.fileName ,filename,sizeof(TParameters.fileName));
+            memset(&TParameters, 0, sizeof(TParameters));
+            strncpy(TParameters.fileName ,filename,strlen(filename)<sizeof(TParameters.fileName)?strlen(filename):sizeof(TParameters.fileName)-1 );
             Task = 0;
             while (Task < DUCKSCRIPTLEN)
             {
@@ -1412,17 +1401,17 @@ return capsLock_return;
 
     void duckscripts_stop(char *filename)
     {
-        int Task = 0;
-        debugf("duckscripts_stop(%s)\n", filename);
-        String file_name = FixPath(String(filename));    
-        for (DuckScript duckscript : DuckScripts)
+        int Task = 0;   
+        debugf("duckscripts_stop(%s)\n", filename);  
+        for (int f=0;f< (sizeof(DuckScripts)/sizeof(DuckScripts[0]));f++)
         {
-            if(duckscript.isRunning())
-                debugln("running [" +duckscript.currentScript() +"] [" +file_name+"]");
-            if (duckscript.currentScript() == file_name)
+            if(DuckScripts[f].isRunning())
+                debugf("running [%s] [%s]\n", DuckScripts[f].currentScript(),filename);
+            
+            if (strcmp(DuckScripts[f].currentScript(), filename)==0)
             {
-                debugf("duckscripts_stoping %s\n", duckscript.currentScript());
-                duckscript.stop();
+                debugf("duckscripts_stoping %s\n", DuckScripts[f].currentScript());
+                DuckScripts[f].stop();
                 break;
             }       
         }
@@ -1430,19 +1419,12 @@ return capsLock_return;
 
     void duckscripts_stopall()
     {
-        for (DuckScript duckscript : DuckScripts)
+        for (int f=0;f< (sizeof(DuckScripts)/sizeof(DuckScripts[0]));f++)
         {
-            if (duckscript.isRunning() )
+            if (DuckScripts[f].isRunning() )
             {
-                debugf("duckscripts_stoping %s\n", duckscript.currentScript());
-                duckscript.stop();
+                debugf("duckscripts_stoping %s\n", DuckScripts[f].currentScript());
+                DuckScripts[f].stop();
             }
         }
-    }
-
-    String FixPath(String Path)
-    {
-        if (Path.startsWith("/"))
-            return (Path);
-        return ("/" + Path);
     }

@@ -3,11 +3,11 @@
 #include "duckscript.hpp"
 #include "settings.h"
 
-bool getArgument(char *Command, int i, char *buffer , int bufferlen )
+bool getArgument(char *Command, int i, char *buffer , int bufferlen,bool addslashes=false) 
 {
     int index = 0;
     bool quote=false;
-    debugf("GetArg %s, %d\n",Command,i);    
+    //debugf("GetArg %s, %d\n",Command,i);    
     memset(buffer, 0, bufferlen);
     while (*Command)
     {
@@ -18,15 +18,10 @@ bool getArgument(char *Command, int i, char *buffer , int bufferlen )
                 {
                     if (bufferlen > 1)
                     {
-                        debug(*Command);
-
-                        if(*Command =='\"') 
-                        {    
+                        if(*Command =='\"') {    
                             quote=!quote;
-                            debug('#');
-                        }
-                        else
-                        {
+                        } else {
+                            if(addslashes) {*buffer='/';bufferlen--;buffer++;addslashes=false;}
                             *buffer = *Command;
                             buffer++;
                         }
@@ -34,7 +29,6 @@ bool getArgument(char *Command, int i, char *buffer , int bufferlen )
                         bufferlen--; 
                     }
                 }
-            debugln(buffer);
             return true;
         }
         index++;
@@ -48,33 +42,24 @@ bool getArgument(char *Command, int i, char *buffer , int bufferlen )
     return false;
 }
 
-void fixPath(String &path)
-{
-    path.replace("\"", "");
-    if (!path.startsWith("/"))
-    {
-        path = "/" + path;
-    }
-}
-
 String listDir(String dirName)
 {
     String res="";
     bool first = true;
     res.reserve(255);
-    fixPath(dirName);
-        File root = LittleFS.open(dirName);
-        File file = root.openNextFile();
-        while (file)
-        {
-            if(!first) res+="\n";    
-            first=false;
-            res += "\""+String(file.name()) + "\" " + String(file.size()) ;
-            file = root.openNextFile();
-        }
-        if (res.length() == 0)
-            res += "\n";
-        root.close();
+    if (!dirName.startsWith("/"))dirName= "/" + dirName;
+    File root = LittleFS.open(dirName);
+    File file = root.openNextFile();
+    while (file)
+    {
+        if(!first) res+="\n";    
+        first=false;
+        res += "\""+String(file.name()) + "\" " + String(file.size()) ;
+        file = root.openNextFile();
+    }
+    if (res.length() == 0)
+        res += "\n";
+    root.close();
     return res;
 }
 
@@ -83,24 +68,24 @@ void Commandline(char * Command, char *buffer, int buffer_len )
     char commandbuffer[32];
     buffer[0] = 0;
     memset(commandbuffer, 0, sizeof(commandbuffer));
-    debugln("Commandline [" + String(Command) + "]");
+    debugln("Command: [" + String(Command) + "] ");
     getArgument(Command, 0, commandbuffer, sizeof(commandbuffer));
-    debugln("commandbuffer [" + String(commandbuffer) + "]");
+    //debugln("commandbuffer [" + String(commandbuffer) + "] ");
     if (strncmp(commandbuffer, "status", 6) == 0)
     {
         bool Ready = true;
-        debugln("Status");
+        //debugln("Status");
         for (DuckScript duckscript : DuckScripts)
         {
-            if (duckscript.running)
+            if (duckscript.isRunning())
             {
+                if(!Ready)snprintf(buffer+strlen(buffer),buffer_len-strlen(buffer),"\n");
                 Ready = false;
-                snprintf(buffer,buffer_len,"running \"%s\" %d",duckscript.currentScript().c_str(),duckscript.running_line);
+                snprintf(buffer+strlen(buffer),buffer_len-strlen(buffer),"running \"%s\" %d",duckscript.currentScript(),duckscript.running_line);
             }
         }
         if (Ready == true)
         {
-            debugln("No Running Tasks");
             snprintf(buffer,buffer_len,"Ultra WifiDuck -- Ready");
         }
     } 
@@ -161,8 +146,8 @@ void Commandline(char * Command, char *buffer, int buffer_len )
     else if (strncmp(commandbuffer, "ls", 2) == 0)
     {
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
-        debugf("LS value [%s]\n", value);
+        getArgument(Command, 1, value, sizeof(value),true);
+        // debugf("LS value [%s]\n", value);
         snprintf(buffer,buffer_len,"%s",listDir(String(value)).c_str());
     }
     else if (strncmp(commandbuffer, "mem", 3) == 0)
@@ -176,14 +161,11 @@ void Commandline(char * Command, char *buffer, int buffer_len )
     else if (strncmp(commandbuffer, "cat", 3) == 0)
     {   // this will not work for big files > 2K
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
-        String filename=String(value);
-        fixPath(filename);
-        debugln(filename);
-        if (LittleFS.exists(filename))
+        getArgument(Command, 1, value, sizeof(value),true);
+        if (LittleFS.exists(value))
         {
             debugln("File found");
-            File f = LittleFS.open(filename);
+            File f = LittleFS.open(value);
             int i=0;
             buffer[0]=0;
             while(f && f.available() && i<(buffer_len-1))
@@ -211,7 +193,7 @@ void Commandline(char * Command, char *buffer, int buffer_len )
     else if (strncmp(commandbuffer, "run", 3) == 0)
     {
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
+        getArgument(Command, 1, value, sizeof(value),true);
         duckscripts_run(value);
         snprintf(buffer,buffer_len,"> started \"%s\"",value);
     }
@@ -223,43 +205,34 @@ void Commandline(char * Command, char *buffer, int buffer_len )
     else if (strncmp(commandbuffer, "stop", 4) == 0)
     {
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
+        getArgument(Command, 1, value, sizeof(value),true);
         duckscripts_stop(value);
         snprintf(buffer,buffer_len,"> stopped \"%s\"",value);
     }
     else if (strncmp(commandbuffer, "create", 6) == 0)
     {
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
-        String filename=String(value);
-        fixPath(filename);
-        debugln(filename);
-        File f=LittleFS.open(filename,"w");
+        getArgument(Command, 1, value, sizeof(value),true);
+        File f=LittleFS.open(value,"w");
         f.close();
-        snprintf(buffer,buffer_len,"> Created file \"%s\"",filename);
+        snprintf(buffer,buffer_len,"> Created file \"%s\"",value);
     }
     else if (strncmp(commandbuffer, "remove", 6) == 0)
     {
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
-        String filename=String(value);
-        fixPath(filename);
-        debugln(filename);
-        LittleFS.remove(filename);
-        snprintf(buffer,buffer_len,"> removed file \"%s\"",filename);
+        getArgument(Command, 1, value, sizeof(value),true);
+        LittleFS.remove(value);
+        snprintf(buffer,buffer_len,"> removed file \"%s\"",value);
     }
     else if (strncmp(commandbuffer, "rename", 6) == 0)
     {
         char value[64];
-        getArgument(Command, 1, value, sizeof(value));
         char value2[64];
-        getArgument(Command, 2, value2, sizeof(value2));
-        String fileold = String(value);
-        String filenew = String(value2);
-        fixPath(fileold);
-        fixPath(filenew);
-        LittleFS.rename(fileold, filenew);
-        snprintf(buffer,buffer_len,"> renamed \"%s\" to \"%s\"",fileold,filenew);
+        getArgument(Command, 1, value, sizeof(value),true);
+        getArgument(Command, 2, value2, sizeof(value2),true);
+
+        LittleFS.rename(value, value2);
+        snprintf(buffer,buffer_len,"> renamed \"%s\" to \"%s\"",value,value2);
     }
     else if (strncmp(commandbuffer, "format", 6) == 0)
     {
@@ -274,4 +247,5 @@ void Commandline(char * Command, char *buffer, int buffer_len )
     {
         snprintf(buffer,buffer_len,"Unknown Command");
     }
+    debugln(buffer);
 }

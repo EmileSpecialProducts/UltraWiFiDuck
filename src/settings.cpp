@@ -159,7 +159,7 @@ namespace settings
         {
         if (atoi(data.RGBLedPin) >= 0 && atoi(data.RGBLedPin) <=48 )
             {
-                debugf("RGBPin=%d\n", atoi(data.RGBLedPin));
+                //debugf("RGBPin=%d\n", atoi(data.RGBLedPin));
                 return atoi(data.RGBLedPin);
             }
         }

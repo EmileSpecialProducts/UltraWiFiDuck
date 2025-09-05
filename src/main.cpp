@@ -27,7 +27,7 @@ void setup() {
     delay(200);
     webserver::begin();
     Gpiotrigger.begin(settings::getRGBLedPinNum());
-    duckscripts_run(settings::getAutorun());
+    if(strlen(settings::getAutorun())>0)duckscripts_run(settings::getAutorun());
     debugln("End of Setup");
 }
 

@@ -122,6 +122,12 @@ const uint8_t help_html[] = R"rawliteral(
                         <td>This will restart the script and loop this script
                         </td>
                     </tr>
+                      <tr>
+                        <td><code>ENDSCRIPT</code></td>
+                        <td><code>DELAY 1000<br>ENDSCRIPT<br>MOUSE 10 0 <br>RESTART</code></td>
+                        <td>This will End the Script at this point 
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <h3>Standard Keys</h3>
