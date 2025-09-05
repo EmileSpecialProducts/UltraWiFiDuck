@@ -6,7 +6,7 @@ PowerShell\SHIFT\CONTROL\ENTER
 DELAY 2000
 REM as the next line Confirm to start as a Administrator 
 REM Pressin the SHIFT TAB and relaseing the SHIFT and then enter
-\SHIFT\t\SHIFT\ENTER
+STRING \SHIFT\t\SHIFT\ENTER
 DELAY 500
 Get-ExecutionPolicy -List
 DELAY 500
