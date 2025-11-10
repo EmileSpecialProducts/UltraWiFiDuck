@@ -231,6 +231,7 @@ const Keyboards_t Local_Keyboards[] =
         {"US", Keyboard_US},
         {"BG", Keyboard_BG},
         {"DE", Keyboard_DE},
+        {"ES", Keyboard_ES},
         {"FR", Keyboard_French},
         {"NONE", Keyboard_NONE}
     };

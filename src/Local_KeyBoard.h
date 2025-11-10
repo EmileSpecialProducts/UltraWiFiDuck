@@ -11,6 +11,7 @@
 // https://kbdlayout.info/
 #include "locale\local_KeyBoard_BG.h"
 #include "locale\local_KeyBoard_DE.h"
+#include "locale\local_KeyBoard_ES.h"
 #include "locale\local_Keyboard_French.h"
 #include "locale\local_KeyBoard_US.h"
 #include "locale\local_KeyBoard_US-INT.h"

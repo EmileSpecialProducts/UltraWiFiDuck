@@ -9,4 +9,5 @@ STRING АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСс�
 STRING абвгдежзийклмнопрсттсуфхцчшщъьюяѫѣ
 LOCALE US 
 STRING AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqUuVvWwXxYyZz
-
+LOCALE ES
+STRING ÁáÉéÍíÓóÚúÜüÑñ\|/ç ºª €¬
