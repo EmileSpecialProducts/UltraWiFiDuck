@@ -195,7 +195,7 @@ window.addEventListener("load", function () {
     }
 
     E("edit_Local").onclick = function () {
-    const Locals = ["US", "US-INT", "FR", "DE","BG","NONE"];
+    const Locals = ["US", "US-INT", "FR", "DE","BG","ES","NONE"];
     var newLocal = prompt("Password (8-64 chars)", E("LocalName").innerHTML);
     if (newLocal && Locals.indexOf(newLocal) >=0) {
             fetch("/run?cmd=set LocalName \"" + newLocal+"\"")

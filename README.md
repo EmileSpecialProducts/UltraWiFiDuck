@@ -267,7 +267,7 @@ But best to upload them to the LittleFS firts and test and then replace the Flas
 ### Translate Keyboard Layout
 
 Currently supported keyboard layouts:
-NONE, US , US-INT , BG , DE , FR  
+NONE, US , US-INT , BG ,ES, DE , FR  
 
 But you can enter the UFT8 characters and they will be typed using the <Alt> and Unicode on the numberpad
 

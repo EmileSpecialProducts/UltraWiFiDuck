@@ -102,7 +102,7 @@ const UnicodeToKeyCode_t Keyboard_Template[] =
         {'P', {HID_KEY_SHIFT_LEFT, HID_KEY_P, 0}},
         {'{', {HID_KEY_SHIFT_LEFT, HID_KEY_BRACKET_LEFT, 0}},
         {'}', {HID_KEY_SHIFT_LEFT, HID_KEY_BRACKET_RIGHT, 0}},
-        {'\\', {HID_KEY_SHIFT_LEFT, HID_KEY_BACKSLASH, 0}},
+        {'|', {HID_KEY_SHIFT_LEFT, HID_KEY_BACKSLASH, 0}},
         // thurted row asdfghjkl:" in US
         {'A', {HID_KEY_SHIFT_LEFT, HID_KEY_A, 0}},
         {'S', {HID_KEY_SHIFT_LEFT, HID_KEY_S, 0}},
