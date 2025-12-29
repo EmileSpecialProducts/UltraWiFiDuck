@@ -95,9 +95,10 @@ public:
   uint8_t capsLock();
   uint8_t numLock();
 };
-#if defined (CONFIG_IDF_TARGET_ESP32C3)
-// As the ESP32C3 has only 320 KB ram
-#define DUCKSCRIPTLEN 5
+#if defined (CONFIG_IDF_TARGET_ESP32C2)
+// As the ESP32C2 has only 272 KB ram
+#define DUCKSCRIPTLEN 2
+#warning "ESP32C2 is not working due to RAM limitations"
 #else
 #define DUCKSCRIPTLEN 5
 #endif

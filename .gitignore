@@ -47,3 +47,11 @@ save-commands.json
 .vscode
 private
 Thumbs.db
+build.txt
+env.txt
+# ESP32C2 Junk
+managed_components
+.dummy
+sdkconfig.*
+dependencies.lock
+CMakeLists.txt
