@@ -35,6 +35,9 @@
 #elif defined(CONFIG_IDF_TARGET_ESP32C2)
 #define RGBLEDPIN ""
 #define _TARGET_ESP_ "ESP32-C2"
+#elif defined(CONFIG_IDF_TARGET_ESP32C5)
+#define RGBLEDPIN "27"
+#define _TARGET_ESP_ "ESP32-C5"
 #elif defined(CONFIG_IDF_TARGET_ESP32C6)
 #define RGBLEDPIN "8"
 #define _TARGET_ESP_ "ESP32-C6"

@@ -12,6 +12,8 @@ const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,
 const uint8_t gpio_pins[]={0,1,2,3,8,9,10,18}; // 20=TXD,19=RXD  
 #elif defined (CONFIG_IDF_TARGET_ESP32C3)
 const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10}; // 21=TXD,20=RXD 18=USB-D- 19=USB-D+ 
+#elif defined (CONFIG_IDF_TARGET_ESP32C5)
+const uint8_t gpio_pins[]={0,1,2,3,6,7,8,9,10,15,23,24,25,26,27,28}; // 11=TXD,12=RXD 13=USB-D- 14=USB-D+ 28 = boot 
 #elif defined (CONFIG_IDF_TARGET_ESP32C6)
 const uint8_t gpio_pins[]={0,1,2,3,4,5,6,7,8,9,10,11,15,18,19,20,21,22,23,27}; // 16=TXD,17=RXD 12=USB-D- 13=USB-D+ 
 #elif defined (CONFIG_IDF_TARGET_ESP32)

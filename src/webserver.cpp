@@ -92,7 +92,7 @@ namespace webserver
         server.onNotFound([](AsyncWebServerRequest *request)
                 { 
                     debugf("url NotFound %s , Method =%s\n", request->url().c_str(), request->methodToString());
-                    if (request->method() == HTTP_GET)
+                    if (request->method() == AsyncWebRequestMethod::HTTP_GET)
                     {
                         if (LittleFS.exists(request->url())) // exists will give a error in the error log see: https://github.com/espressif/arduino-esp32/issues/7615
                         {
@@ -143,16 +143,16 @@ namespace webserver
                             }
                         }
                     }
-                    else if (request->method() == HTTP_POST)
+                    else if (request->method() == AsyncWebRequestMethod::HTTP_POST)
                     {
                         reply(request, 404, "text/html", error404_html, sizeof(error404_html) - 1);
                     }
                 });
         // Webserver
-        server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+        server.on("/", AsyncWebRequestMethod::HTTP_GET, [](AsyncWebServerRequest *request)
                   { request->redirect("/index.html"); });
 
-        server.on("/upload", HTTP_POST, 
+        server.on("/upload", AsyncWebRequestMethod::HTTP_POST, 
                 [](AsyncWebServerRequest *request)
                   {
                     debugln("File upload completed " + request->url());
