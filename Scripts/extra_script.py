@@ -20,6 +20,7 @@ def PostBuild(source, target, env):
 
     # print("PROJECT_DIR " + env.get("PROJECT_DIR"))
     # print("PROJECT_BUILD_DIR " + env.get("PROJECT_BUILD_DIR"))
+    # print("PROJECT_DATA_DIR " + env.get("PROJECT_DATA_DIR"))
     # print("BOARD " + env.get("BOARD"))
     # print("BUILD_TYPE " + env.get("BUILD_TYPE"))
     # print("PROJECT_CONFIG " + env.get("PROJECT_CONFIG")) # pints to the platformio.ini file
@@ -27,7 +28,7 @@ def PostBuild(source, target, env):
     # partitions_csv = env.subst("$PARTITIONS_TABLE_CSV")
     # print(partitions_csv)
     # print("PROJECT_CORE_DIR " + env.get("PROJECT_CORE_DIR"))
-
+    # print("PROJECT_PACKAGES_DIR " + env.get("PROJECT_PACKAGES_DIR"))
     # print("PROJECT_PACKAGES_DIR " + platformpakkages )
     # board_config = env.BoardConfig()
     # print( board_config.get("build.flash_mode", "dio"))
@@ -74,7 +75,8 @@ def PostBuild(source, target, env):
         print("partition_file " , partition_file)   
         mklittlefs=env.get("PROJECT_CORE_DIR")+"/tools/tool-mklittlefs/mklittlefs.exe"
         print("MKSPIFFSTOOL ",mklittlefs)
-        littlefsdir = os.getcwd() + "/payloads"    
+        #littlefsdir = os.getcwd() + "/payloads"
+        littlefsdir = env.get("PROJECT_DATA_DIR")     
         # mklittlefs doc -> https://github.com/jason2866/mklittlefs
         #env.Execute(mklittlefs +" -a -c "+littlefsdir + " -s "+ str(littlefs_size) + " " + destination + "/littlefs.bin")
         # list all the files 
@@ -83,74 +85,76 @@ def PostBuild(source, target, env):
         print("images " , images)
         print("Do not know how to make the littlefs for the 8266 yet!!!!")    
         ################################################################################
-    else:
-        if "OTA" in pioenv:
-            print("Not gererating ESP-Web-tool dowload files")  
-        else:
-            #for flash_row in flash_image:
-            #    print("Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
-            #print("BOARD_MCU " + board_mcu)
-            #print("BOARD_BOOT_MODE " + board_boot_mode)
-            #print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
-            #print("BOARD = " + board + " board_mcu = " + board_mcu + " board_boot_mode = " + board_boot_mode)
-            ##### Generate the littlefs from littlefs dir 
-            mklittlefs=env.get("PROJECT_CORE_DIR")+"/tools/tool-mklittlefs/mklittlefs.exe"
-            #print("MKSPIFFSTOOL ",mklittlefs)
-            littlefsdir = os.getcwd() + "/payloads"    
-            partition=env.get("PARTITIONS_TABLE_CSV")
-            print("partition " , partition)    
-            import csv
-            # get the littlefs_size form the PARTITIONS_TABLE_CSV 
-            littlefs_size=0
-            littlefs_offset="?"
-            app0_size=0
-            app0_offset="?"
-            endofmemmory=0
-            with open(partition) as csv_file:
-                csv_reader = csv.reader(csv_file, delimiter=',')
-                for row in csv_reader:
-                    # row[0] = Name, row[1]= Type, row[2]= SubType, row[3]= Offset, row[4]= Size  
-                    print(f'{row[0]: <16} {row[1]: <16} {row[2]: <16} {row[3]: <16} {row[4]: <16}')
-                    if row[3].startswith("0x") and row[4].startswith("0x") and endofmemmory < (int(row[3], 0) + int(row[4], 0)) :
-                        endofmemmory = (int(row[3], 0) + int(row[4], 0))
-                    if row[0] == "spiffs" : 
-                        littlefs_size =  int(row[4], 0)
-                        littlefs_offset =int(row[3], 0)
-                    if row[0] == "littlefs" : 
-                        littlefs_size =  int(row[4], 0)
-                        littlefs_offset =int(row[3], 0)  
-                    if row[0] == "app0" : 
-                        app0_size =  int(row[4], 0)
-                        app0_offset =int(row[3], 0)  
-            #print("endofmemmory = ", endofmemmory , " ", int( (endofmemmory+0x80000) / 0x100000))
-            flashsize = str(int( (endofmemmory+0x80000) / 0x100000)) + "MB" 
-            print("flashsize = ",flashsize)            
-            #print("littlefs size = ",littlefs_size ," Offset = ", littlefs_offset)
-            destination = os.getcwd() + "/firmware" 
-            if not os.path.exists(destination):
-                os.mkdir(destination)
-            destination = (
-                destination + "/" + board_mcu + "_" + flashsize + "_" + board_boot_mode
-            )  
-            if not os.path.exists(destination):
-                os.mkdir(destination)
-            print("destination = " + destination)            
-            for flash_row in flash_image:
-                if flash_row[1].endswith("bootloader.bin"):
-                    shutil.copyfile(flash_row[1], destination + "/bootloader.bin")
-                if flash_row[1].endswith("partitions.bin"):
-                    shutil.copyfile(flash_row[1], destination + "/partitions.bin")
-                if flash_row[1].endswith("boot_app0.bin"):
-                    shutil.copyfile(flash_row[1], destination + "/boot_app0.bin")
-                print("flash_row Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
-            shutil.copyfile(source + "/firmware.bin", destination + "/firmware.bin")
-            print("firmware  Offset = ", hex(app0_offset) ,app0_offset,"File = ",source + "/firmware.bin" )
-            print("littlefs  Offset = ", hex(littlefs_offset) ,littlefs_offset,"File = ",destination + "/littlefs.bin" )
-            # mklittlefs doc -> https://github.com/jason2866/mklittlefs
-            env.Execute(mklittlefs +" -a -c "+littlefsdir + " -s "+ str(littlefs_size) + " " + destination + "/littlefs.bin")
-            # list all the files 
-            # env.Execute(mklittlefs +" -l " + destination + "/littlefs.bin")    
-            ################################################################################
+    else: 
+        for flash_row in flash_image:
+            print("Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
+
+        #print("BOARD_MCU " + board_mcu)
+        #print("BOARD_BOOT_MODE " + board_boot_mode)
+        #print("BOARD_F_CPU " + env.get("BOARD_F_CPU"))
+        #print("BOARD = " + board + " board_mcu = " + board_mcu + " board_boot_mode = " + board_boot_mode)
+        ##### Generate the littlefs from littlefs dir 
+        ##mklittlefs=env.get("PROJECT_CORE_DIR")+"/tools/tool-mklittlefs/mklittlefs.exe"
+        mklittlefs=env.get("PROJECT_PACKAGES_DIR")+"/tool-mklittlefs/mklittlefs.exe"
+        print("MKSPIFFSTOOL ",mklittlefs)
+        #littlefsdir = os.getcwd() + "/littlefs"
+        littlefsdir = env.get("PROJECT_DATA_DIR")    
+        partition=env.get("PARTITIONS_TABLE_CSV")
+        print("partition " , partition)    
+        import csv
+        # get the littlefs_size form the PARTITIONS_TABLE_CSV 
+        littlefs_size=0
+        littlefs_offset="?"
+        endofmemmory=0
+        with open(partition) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                print(f'\t{row[0]} Name  , {row[1]} Type , {row[2]} SubType {row[3]} Offset {row[4]} Size .')
+                if row[3].startswith("0x") and row[4].startswith("0x") and endofmemmory < (int(row[3], 0) + int(row[4], 0)) :
+                    endofmemmory = (int(row[3], 0) + int(row[4], 0))
+                if row[0] == "spiffs" : 
+                    littlefs_size =  int(row[4], 0)
+                    littlefs_offset =int(row[3], 0)
+                if row[0] == "littlefs" : 
+                    littlefs_size =  int(row[4], 0)
+                    littlefs_offset =int(row[3], 0)  
+        print("endofmemmory = ", endofmemmory , " ", int( (endofmemmory+0x80000) / 0x100000))
+        flashsize = str(int( (endofmemmory+0x80000) / 0x100000)) + "MB" 
+        print("flashsize = ",flashsize)            
+        print("littlefs size = ",littlefs_size ," Offset = ", littlefs_offset)
+        destination = os.getcwd() + "/firmware" 
+        if not os.path.exists(destination):
+            os.mkdir(destination)
+        destination = (
+            destination + "/" + board_mcu + "_" + flashsize + "_" + board_boot_mode
+        )  
+        if not os.path.exists(destination):
+            os.mkdir(destination)
+        print("destination = " + destination)
+        
+        for flash_row in flash_image:
+            if flash_row[1].endswith("bootloader.bin"):
+                shutil.copyfile(flash_row[1], destination + "/bootloader.bin")
+            if flash_row[1].endswith("partitions.bin"):
+                shutil.copyfile(flash_row[1], destination + "/partitions.bin")
+            if flash_row[1].endswith("boot_app0.bin"):
+                shutil.copyfile(flash_row[1], destination + "/boot_app0.bin")
+            print("flash_row Offset = ", flash_row[0],int(flash_row[0],0),"File = ",flash_row[1] )
+        shutil.copyfile(source + "/firmware.bin", destination + "/firmware.bin")
+
+        # mklittlefs doc -> https://github.com/jason2866/mklittlefs
+        ### To buil d the littlefs.bin file from the littlefs dir, use the following command in the terminal, after building the firmware. 
+        ### pio run -e esp32-s3-devkitc-1-Debug -t buildfs
+        ## As the <User>.platformio\tools\tool-mklittlefs\mklittlefs.exe is not more supported > +/- 3.3.9. 
+        ## but is located at C:\Users\<User>\.platformio\packages\tool-mkspiffs
+        ## It is also possible to use pio run -e esp32-s3-devkitc-1-Debug -t buildfs to build the littlefs.bin file from the littlefs dir, but it will use the old mklittlefs.exe tool.
+        ## Bit this will will not build in the same upload command.
+        env.Execute(mklittlefs +" -a -c "+littlefsdir + " -s "+ str(littlefs_size) + " " + source + "/littlefs.bin")
+        # list all the files 
+        env.Execute(mklittlefs +" -l " + source + "/littlefs.bin")    
+        print("littlefs From:"+ source + "/littlefs.bin" + " To: ",destination + "/littlefs.bin")
+        shutil.copyfile(source + "/littlefs.bin", destination + "/littlefs.bin")
+        ################################################################################
 
 # env.AddPostAction("buildprog", PostBuild)
 
